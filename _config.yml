@@ -1,10 +1,10 @@
 title: "The Forward Horizon"
-  description: "Structured Living Communities - Building Foundations for 
+  Description: "Structured Living Communities - Building Foundations for 
   Success"
   baseurl: "/the-forward-horizon"
   url: "https://jumaanebey.github.io"
 
-  markdown: kramdown
+  markdown: kramdown 
   highlighter: rouge
   permalink: pretty
 
