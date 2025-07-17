@@ -195,16 +195,16 @@
               <div class="mb-8">
                   <div class="border-b border-gray-200">
                       <nav class="-mb-px flex space-x-8 justify-center">
-                          <button onclick="switchTab('expectations')" 
-  id="expectations-tab" class="tab-button active-tab border-b-2 
-  border-blue-500 text-blue-600 py-2 px-1 font-medium">
-                              House Expectations
-                          </button>
                           <button onclick="switchTab('benefits')" 
-  id="benefits-tab" class="tab-button border-b-2 border-transparent 
+  id="benefits-tab" class="tab-button active-tab border-b-2 border-blue-500
+   text-blue-600 py-2 px-1 font-medium">
+                              Community Benefits
+                          </button>
+                          <button onclick="switchTab('expectations')" 
+  id="expectations-tab" class="tab-button border-b-2 border-transparent 
   text-gray-500 hover:text-gray-700 hover:border-gray-300 py-2 px-1 
   font-medium">
-                              Community Benefits
+                              House Expectations
                           </button>
                           <button onclick="switchTab('structure')" 
   id="structure-tab" class="tab-button border-b-2 border-transparent 
@@ -723,7 +723,7 @@
 
           // Initialize first tab as active on page load
           document.addEventListener('DOMContentLoaded', function() {
-              switchTab('expectations');
+              switchTab('benefits');
           });
       </script>
   </body>
