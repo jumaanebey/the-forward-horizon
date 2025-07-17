@@ -54,13 +54,24 @@
           "email": "admin@theforwardhorizon.com",
           "address": {
               "@type": "PostalAddress",
+              "addressLocality": "Los Angeles County",
               "addressRegion": "California",
               "addressCountry": "US"
           },
-          "areaServed": {
-              "@type": "Place",
-              "name": "Southern California"
-          },
+          "areaServed": [
+              {
+                  "@type": "Place",
+                  "name": "Los Angeles County"
+              },
+              {
+                  "@type": "Place",
+                  "name": "Orange County"
+              },
+              {
+                  "@type": "Place",
+                  "name": "Riverside County"
+              }
+          ],
           "serviceType": "Sober Living Housing",
           "priceRange": "$1500/month"
       }
@@ -527,8 +538,8 @@
                           </div>
                           <div class="flex items-center">
                               <span class="text-blue-600 mr-3">📍</span>
-                              <span class="text-gray-700">Southern
-  California Service Area</span>
+                              <span class="text-gray-700">Serving Los
+  Angeles, Orange County & Riverside Areas</span>
                           </div>
                       </div>
                   </div>
