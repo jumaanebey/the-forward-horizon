@@ -1,0 +1,17 @@
+User-agent: *
+  Allow: /
+
+  # Sitemap location
+  Sitemap: https://jumaanebey.github.io/the-forward-horizon/sitemap.xml
+
+  # Crawl-delay for all bots
+  Crawl-delay: 1
+
+  # Allow specific files
+  Allow: /index.html
+  Allow: /application.html
+  Allow: /house-rules.html
+  Allow: /careers.html
+
+  # Block nothing - allow full access
+  Disallow:
