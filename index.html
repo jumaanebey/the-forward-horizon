@@ -750,6 +750,40 @@
             document.addEventListener('DOMContentLoaded', function() {
                 switchTab('benefits');
             });
-        </script>
-    </body>
-    </html>
+    535 +  
+       536 +          // Back to top button functionality
+       537 +          const backToTopButton = 
+           + document.getElementById('backToTop');
+       538 +          
+       539 +          window.addEventListener('scroll', function() {
+       540 +              if (window.pageYOffset > 300) {
+       541 +                  backToTopButton.classList.remove('hidden');
+       542 +              } else {
+       543 +                  backToTopButton.classList.add('hidden');
+       544 +              }
+       545 +          });
+       546 +          
+       547 +          backToTopButton.addEventListener('click', function() 
+     {
+       548 +              window.scrollTo({
+       549 +                  top: 0,
+       550 +                  behavior: 'smooth'
+       551 +              });
+       552 +          });
+       553        </script>
+       554 +  
+       555 +      <!-- Back to Top Button -->
+       556 +      <button id="backToTop" class="fixed bottom-8 right-8 
+           + bg-blue-600 text-white p-3 rounded-full shadow-lg 
+           + hover:bg-blue-700 transition-all duration-300 z-50 hidden">
+       557 +          <svg class="w-6 h-6" fill="none" 
+     stroke="currentColor"
+           +  viewBox="0 0 24 24">
+       558 +              <path stroke-linecap="round" 
+           + stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 
+           + 7m-7-7v18"></path>
+       559 +          </svg>
+       560 +      </button>
+       561    </body>
+       562    </html>
+       563   \ No newline at end of file
