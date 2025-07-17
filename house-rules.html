@@ -18,8 +18,8 @@
 
         <!-- Open Graph / Facebook -->
         <meta property="og:type" content="website">
-        <meta property="og:url" content="https://jumaanebey.github.io/the-f
-    orward-horizon/house-rules.html">
+        <meta property="og:url" 
+    content="https://theforwardhorizon.com/house-rules.html">
         <meta property="og:title" content="Sober Living House Rules & 
     Guidelines - The Forward Horizon">
         <meta property="og:description" content="Clear house rules and 
@@ -27,8 +27,8 @@
     tolerance policy and structured living standards.">
 
         <!-- Canonical URL -->
-        <link rel="canonical" href="https://jumaanebey.github.io/the-forwar
-    d-horizon/house-rules.html">
+        <link rel="canonical" 
+    href="https://theforwardhorizon.com/house-rules.html">
 
         <script src="https://cdn.tailwindcss.com"></script>
     </head>
@@ -41,18 +41,56 @@
                         <a href="index.html" class="text-2xl font-bold 
     text-blue-600">The Forward Horizon</a>
                     </div>
-                    <div class="flex items-center space-x-8">
+                    <div class="hidden md:flex items-center space-x-8">
                         <a href="index.html" class="text-gray-700 
     hover:text-blue-600">Home</a>
+                        <a href="index.html#living-standards" 
+    class="text-gray-700 hover:text-blue-600">Living Standards</a>
                         <a href="application.html" class="text-gray-700 
     hover:text-blue-600">Apply</a>
                         <a href="house-rules.html" class="text-blue-600 
     font-medium">House Rules</a>
                         <a href="careers.html" class="text-gray-700 
     hover:text-blue-600">Careers</a>
-                        <a href="#contact" class="text-gray-700 
+                        <a href="resources.html" class="text-gray-700 
+    hover:text-blue-600">Resources</a>
+                        <a href="index.html#contact" class="text-gray-700 
     hover:text-blue-600">Contact</a>
                     </div>
+                    <div class="md:hidden flex items-center">
+                        <button id="mobile-menu-button" 
+    class="text-gray-700">
+                            <svg class="w-6 h-6" fill="none" 
+    stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" 
+    stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 
+    18h16"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- Mobile menu -->
+            <div id="mobile-menu" class="hidden md:hidden bg-white 
+    border-t">
+                <div class="px-2 pt-2 pb-3 space-y-1">
+                    <a href="index.html" class="block px-3 py-2 
+    text-gray-700 hover:text-blue-600">Home</a>
+                    <a href="index.html#living-standards" class="block px-3
+     py-2 text-gray-700 hover:text-blue-600">Living Standards</a>
+                    <a href="application.html" class="block px-3 py-2 
+    text-gray-700 hover:text-blue-600">Apply</a>
+                    <a href="house-rules.html" class="block px-3 py-2 
+    text-blue-600 font-medium">House Rules</a>
+                    <a href="careers.html" class="block px-3 py-2 
+    text-gray-700 hover:text-blue-600">Careers</a>
+                    <a href="resources.html" class="block px-3 py-2 
+    text-gray-700 hover:text-blue-600">Resources</a>
+                    <a href="index.html#contact" class="block px-3 py-2 
+    text-gray-700 hover:text-blue-600">Contact</a>
+                </div>
+            </div>
+        </nav>
                 </div>
             </div>
         </nav>
@@ -328,5 +366,16 @@
     Area | (626) 603-0954</p>
             </div>
         </footer>
+
+        <!-- JavaScript for Mobile Menu -->
+        <script>
+            // Mobile menu toggle
+
+    document.getElementById('mobile-menu-button').addEventListener('click',
+     function() {
+                const mobileMenu = document.getElementById('mobile-menu');
+                mobileMenu.classList.toggle('hidden');
+            });
+        </script>
     </body>
     </html>
