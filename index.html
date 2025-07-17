@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
   <html lang="en">
   <head>
       <meta charset="UTF-8">
@@ -522,10 +522,11 @@
                   </p>
               </div>
               <div class="grid md:grid-cols-2 gap-8">
+                  <!-- Contact Information -->
                   <div class="bg-white rounded-lg shadow-md p-6">
                       <h3 class="text-xl font-semibold text-gray-900 
   mb-4">Get In Touch</h3>
-                      <div class="space-y-3">
+                      <div class="space-y-3 mb-6">
                           <div class="flex items-center">
                               <span class="text-blue-600 mr-3">📞</span>
                               <span class="text-gray-700">(626)
@@ -542,10 +543,9 @@
   Angeles, Orange County & Riverside Areas</span>
                           </div>
                       </div>
-                  </div>
-                  <div class="bg-white rounded-lg shadow-md p-6">
-                      <h3 class="text-xl font-semibold text-gray-900 
-  mb-4">Office Hours</h3>
+
+                      <h4 class="text-lg font-semibold text-gray-900 
+  mb-3">Office Hours</h4>
                       <div class="space-y-2 text-gray-700">
                           <div>Monday - Friday: 9:00 AM - 6:00 PM</div>
                           <div>Saturday: 10:00 AM - 4:00 PM</div>
@@ -553,6 +553,76 @@
                           <div class="text-sm text-blue-600 mt-3">24/7
   emergency support available</div>
                       </div>
+                  </div>
+
+                  <!-- Contact Form -->
+                  <div class="bg-white rounded-lg shadow-md p-6">
+                      <h3 class="text-xl font-semibold text-gray-900 
+  mb-4">Send Us a Message</h3>
+                      <form action="https://formspree.io/f/YOUR_FORM_ID" 
+  method="POST" class="space-y-4">
+                          <div>
+                              <label for="name" class="block text-sm 
+  font-medium text-gray-700 mb-1">Full Name *</label>
+                              <input type="text" id="name" name="name" 
+  required class="w-full px-3 py-2 border border-gray-300 rounded-lg 
+  focus:outline-none focus:ring-2 focus:ring-blue-500">
+                          </div>
+
+                          <div>
+                              <label for="email" class="block text-sm 
+  font-medium text-gray-700 mb-1">Email Address *</label>
+                              <input type="email" id="email" name="email" 
+  required class="w-full px-3 py-2 border border-gray-300 rounded-lg 
+  focus:outline-none focus:ring-2 focus:ring-blue-500">
+                          </div>
+
+                          <div>
+                              <label for="phone" class="block text-sm 
+  font-medium text-gray-700 mb-1">Phone Number</label>
+                              <input type="tel" id="phone" name="phone" 
+  class="w-full px-3 py-2 border border-gray-300 rounded-lg 
+  focus:outline-none focus:ring-2 focus:ring-blue-500">
+                          </div>
+
+                          <div>
+                              <label for="inquiry-type" class="block 
+  text-sm font-medium text-gray-700 mb-1">Inquiry Type *</label>
+                              <select id="inquiry-type" name="inquiry_type"
+   required class="w-full px-3 py-2 border border-gray-300 rounded-lg 
+  focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                  <option value="">Select an
+  option</option>
+                                  <option value="general-info">General
+  Information</option>
+                                  <option value="application">Application
+  Process</option>
+                                  <option value="pricing">Pricing &
+  Availability</option>
+                                  <option value="support">Support
+  Services</option>
+                                  <option value="other">Other</option>
+                              </select>
+                          </div>
+
+                          <div>
+                              <label for="message" class="block text-sm 
+  font-medium text-gray-700 mb-1">Message *</label>
+                              <textarea id="message" name="message" 
+  rows="4" required class="w-full px-3 py-2 border border-gray-300 
+  rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
+  placeholder="Tell us how we can help you..."></textarea>
+                          </div>
+
+                          <button type="submit" class="w-full bg-blue-600 
+  text-white py-2 px-4 rounded-lg font-semibold hover:bg-blue-700 
+  transition duration-300">
+                              Send Message
+                          </button>
+
+                          <p class="text-xs text-gray-500 
+  text-center">We'll respond within 24 hours during business days</p>
+                      </form>
                   </div>
               </div>
           </div>
