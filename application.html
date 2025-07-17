@@ -543,6 +543,40 @@
               const mobileMenu = document.getElementById('mobile-menu');
               mobileMenu.classList.toggle('hidden');
           });
-      </script>
-  </body>
-  </html>
++  
+       389 +          // Back to top button functionality
+       390 +          const backToTopButton = 
+           + document.getElementById('backToTop');
+       391 +          
+       392 +          window.addEventListener('scroll', function() {
+       393 +              if (window.pageYOffset > 300) {
+       394 +                  backToTopButton.classList.remove('hidden');
+       395 +              } else {
+       396 +                  backToTopButton.classList.add('hidden');
+       397 +              }
+       398 +          });
+       399 +          
+       400 +          backToTopButton.addEventListener('click', function() 
+     {
+       401 +              window.scrollTo({
+       402 +                  top: 0,
+       403 +                  behavior: 'smooth'
+       404 +              });
+       405 +          });
+       406        </script>
+       407 +  
+       408 +      <!-- Back to Top Button -->
+       409 +      <button id="backToTop" class="fixed bottom-8 right-8 
+           + bg-blue-600 text-white p-3 rounded-full shadow-lg 
+           + hover:bg-blue-700 transition-all duration-300 z-50 hidden">
+       410 +          <svg class="w-6 h-6" fill="none" 
+     stroke="currentColor"
+           +  viewBox="0 0 24 24">
+       411 +              <path stroke-linecap="round" 
+           + stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 
+           + 7m-7-7v18"></path>
+       412 +          </svg>
+       413 +      </button>
+       414    </body>
+       415    </html>
+       416   \ No newline at end of file
