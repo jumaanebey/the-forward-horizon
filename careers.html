@@ -573,5 +573,52 @@
   Area | (626) 603-0954</p>
           </div>
       </footer>
-  </body>
-  </html>
+2 +  
+       403 +      <!-- JavaScript for Mobile Menu -->
+       404 +      <script>
+       405 +          // Mobile menu toggle
+       406 +          
+     document.getElementById('mobile-menu-button').addEvent
+           + Listener('click', function() {
+       407 +              const mobileMenu = 
+           + document.getElementById('mobile-menu');
+       408 +              mobileMenu.classList.toggle('hidden');
+       409 +          });
+       410 +  
+       411 +          // Back to top button functionality
+       412 +          const backToTopButton = 
+           + document.getElementById('backToTop');
+       413 +          
+       414 +          window.addEventListener('scroll', function() {
+       415 +              if (window.pageYOffset > 300) {
+       416 +                  backToTopButton.classList.remove('hidden');
+       417 +              } else {
+       418 +                  backToTopButton.classList.add('hidden');
+       419 +              }
+       420 +          });
+       421 +          
+       422 +          backToTopButton.addEventListener('click', function() 
+     {
+       423 +              window.scrollTo({
+       424 +                  top: 0,
+       425 +                  behavior: 'smooth'
+       426 +              });
+       427 +          });
+       428 +      </script>
+       429 +  
+       430 +      <!-- Back to Top Button -->
+       431 +      <button id="backToTop" class="fixed bottom-8 right-8 
+           + bg-blue-600 text-white p-3 rounded-full shadow-lg 
+           + hover:bg-blue-700 transition-all duration-300 z-50 hidden">
+       432 +          <svg class="w-6 h-6" fill="none" 
+     stroke="currentColor"
+           +  viewBox="0 0 24 24">
+       433 +              <path stroke-linecap="round" 
+           + stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 
+           + 7m-7-7v18"></path>
+       434 +          </svg>
+       435 +      </button>
+       436    </body>
+       437    </html>
+       438   \ No newline at end of file
+
