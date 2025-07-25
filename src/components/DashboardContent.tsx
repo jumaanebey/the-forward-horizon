@@ -14,6 +14,8 @@ import SchedulingSystem from '@/components/SchedulingSystem';
 import AdvancedAnalytics from '@/components/AdvancedAnalytics';
 import InventoryManagement from '@/components/InventoryManagement';
 import MaintenanceTracker from '@/components/MaintenanceTracker';
+import AIAssistant from '@/components/AIAssistant';
+import SmartNotifications from '@/components/SmartNotifications';
 
 export default function DashboardContent() {
   // State for residents data
@@ -40,6 +42,8 @@ export default function DashboardContent() {
   const [showAdvancedAnalytics, setShowAdvancedAnalytics] = useState(false);
   const [showInventoryManagement, setShowInventoryManagement] = useState(false);
   const [showMaintenanceTracker, setShowMaintenanceTracker] = useState(false);
+  const [showAIAssistant, setShowAIAssistant] = useState(false);
+  const [showSmartNotifications, setShowSmartNotifications] = useState(false);
 
   const handleAddResident = (newResident: any) => {
     setResidents([...residents, newResident]);
@@ -93,6 +97,24 @@ export default function DashboardContent() {
               <div className="flex justify-between items-center">
                 <h2 className="text-lg font-medium text-gray-900">Recent Residents</h2>
                 <div className="flex gap-3 flex-wrap">
+                  <button
+                    onClick={() => setShowAIAssistant(true)}
+                    className="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-md hover:from-purple-700 hover:to-pink-700 transition-colors flex items-center"
+                  >
+                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    </svg>
+                    AI Assistant
+                  </button>
+                  <button
+                    onClick={() => setShowSmartNotifications(true)}
+                    className="px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-md hover:from-blue-700 hover:to-cyan-700 transition-colors flex items-center"
+                  >
+                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM4.19 4.19A2 2 0 006 3h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V5a2 2 0 012-2z" />
+                    </svg>
+                    Smart Alerts
+                  </button>
                   <button
                     onClick={() => setShowMaintenanceTracker(true)}
                     className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors flex items-center"
@@ -408,6 +430,18 @@ export default function DashboardContent() {
       <MaintenanceTracker
         isOpen={showMaintenanceTracker}
         onClose={() => setShowMaintenanceTracker(false)}
+      />
+
+      {/* AI Assistant */}
+      <AIAssistant
+        isOpen={showAIAssistant}
+        onClose={() => setShowAIAssistant(false)}
+      />
+
+      {/* Smart Notifications */}
+      <SmartNotifications
+        isOpen={showSmartNotifications}
+        onClose={() => setShowSmartNotifications(false)}
       />
     </div>
   );
