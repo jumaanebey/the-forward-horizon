@@ -6,6 +6,10 @@ import ReportsContent from '@/components/ReportsContent';
 import CalendarContent from '@/components/CalendarContent';
 import ProgramsContent from '@/components/ProgramsContent';
 import StaffContent from '@/components/StaffContent';
+import DocumentManager from '@/components/DocumentManager';
+import CaseNotesManager from '@/components/CaseNotesManager';
+import RoomManager from '@/components/RoomManager';
+import AlumniTracker from '@/components/AlumniTracker';
 import SettingsContent from '@/components/SettingsContent';
 import ResidentsList from '../components/ResidentsList';
 
@@ -26,6 +30,14 @@ export default function Home() {
         return <ProgramsContent />;
       case 'staff':
         return <StaffContent />;
+      case 'documents':
+        return <DocumentManager />;
+      case 'case-notes':
+        return <CaseNotesManager />;
+      case 'rooms':
+        return <RoomManager />;
+      case 'alumni':
+        return <AlumniTracker />;
       case 'settings':
         return <SettingsContent />;
       default:

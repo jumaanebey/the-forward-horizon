@@ -278,6 +278,10 @@ class EnterpriseManager {
     return true;
   }
 
+  async listFranchises(): Promise<FranchiseNetwork[]> {
+    return Array.from(this.franchises.values());
+  }
+
   async getFranchisePerformance(franchiseId: string): Promise<any> {
     const franchise = this.franchises.get(franchiseId);
     if (!franchise) return null;
