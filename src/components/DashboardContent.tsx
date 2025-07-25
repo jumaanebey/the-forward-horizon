@@ -8,6 +8,7 @@ import DisciplinaryModal from '@/components/DisciplinaryModal';
 import ProgressTrackingModal from '@/components/ProgressTrackingModal';
 import DashboardStats from '@/components/DashboardStats';
 import ReportsPanel from '@/components/ReportsPanel';
+import IntegrationPanel from '@/components/IntegrationPanel';
 
 export default function DashboardContent() {
   // State for residents data
@@ -29,6 +30,7 @@ export default function DashboardContent() {
   const [showProgress, setShowProgress] = useState(false);
   const [progressResident, setProgressResident] = useState(null);
   const [showReportsPanel, setShowReportsPanel] = useState(false);
+  const [showIntegrationPanel, setShowIntegrationPanel] = useState(false);
 
   const handleAddResident = (newResident: any) => {
     setResidents([...residents, newResident]);
@@ -82,6 +84,15 @@ export default function DashboardContent() {
               <div className="flex justify-between items-center">
                 <h2 className="text-lg font-medium text-gray-900">Recent Residents</h2>
                 <div className="flex gap-3">
+                  <button
+                    onClick={() => setShowIntegrationPanel(true)}
+                    className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors flex items-center"
+                  >
+                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                    Integrations
+                  </button>
                   <button
                     onClick={() => setShowReportsPanel(true)}
                     className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors flex items-center"
@@ -305,6 +316,12 @@ export default function DashboardContent() {
         residents={residents}
         isOpen={showReportsPanel}
         onClose={() => setShowReportsPanel(false)}
+      />
+      
+      {/* Integration Panel */}
+      <IntegrationPanel
+        isOpen={showIntegrationPanel}
+        onClose={() => setShowIntegrationPanel(false)}
       />
     </div>
   );
