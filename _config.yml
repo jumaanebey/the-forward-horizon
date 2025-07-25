@@ -1,0 +1,7 @@
+ title: "The Forward Horizon"
+  description: "Structured Living Communities"
+  baseurl: "/the-forward-horizon"
+  url: "https://jumaanebey.github.io"
+
+  exclude:
+    - README.md
