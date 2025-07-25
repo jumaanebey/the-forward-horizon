@@ -1,5 +1,7 @@
 'use client';
 import { useState } from 'react';
+import { toast } from 'react-hot-toast';
+import { supabase } from '../utils/supabaseClient';
 
 interface EditResidentFormProps {
   resident: any;
@@ -22,14 +24,51 @@ export default function EditResidentForm({ resident, onClose, onUpdate }: EditRe
     notes: resident.notes || '',
     status: resident.status || 'Active'
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+    setError(null);
+    // Map form fields to Supabase columns
     const updatedResident = {
       ...resident,
-      ...formData
+      ...formData,
     };
-    onUpdate(updatedResident);
+    if (supabase) {
+      try {
+        const { error } = await supabase.from('residents').update({
+          name: formData.name,
+          dob: formData.dateOfBirth || null,
+          phone: formData.phone,
+          emergencyContact: formData.emergencyContact,
+          emergencyPhone: formData.emergencyPhone,
+          room_number: formData.room,
+          admission_date: formData.entryDate || null,
+          program: formData.program,
+          medicalConditions: formData.medicalConditions,
+          medications: formData.medications,
+          notes: formData.notes || null,
+          status: formData.status,
+        }).eq('id', resident.id);
+        if (error) {
+          toast.error(error.message);
+          setLoading(false);
+          return;
+        }
+        onUpdate(updatedResident);
+        toast.success('Resident updated successfully!');
+      } catch (err) {
+        toast.error('Failed to update resident');
+        setLoading(false);
+        return;
+      }
+    } else {
+      onUpdate(updatedResident);
+      toast.success('Resident updated successfully!');
+    }
+    setLoading(false);
     onClose();
   };
 
@@ -247,15 +286,24 @@ export default function EditResidentForm({ resident, onClose, onUpdate }: EditRe
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+              className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+              disabled={loading}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+              className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+              disabled={loading}
             >
-              Update Resident
+              {loading ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  Updating...
+                </>
+              ) : (
+                'Update Resident'
+              )}
             </button>
           </div>
         </form>
