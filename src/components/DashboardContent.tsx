@@ -20,6 +20,7 @@ import MobileApp from '@/components/MobileApp';
 import PushNotifications from '@/components/PushNotifications';
 import PerformanceMonitor from '@/components/PerformanceMonitor';
 import AIPredictions from '@/components/AIPredictions';
+import EnterpriseDashboard from '@/components/EnterpriseDashboard';
 
 export default function DashboardContent() {
   // State for residents data
@@ -52,6 +53,7 @@ export default function DashboardContent() {
   const [showPushNotifications, setShowPushNotifications] = useState(false);
   const [showPerformanceMonitor, setShowPerformanceMonitor] = useState(false);
   const [showAIPredictions, setShowAIPredictions] = useState(false);
+  const [showEnterpriseDashboard, setShowEnterpriseDashboard] = useState(false);
 
   const handleAddResident = (newResident: any) => {
     setResidents([...residents, newResident]);
@@ -105,6 +107,15 @@ export default function DashboardContent() {
               <div className="flex justify-between items-center">
                 <h2 className="text-lg font-medium text-gray-900">Recent Residents</h2>
                 <div className="flex gap-3 flex-wrap">
+                  <button
+                    onClick={() => setShowEnterpriseDashboard(true)}
+                    className="px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-md hover:from-indigo-700 hover:to-purple-700 transition-colors flex items-center"
+                  >
+                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    </svg>
+                    Enterprise
+                  </button>
                   <button
                     onClick={() => setShowAIPredictions(true)}
                     className="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-md hover:from-purple-700 hover:to-indigo-700 transition-colors flex items-center"
@@ -510,6 +521,12 @@ export default function DashboardContent() {
       <AIPredictions
         isOpen={showAIPredictions}
         onClose={() => setShowAIPredictions(false)}
+      />
+
+      {/* Enterprise Dashboard */}
+      <EnterpriseDashboard
+        isOpen={showEnterpriseDashboard}
+        onClose={() => setShowEnterpriseDashboard(false)}
       />
     </div>
   );
