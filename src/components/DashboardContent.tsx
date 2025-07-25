@@ -1,0 +1,346 @@
+'use client';
+import { useState } from 'react';
+import AddResidentForm from '@/components/AddResidentForm';
+import EditResidentForm from '@/components/EditResidentForm';
+import MedicalRecordsModal from '@/components/MedicalRecordsModal';
+import PaymentTrackingModal from '@/components/PaymentTrackingModal';
+import DisciplinaryModal from '@/components/DisciplinaryModal';
+import ProgressTrackingModal from '@/components/ProgressTrackingModal';
+
+export default function DashboardContent() {
+  // State for residents data
+  const [residents, setResidents] = useState([
+    { id: 1, name: "John Smith", room: "A-101", status: "Active", entryDate: "2024-01-15" },
+    { id: 2, name: "Sarah Johnson", room: "B-203", status: "Active", entryDate: "2024-02-10" },
+    { id: 3, name: "Michael Brown", room: "A-105", status: "Pending", entryDate: "2024-03-01" },
+  ]);
+  
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [showEditForm, setShowEditForm] = useState(false);
+  const [editingResident, setEditingResident] = useState(null);
+  const [showMedicalRecords, setShowMedicalRecords] = useState(false);
+  const [selectedResident, setSelectedResident] = useState(null);
+  const [showPaymentTracking, setShowPaymentTracking] = useState(false);
+  const [paymentResident, setPaymentResident] = useState(null);
+  const [showDisciplinary, setShowDisciplinary] = useState(false);
+  const [disciplinaryResident, setDisciplinaryResident] = useState(null);
+  const [showProgress, setShowProgress] = useState(false);
+  const [progressResident, setProgressResident] = useState(null);
+
+  const handleAddResident = (newResident: any) => {
+    setResidents([...residents, newResident]);
+  };
+
+  const handleEditResident = (resident: any) => {
+    setEditingResident(resident);
+    setShowEditForm(true);
+  };
+
+  const handleUpdateResident = (updatedResident: any) => {
+    setResidents(residents.map(r => r.id === updatedResident.id ? updatedResident : r));
+  };
+
+  const handleDeleteResident = (residentId: number) => {
+    if (confirm('Are you sure you want to delete this resident?')) {
+      setResidents(residents.filter(r => r.id !== residentId));
+    }
+  };
+
+  const handleViewMedicalRecords = (resident: any) => {
+    setSelectedResident(resident);
+    setShowMedicalRecords(true);
+  };
+
+  const handleViewPayments = (resident: any) => {
+    setPaymentResident(resident);
+    setShowPaymentTracking(true);
+  };
+
+  const handleViewDisciplinary = (resident: any) => {
+    setDisciplinaryResident(resident);
+    setShowDisciplinary(true);
+  };
+
+  const handleViewProgress = (resident: any) => {
+    setProgressResident(resident);
+    setShowProgress(true);
+  };
+
+  return (
+    <div>
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+          <div className="flex items-center">
+            <div className="p-2 bg-blue-100 rounded-lg">
+              <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+              </svg>
+            </div>
+            <div className="ml-4">
+              <h3 className="text-sm font-medium text-gray-500">Total Residents</h3>
+              <p className="text-2xl font-bold text-gray-900">{residents.length}</p>
+            </div>
+          </div>
+        </div>
+        
+        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+          <div className="flex items-center">
+            <div className="p-2 bg-green-100 rounded-lg">
+              <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div className="ml-4">
+              <h3 className="text-sm font-medium text-gray-500">Active Cases</h3>
+              <p className="text-2xl font-bold text-green-600">{residents.filter(r => r.status === 'Active').length}</p>
+            </div>
+          </div>
+        </div>
+        
+        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+          <div className="flex items-center">
+            <div className="p-2 bg-yellow-100 rounded-lg">
+              <svg className="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div className="ml-4">
+              <h3 className="text-sm font-medium text-gray-500">Pending Reviews</h3>
+              <p className="text-2xl font-bold text-yellow-600">{residents.filter(r => r.status === 'Pending').length}</p>
+            </div>
+          </div>
+        </div>
+        
+        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+          <div className="flex items-center">
+            <div className="p-2 bg-blue-100 rounded-lg">
+              <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <div className="ml-4">
+              <h3 className="text-sm font-medium text-gray-500">This Month</h3>
+              <p className="text-2xl font-bold text-blue-600">2</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Recent Activity */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        <div className="lg:col-span-2">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+            <div className="px-6 py-4 border-b border-gray-200">
+              <div className="flex justify-between items-center">
+                <h2 className="text-lg font-medium text-gray-900">Recent Residents</h2>
+                <button 
+                  onClick={() => setShowAddForm(true)}
+                  className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
+                >
+                  Add Resident
+                </button>
+              </div>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Room</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Entry Date</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {residents.map((resident) => (
+                    <tr key={resident.id} className="hover:bg-gray-50">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm font-medium text-gray-900">{resident.name}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">{resident.room}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                          resident.status === 'Active' 
+                            ? 'bg-green-100 text-green-800' 
+                            : 'bg-yellow-100 text-yellow-800'
+                        }`}>
+                          {resident.status}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {resident.entryDate}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <div className="flex flex-wrap gap-2">
+                          <button 
+                            onClick={() => handleViewMedicalRecords(resident)}
+                            className="text-green-600 hover:text-green-900"
+                          >
+                            Medical
+                          </button>
+                          <button 
+                            onClick={() => handleViewPayments(resident)}
+                            className="text-purple-600 hover:text-purple-900"
+                          >
+                            Payments
+                          </button>
+                          <button 
+                            onClick={() => handleViewDisciplinary(resident)}
+                            className="text-orange-600 hover:text-orange-900"
+                          >
+                            Disciplinary
+                          </button>
+                          <button 
+                            onClick={() => handleViewProgress(resident)}
+                            className="text-indigo-600 hover:text-indigo-900"
+                          >
+                            Progress
+                          </button>
+                          <button 
+                            onClick={() => handleEditResident(resident)}
+                            className="text-blue-600 hover:text-blue-900"
+                          >
+                            Edit
+                          </button>
+                          <button 
+                            onClick={() => handleDeleteResident(resident.id)}
+                            className="text-red-600 hover:text-red-900"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="space-y-6">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <h3 className="text-lg font-medium text-gray-900 mb-4">Quick Actions</h3>
+            <div className="space-y-3">
+              <button className="w-full text-left p-3 rounded-md border border-gray-200 hover:bg-gray-50 transition-colors">
+                <div className="flex items-center">
+                  <svg className="w-5 h-5 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                  </svg>
+                  <span className="text-sm font-medium">Add New Resident</span>
+                </div>
+              </button>
+              <button className="w-full text-left p-3 rounded-md border border-gray-200 hover:bg-gray-50 transition-colors">
+                <div className="flex items-center">
+                  <svg className="w-5 h-5 text-blue-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  </svg>
+                  <span className="text-sm font-medium">View Reports</span>
+                </div>
+              </button>
+              <button className="w-full text-left p-3 rounded-md border border-gray-200 hover:bg-gray-50 transition-colors">
+                <div className="flex items-center">
+                  <svg className="w-5 h-5 text-yellow-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <span className="text-sm font-medium">Schedule Appointment</span>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <h3 className="text-lg font-medium text-gray-900 mb-4">Recent Activities</h3>
+            <div className="space-y-3">
+              <div className="flex items-start space-x-3">
+                <div className="w-2 h-2 bg-green-400 rounded-full mt-2"></div>
+                <div>
+                  <p className="text-sm text-gray-900">John Smith completed 30-day milestone</p>
+                  <p className="text-xs text-gray-500">2 hours ago</p>
+                </div>
+              </div>
+              <div className="flex items-start space-x-3">
+                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2"></div>
+                <div>
+                  <p className="text-sm text-gray-900">New resident Sarah Johnson admitted</p>
+                  <p className="text-xs text-gray-500">5 hours ago</p>
+                </div>
+              </div>
+              <div className="flex items-start space-x-3">
+                <div className="w-2 h-2 bg-yellow-400 rounded-full mt-2"></div>
+                <div>
+                  <p className="text-sm text-gray-900">Payment reminder sent to Michael Brown</p>
+                  <p className="text-xs text-gray-500">1 day ago</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Modals */}
+      {showAddForm && (
+        <AddResidentForm
+          onClose={() => setShowAddForm(false)}
+          onAdd={handleAddResident}
+        />
+      )}
+
+      {showEditForm && editingResident && (
+        <EditResidentForm
+          resident={editingResident}
+          onClose={() => {
+            setShowEditForm(false);
+            setEditingResident(null);
+          }}
+          onUpdate={handleUpdateResident}
+        />
+      )}
+
+      {showMedicalRecords && selectedResident && (
+        <MedicalRecordsModal
+          resident={selectedResident}
+          onClose={() => {
+            setShowMedicalRecords(false);
+            setSelectedResident(null);
+          }}
+        />
+      )}
+
+      {showPaymentTracking && paymentResident && (
+        <PaymentTrackingModal
+          resident={paymentResident}
+          onClose={() => {
+            setShowPaymentTracking(false);
+            setPaymentResident(null);
+          }}
+        />
+      )}
+
+      {showDisciplinary && disciplinaryResident && (
+        <DisciplinaryModal
+          resident={disciplinaryResident}
+          onClose={() => {
+            setShowDisciplinary(false);
+            setDisciplinaryResident(null);
+          }}
+        />
+      )}
+
+      {showProgress && progressResident && (
+        <ProgressTrackingModal
+          resident={progressResident}
+          onClose={() => {
+            setShowProgress(false);
+            setProgressResident(null);
+          }}
+        />
+      )}
+    </div>
+  );
+}
