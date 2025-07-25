@@ -16,6 +16,8 @@ import InventoryManagement from '@/components/InventoryManagement';
 import MaintenanceTracker from '@/components/MaintenanceTracker';
 import AIAssistant from '@/components/AIAssistant';
 import SmartNotifications from '@/components/SmartNotifications';
+import MobileApp from '@/components/MobileApp';
+import PushNotifications from '@/components/PushNotifications';
 
 export default function DashboardContent() {
   // State for residents data
@@ -44,6 +46,8 @@ export default function DashboardContent() {
   const [showMaintenanceTracker, setShowMaintenanceTracker] = useState(false);
   const [showAIAssistant, setShowAIAssistant] = useState(false);
   const [showSmartNotifications, setShowSmartNotifications] = useState(false);
+  const [showMobileApp, setShowMobileApp] = useState(false);
+  const [showPushNotifications, setShowPushNotifications] = useState(false);
 
   const handleAddResident = (newResident: any) => {
     setResidents([...residents, newResident]);
@@ -97,6 +101,24 @@ export default function DashboardContent() {
               <div className="flex justify-between items-center">
                 <h2 className="text-lg font-medium text-gray-900">Recent Residents</h2>
                 <div className="flex gap-3 flex-wrap">
+                  <button
+                    onClick={() => setShowMobileApp(true)}
+                    className="px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-md hover:from-indigo-700 hover:to-purple-700 transition-colors flex items-center"
+                  >
+                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                    </svg>
+                    Mobile App
+                  </button>
+                  <button
+                    onClick={() => setShowPushNotifications(true)}
+                    className="px-4 py-2 bg-gradient-to-r from-pink-600 to-rose-600 text-white rounded-md hover:from-pink-700 hover:to-rose-700 transition-colors flex items-center"
+                  >
+                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM4.19 4.19A2 2 0 006 3h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V5a2 2 0 012-2z" />
+                    </svg>
+                    Push Alerts
+                  </button>
                   <button
                     onClick={() => setShowAIAssistant(true)}
                     className="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-md hover:from-purple-700 hover:to-pink-700 transition-colors flex items-center"
@@ -442,6 +464,18 @@ export default function DashboardContent() {
       <SmartNotifications
         isOpen={showSmartNotifications}
         onClose={() => setShowSmartNotifications(false)}
+      />
+
+      {/* Mobile App */}
+      <MobileApp
+        isOpen={showMobileApp}
+        onClose={() => setShowMobileApp(false)}
+      />
+
+      {/* Push Notifications */}
+      <PushNotifications
+        isOpen={showPushNotifications}
+        onClose={() => setShowPushNotifications(false)}
       />
     </div>
   );
