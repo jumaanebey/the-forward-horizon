@@ -1,26 +1,163 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Custom mobile improvements */
+@layer utilities {
+  /* Mobile-first responsive improvements */
+  .mobile-container {
+    @apply px-4 sm:px-6 lg:px-8;
+  }
+  
+  .mobile-table {
+    @apply text-xs sm:text-sm;
+  }
+  
+  .mobile-button {
+    @apply px-2 py-1 sm:px-3 sm:py-2 text-xs sm:text-sm;
+  }
+  
+  .mobile-card {
+    @apply p-3 sm:p-4 lg:p-6;
+  }
+  
+  .mobile-grid {
+    @apply grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4;
+  }
+  
+  /* Improved touch targets for mobile */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px];
+  }
+  
+  /* Better mobile navigation */
+  .mobile-nav {
+    @apply fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50;
+  }
+  
+  /* Mobile-friendly modals */
+  .mobile-modal {
+    @apply m-4 sm:m-8 max-h-[90vh] overflow-y-auto;
+  }
+  
+  /* Responsive text sizes */
+  .mobile-text-lg {
+    @apply text-base sm:text-lg lg:text-xl;
+  }
+  
+  .mobile-text-xl {
+    @apply text-lg sm:text-xl lg:text-2xl;
+  }
+  
+  .mobile-text-2xl {
+    @apply text-xl sm:text-2xl lg:text-3xl;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Print styles for reports */
+@media print {
+  body {
+    margin: 0;
+    padding: 0;
+    background: white;
+    font-size: 12px;
+  }
+  
+  .print-hidden {
+    display: none !important;
+  }
+  
+  .print-break-before {
+    page-break-before: always;
+  }
+  
+  .print-break-after {
+    page-break-after: always;
+  }
+  
+  .print-avoid-break {
+    page-break-inside: avoid;
+  }
+}
+
+/* Improved focus states for accessibility */
+@layer base {
+  button:focus,
+  input:focus,
+  select:focus,
+  textarea:focus {
+    @apply outline-none ring-2 ring-blue-500 ring-offset-2;
+  }
+  
+  /* Better contrast for accessibility */
+  .text-gray-600 {
+    color: #4b5563;
+  }
+  
+  .text-gray-700 {
+    color: #374151;
+  }
+  
+  /* Improved loading states */
+  .loading-skeleton {
+    @apply animate-pulse bg-gray-200 rounded;
+  }
+  
+  /* Better hover states for mobile */
+  @media (hover: hover) {
+    .hover-lift {
+      @apply transition-transform duration-200 hover:-translate-y-1;
+    }
+  }
+  
+  /* Mobile-specific improvements */
+  @media (max-width: 640px) {
+    /* Smaller padding for mobile */
+    .mobile-padding {
+      @apply px-3 py-2;
+    }
+    
+    /* Stack buttons vertically on mobile */
+    .mobile-stack {
+      @apply flex-col space-y-2;
+    }
+    
+    /* Full width buttons on mobile */
+    .mobile-full-width {
+      @apply w-full;
+    }
+    
+    /* Better table layout for mobile */
+    .mobile-table-responsive {
+      @apply block overflow-x-auto;
+    }
+    
+    /* Improved form layout for mobile */
+    .mobile-form-grid {
+      @apply grid-cols-1 gap-4;
+    }
+  }
+}
+
+/* Dark mode support (optional) */
+@media (prefers-color-scheme: dark) {
+  .dark-mode-auto {
+    @apply bg-gray-900 text-white;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .high-contrast {
+    @apply border-2 border-black;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
