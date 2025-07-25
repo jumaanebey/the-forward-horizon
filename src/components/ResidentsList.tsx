@@ -4,6 +4,8 @@ import { supabase } from "../utils/supabaseClient";
 import EditResidentForm from "./EditResidentForm";
 import { toast } from 'react-hot-toast';
 import ExportButton from './ExportButton';
+import BulkActions from './BulkActions';
+import AdvancedFilters from './AdvancedFilters';
 
 interface Resident {
   id: number;
@@ -11,7 +13,14 @@ interface Resident {
   room_number?: string;
   admission_date?: string;
   notes?: string;
-  // Add other fields as needed
+  program?: string;
+  status?: string;
+  medicalConditions?: string;
+  emergencyContact?: string;
+  emergencyPhone?: string;
+  dob?: string;
+  phone?: string;
+  medications?: string;
 }
 
 export default function ResidentsList() {
@@ -26,6 +35,15 @@ export default function ResidentsList() {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
+  const [selectedResidents, setSelectedResidents] = useState<number[]>([]);
+  const [advancedFilters, setAdvancedFilters] = useState({
+    dateRange: { start: "", end: "" },
+    program: "",
+    status: "",
+    roomType: "",
+    hasMedicalConditions: false,
+    hasEmergencyContact: false
+  });
 
   useEffect(() => {
     fetchResidents();
@@ -94,12 +112,47 @@ export default function ResidentsList() {
     showSuccess("Resident deleted successfully!");
   };
 
+  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      setSelectedResidents(filteredResidents.map(resident => resident.id));
+    } else {
+      setSelectedResidents([]);
+    }
+  };
+
+  const handleSelectResident = (residentId: number) => {
+    setSelectedResidents(prev => {
+      if (prev.includes(residentId)) {
+        return prev.filter(id => id !== residentId);
+      } else {
+        return [...prev, residentId];
+      }
+    });
+  };
+
   const filteredResidents = residents.filter(resident => {
+    // Basic search filter
     const matchesSearch = resident.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          (resident.room_number && resident.room_number.toLowerCase().includes(searchTerm.toLowerCase()));
-    const matchesFilter = filterStatus === 'all' || true; // Add status filtering when you have status field
-    return matchesSearch && matchesFilter;
+    
+    // Advanced filters
+    const matchesDateRange = !advancedFilters.dateRange.start && !advancedFilters.dateRange.end ? true :
+      (!advancedFilters.dateRange.start || (resident.admission_date && resident.admission_date >= advancedFilters.dateRange.start)) &&
+      (!advancedFilters.dateRange.end || (resident.admission_date && resident.admission_date <= advancedFilters.dateRange.end));
+    
+    const matchesProgram = !advancedFilters.program || resident.program === advancedFilters.program;
+    const matchesStatus = !advancedFilters.status || resident.status === advancedFilters.status;
+    const matchesRoomType = !advancedFilters.roomType || (resident.room_number && resident.room_number.startsWith(advancedFilters.roomType));
+    const matchesMedicalConditions = !advancedFilters.hasMedicalConditions || (resident.medicalConditions && resident.medicalConditions.trim() !== '');
+    const matchesEmergencyContact = !advancedFilters.hasEmergencyContact || (resident.emergencyContact && resident.emergencyContact.trim() !== '');
+    
+    return matchesSearch && matchesDateRange && matchesProgram && matchesStatus && 
+           matchesRoomType && matchesMedicalConditions && matchesEmergencyContact;
   });
+
+  const handleAdvancedFiltersChange = (filters: any) => {
+    setAdvancedFilters(filters);
+  };
 
   if (loading) return <div>Loading residents...</div>;
   if (error) return <div className="text-red-600">Error: {error}</div>;
@@ -112,7 +165,13 @@ export default function ResidentsList() {
         <ExportButton residents={residents} />
       </div>
       
-      {/* Search and Filter Controls */}
+      {/* Bulk Actions */}
+      <BulkActions residents={residents} onResidentsUpdate={fetchResidents} />
+      
+      {/* Advanced Filters */}
+      <AdvancedFilters onFiltersChange={handleAdvancedFiltersChange} />
+      
+      {/* Basic Search and Filter Controls */}
       <div className="mb-4 flex flex-col sm:flex-row gap-4">
         <div className="flex-1">
           <input
@@ -151,6 +210,14 @@ export default function ResidentsList() {
         <table className="min-w-full border border-gray-200 rounded-md overflow-hidden">
           <thead className="bg-gray-100">
             <tr>
+              <th className="px-4 py-2 text-left">
+                <input
+                  type="checkbox"
+                  checked={selectedResidents.length === filteredResidents.length && filteredResidents.length > 0}
+                  onChange={handleSelectAll}
+                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                />
+              </th>
               <th className="px-4 py-2 text-left">Name</th>
               <th className="px-4 py-2 text-left">Room</th>
               <th className="px-4 py-2 text-left">Admission Date</th>
@@ -161,6 +228,14 @@ export default function ResidentsList() {
           <tbody>
             {filteredResidents.map((resident) => (
               <tr key={resident.id} className="border-t hover:bg-gray-50">
+                <td className="px-4 py-2">
+                  <input
+                    type="checkbox"
+                    checked={selectedResidents.includes(resident.id)}
+                    onChange={() => handleSelectResident(resident.id)}
+                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  />
+                </td>
                 <td className="px-4 py-2">{resident.name}</td>
                 <td className="px-4 py-2">{resident.room_number || "-"}</td>
                 <td className="px-4 py-2">{resident.admission_date || "-"}</td>
