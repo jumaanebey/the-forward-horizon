@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "../utils/supabaseClient";
 import EditResidentForm from "./EditResidentForm";
 import { toast } from 'react-hot-toast';
+import ExportButton from './ExportButton';
 
 interface Resident {
   id: number;
@@ -106,7 +107,10 @@ export default function ResidentsList() {
 
   return (
     <div className="mt-8">
-      <h2 className="text-xl font-bold mb-4">Residents</h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-bold">Residents</h2>
+        <ExportButton residents={residents} />
+      </div>
       
       {/* Search and Filter Controls */}
       <div className="mb-4 flex flex-col sm:flex-row gap-4">
