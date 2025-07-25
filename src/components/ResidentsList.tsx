@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../utils/supabaseClient";
 import EditResidentForm from "./EditResidentForm";
+import { toast } from 'react-hot-toast';
 
 interface Resident {
   id: number;
@@ -22,6 +23,8 @@ export default function ResidentsList() {
   const [deletingResidentId, setDeletingResidentId] = useState<number | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterStatus, setFilterStatus] = useState('all');
 
   useEffect(() => {
     fetchResidents();
@@ -48,8 +51,7 @@ export default function ResidentsList() {
   };
 
   const showSuccess = (msg: string) => {
-    setSuccessMessage(msg);
-    setTimeout(() => setSuccessMessage(null), 3000);
+    toast.success(msg);
   };
 
   const handleUpdate = async (updatedResident: any) => {
@@ -69,7 +71,7 @@ export default function ResidentsList() {
       .eq("id", id);
     setEditLoading(false);
     if (error) {
-      setEditError(error.message);
+      toast.error(error.message);
       return;
     }
     setEditingResident(null);
@@ -84,12 +86,19 @@ export default function ResidentsList() {
     const { error } = await supabase.from("residents").delete().eq("id", residentId);
     setDeletingResidentId(null);
     if (error) {
-      setDeleteError(error.message);
+      toast.error(error.message);
       return;
     }
     fetchResidents();
     showSuccess("Resident deleted successfully!");
   };
+
+  const filteredResidents = residents.filter(resident => {
+    const matchesSearch = resident.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         (resident.room_number && resident.room_number.toLowerCase().includes(searchTerm.toLowerCase()));
+    const matchesFilter = filterStatus === 'all' || true; // Add status filtering when you have status field
+    return matchesSearch && matchesFilter;
+  });
 
   if (loading) return <div>Loading residents...</div>;
   if (error) return <div className="text-red-600">Error: {error}</div>;
@@ -98,47 +107,80 @@ export default function ResidentsList() {
   return (
     <div className="mt-8">
       <h2 className="text-xl font-bold mb-4">Residents</h2>
-      {successMessage && (
-        <div className="mb-4 p-3 bg-green-100 text-green-800 rounded">
-          {successMessage}
+      
+      {/* Search and Filter Controls */}
+      <div className="mb-4 flex flex-col sm:flex-row gap-4">
+        <div className="flex-1">
+          <input
+            type="text"
+            placeholder="Search by name or room number..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
         </div>
-      )}
-      <table className="min-w-full border border-gray-200 rounded-md overflow-hidden">
-        <thead className="bg-gray-100">
-          <tr>
-            <th className="px-4 py-2 text-left">Name</th>
-            <th className="px-4 py-2 text-left">Room</th>
-            <th className="px-4 py-2 text-left">Admission Date</th>
-            <th className="px-4 py-2 text-left">Notes</th>
-            <th className="px-4 py-2 text-left">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {residents.map((resident) => (
-            <tr key={resident.id} className="border-t">
-              <td className="px-4 py-2">{resident.name}</td>
-              <td className="px-4 py-2">{resident.room_number || "-"}</td>
-              <td className="px-4 py-2">{resident.admission_date || "-"}</td>
-              <td className="px-4 py-2">{resident.notes || "-"}</td>
-              <td className="px-4 py-2 flex gap-2">
-                <button
-                  className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
-                  onClick={() => handleEdit(resident)}
-                >
-                  Edit
-                </button>
-                <button
-                  className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
-                  onClick={() => handleDelete(resident.id)}
-                  disabled={deletingResidentId === resident.id}
-                >
-                  {deletingResidentId === resident.id ? "Deleting..." : "Delete"}
-                </button>
-              </td>
+        <div className="sm:w-48">
+          <select
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="all">All Residents</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </div>
+      </div>
+
+      {loading ? (
+        <div className="text-center py-8">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+          <p className="mt-2 text-gray-600">Loading residents...</p>
+        </div>
+      ) : error ? (
+        <div className="text-red-600 text-center py-8">{error}</div>
+      ) : filteredResidents.length === 0 ? (
+        <div className="text-center py-8 text-gray-600">
+          {searchTerm ? 'No residents found matching your search.' : 'No residents found.'}
+        </div>
+      ) : (
+        <table className="min-w-full border border-gray-200 rounded-md overflow-hidden">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="px-4 py-2 text-left">Name</th>
+              <th className="px-4 py-2 text-left">Room</th>
+              <th className="px-4 py-2 text-left">Admission Date</th>
+              <th className="px-4 py-2 text-left">Notes</th>
+              <th className="px-4 py-2 text-left">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {filteredResidents.map((resident) => (
+              <tr key={resident.id} className="border-t hover:bg-gray-50">
+                <td className="px-4 py-2">{resident.name}</td>
+                <td className="px-4 py-2">{resident.room_number || "-"}</td>
+                <td className="px-4 py-2">{resident.admission_date || "-"}</td>
+                <td className="px-4 py-2">{resident.notes || "-"}</td>
+                <td className="px-4 py-2 flex gap-2">
+                  <button
+                    className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+                    onClick={() => handleEdit(resident)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
+                    onClick={() => handleDelete(resident.id)}
+                    disabled={deletingResidentId === resident.id}
+                  >
+                    {deletingResidentId === resident.id ? "Deleting..." : "Delete"}
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
       {editingResident && (
         <EditResidentForm
           resident={editingResident}

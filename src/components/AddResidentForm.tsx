@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { supabase } from '../utils/supabaseClient';
+import { toast } from 'react-hot-toast';
 
 interface AddResidentFormProps {
   onClose: () => void;
@@ -50,19 +51,21 @@ export default function AddResidentForm({ onClose, onAdd }: AddResidentFormProps
       try {
         const { data, error } = await supabase.from('residents').insert([newResident]);
         if (error) {
-          setError(error.message);
+          toast.error(error.message);
           setLoading(false);
           return;
         }
         if (onAdd) onAdd(data?.[0] || newResident);
+        toast.success('Resident added successfully!');
       } catch (err) {
-        setError('Failed to save resident');
+        toast.error('Failed to save resident');
         setLoading(false);
         return;
       }
     } else {
       // If no Supabase, just add to local state
       if (onAdd) onAdd(newResident);
+      toast.success('Resident added successfully!');
     }
     
     setLoading(false);
@@ -267,17 +270,24 @@ export default function AddResidentForm({ onClose, onAdd }: AddResidentFormProps
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+              className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
               disabled={loading}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+              className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
               disabled={loading}
             >
-              {loading ? 'Adding...' : 'Add Resident'}
+              {loading ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  Adding...
+                </>
+              ) : (
+                'Add Resident'
+              )}
             </button>
           </div>
         </form>
