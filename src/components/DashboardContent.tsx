@@ -21,6 +21,7 @@ import PushNotifications from '@/components/PushNotifications';
 import PerformanceMonitor from '@/components/PerformanceMonitor';
 import AIPredictions from '@/components/AIPredictions';
 import EnterpriseDashboard from '@/components/EnterpriseDashboard';
+import AcquisitionHub from '@/components/AcquisitionHub';
 
 export default function DashboardContent() {
   // State for residents data
@@ -54,6 +55,7 @@ export default function DashboardContent() {
   const [showPerformanceMonitor, setShowPerformanceMonitor] = useState(false);
   const [showAIPredictions, setShowAIPredictions] = useState(false);
   const [showEnterpriseDashboard, setShowEnterpriseDashboard] = useState(false);
+  const [showAcquisitionHub, setShowAcquisitionHub] = useState(false);
 
   const handleAddResident = (newResident: any) => {
     setResidents([...residents, newResident]);
@@ -107,6 +109,15 @@ export default function DashboardContent() {
               <div className="flex justify-between items-center">
                 <h2 className="text-lg font-medium text-gray-900">Recent Residents</h2>
                 <div className="flex gap-3 flex-wrap">
+                  <button
+                    onClick={() => setShowAcquisitionHub(true)}
+                    className="px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-md hover:from-green-700 hover:to-emerald-700 transition-colors flex items-center"
+                  >
+                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                    </svg>
+                    Acquisition
+                  </button>
                   <button
                     onClick={() => setShowEnterpriseDashboard(true)}
                     className="px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-md hover:from-indigo-700 hover:to-purple-700 transition-colors flex items-center"
@@ -527,6 +538,12 @@ export default function DashboardContent() {
       <EnterpriseDashboard
         isOpen={showEnterpriseDashboard}
         onClose={() => setShowEnterpriseDashboard(false)}
+      />
+
+      {/* Acquisition Hub */}
+      <AcquisitionHub
+        isOpen={showAcquisitionHub}
+        onClose={() => setShowAcquisitionHub(false)}
       />
     </div>
   );
