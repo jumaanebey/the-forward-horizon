@@ -6,6 +6,7 @@ import { toast } from 'react-hot-toast';
 import ExportButton from './ExportButton';
 import BulkActions from './BulkActions';
 import AdvancedFilters from './AdvancedFilters';
+import ResidentDetailsModal from './ResidentDetailsModal';
 
 interface Resident {
   id: number;
@@ -44,6 +45,7 @@ export default function ResidentsList() {
     hasMedicalConditions: false,
     hasEmergencyContact: false
   });
+  const [selectedResidentForDetails, setSelectedResidentForDetails] = useState<Resident | null>(null);
 
   useEffect(() => {
     fetchResidents();
@@ -128,6 +130,10 @@ export default function ResidentsList() {
         return [...prev, residentId];
       }
     });
+  };
+
+  const handleViewDetails = (resident: Resident) => {
+    setSelectedResidentForDetails(resident);
   };
 
   const filteredResidents = residents.filter(resident => {
@@ -242,6 +248,12 @@ export default function ResidentsList() {
                 <td className="px-4 py-2">{resident.notes || "-"}</td>
                 <td className="px-4 py-2 flex gap-2">
                   <button
+                    className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 transition-colors"
+                    onClick={() => handleViewDetails(resident)}
+                  >
+                    View
+                  </button>
+                  <button
                     className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
                     onClick={() => handleEdit(resident)}
                   >
@@ -269,6 +281,14 @@ export default function ResidentsList() {
       )}
       {editError && <div className="text-red-600 mt-2">{editError}</div>}
       {deleteError && <div className="text-red-600 mt-2">{deleteError}</div>}
+      
+      {/* Resident Details Modal */}
+      {selectedResidentForDetails && (
+        <ResidentDetailsModal
+          resident={selectedResidentForDetails}
+          onClose={() => setSelectedResidentForDetails(null)}
+        />
+      )}
     </div>
   );
 } 
