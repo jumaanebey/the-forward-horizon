@@ -9,6 +9,9 @@ import ProgressTrackingModal from '@/components/ProgressTrackingModal';
 import DashboardStats from '@/components/DashboardStats';
 import ReportsPanel from '@/components/ReportsPanel';
 import IntegrationPanel from '@/components/IntegrationPanel';
+import PaymentTracking from '@/components/PaymentTracking';
+import SchedulingSystem from '@/components/SchedulingSystem';
+import AdvancedAnalytics from '@/components/AdvancedAnalytics';
 
 export default function DashboardContent() {
   // State for residents data
@@ -22,7 +25,7 @@ export default function DashboardContent() {
   const [showEditForm, setShowEditForm] = useState(false);
   const [editingResident, setEditingResident] = useState(null);
   const [showMedicalRecords, setShowMedicalRecords] = useState(false);
-  const [selectedResident, setSelectedResident] = useState(null);
+  const [selectedResident, setSelectedResident] = useState<any>(null);
   const [showPaymentTracking, setShowPaymentTracking] = useState(false);
   const [paymentResident, setPaymentResident] = useState(null);
   const [showDisciplinary, setShowDisciplinary] = useState(false);
@@ -31,6 +34,8 @@ export default function DashboardContent() {
   const [progressResident, setProgressResident] = useState(null);
   const [showReportsPanel, setShowReportsPanel] = useState(false);
   const [showIntegrationPanel, setShowIntegrationPanel] = useState(false);
+  const [showSchedulingSystem, setShowSchedulingSystem] = useState(false);
+  const [showAdvancedAnalytics, setShowAdvancedAnalytics] = useState(false);
 
   const handleAddResident = (newResident: any) => {
     setResidents([...residents, newResident]);
@@ -83,7 +88,34 @@ export default function DashboardContent() {
             <div className="px-6 py-4 border-b border-gray-200">
               <div className="flex justify-between items-center">
                 <h2 className="text-lg font-medium text-gray-900">Recent Residents</h2>
-                <div className="flex gap-3">
+                <div className="flex gap-3 flex-wrap">
+                  <button
+                    onClick={() => setShowAdvancedAnalytics(true)}
+                    className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors flex items-center"
+                  >
+                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                    Analytics
+                  </button>
+                  <button
+                    onClick={() => setShowSchedulingSystem(true)}
+                    className="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-colors flex items-center"
+                  >
+                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    Schedule
+                  </button>
+                  <button
+                    onClick={() => setShowPaymentTracking(true)}
+                    className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors flex items-center"
+                  >
+                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                    </svg>
+                    Payments
+                  </button>
                   <button
                     onClick={() => setShowIntegrationPanel(true)}
                     className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors flex items-center"
@@ -322,6 +354,25 @@ export default function DashboardContent() {
       <IntegrationPanel
         isOpen={showIntegrationPanel}
         onClose={() => setShowIntegrationPanel(false)}
+      />
+
+      {/* Payment Tracking */}
+      <PaymentTracking
+        resident={selectedResident}
+        isOpen={showPaymentTracking}
+        onClose={() => setShowPaymentTracking(false)}
+      />
+
+      {/* Scheduling System */}
+      <SchedulingSystem
+        isOpen={showSchedulingSystem}
+        onClose={() => setShowSchedulingSystem(false)}
+      />
+
+      {/* Advanced Analytics */}
+      <AdvancedAnalytics
+        isOpen={showAdvancedAnalytics}
+        onClose={() => setShowAdvancedAnalytics(false)}
       />
     </div>
   );
