@@ -14,7 +14,7 @@ export default function Home() {
   const renderContent = () => {
     switch (activeTab) {
       case 'dashboard':
-        return <ModernDashboard />;
+        return <ModernDashboard onNavigate={setActiveTab} />;
       case 'residents':
         return <ResidentManagement />;
       case 'programs':
@@ -26,7 +26,7 @@ export default function Home() {
       case 'calendar':
         return <CalendarScheduling />;
       default:
-        return <ModernDashboard />;
+        return <ModernDashboard onNavigate={setActiveTab} />;
     }
   };
 

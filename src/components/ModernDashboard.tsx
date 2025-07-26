@@ -19,7 +19,11 @@ interface Activity {
   user?: string;
 }
 
-export default function ModernDashboard() {
+interface ModernDashboardProps {
+  onNavigate?: (tab: string) => void;
+}
+
+export default function ModernDashboard({ onNavigate }: ModernDashboardProps) {
   const [metrics, setMetrics] = useState<MetricCard[]>([]);
   const [recentActivity, setRecentActivity] = useState<Activity[]>([]);
   const [loading, setLoading] = useState(true);
@@ -265,7 +269,10 @@ export default function ModernDashboard() {
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
               <div className="space-y-3">
-                <button className="w-full flex items-center p-3 text-left border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                <button 
+                  onClick={() => onNavigate?.('residents')}
+                  className="w-full flex items-center p-3 text-left border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                >
                   <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
                     <span className="text-blue-600 text-sm">👤</span>
                   </div>
@@ -275,7 +282,10 @@ export default function ModernDashboard() {
                   </div>
                 </button>
                 
-                <button className="w-full flex items-center p-3 text-left border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                <button 
+                  onClick={() => onNavigate?.('reports')}
+                  className="w-full flex items-center p-3 text-left border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                >
                   <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mr-3">
                     <span className="text-green-600 text-sm">📊</span>
                   </div>
@@ -285,7 +295,10 @@ export default function ModernDashboard() {
                   </div>
                 </button>
                 
-                <button className="w-full flex items-center p-3 text-left border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                <button 
+                  onClick={() => onNavigate?.('calendar')}
+                  className="w-full flex items-center p-3 text-left border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                >
                   <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
                     <span className="text-purple-600 text-sm">📅</span>
                   </div>

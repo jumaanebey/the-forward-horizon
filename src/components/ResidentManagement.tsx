@@ -381,6 +381,15 @@ export default function ResidentManagement() {
                         >
                           View Details
                         </button>
+                        <button
+                          onClick={() => {
+                            const updatedResidents = residents.filter(r => r.id !== resident.id);
+                            setResidents(updatedResidents);
+                          }}
+                          className="text-red-600 hover:text-red-900"
+                        >
+                          Delete
+                        </button>
                       </td>
                     </tr>
                   ))}
@@ -564,11 +573,11 @@ export default function ResidentManagement() {
           </div>
         )}
 
-        {/* Add Resident Form Placeholder */}
+        {/* Add Resident Form */}
         {showAddForm && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-xl w-full max-w-md p-6">
-              <div className="flex justify-between items-center mb-4">
+            <div className="bg-white rounded-xl w-full max-w-2xl max-h-[90vh] overflow-hidden">
+              <div className="flex justify-between items-center p-6 border-b">
                 <h2 className="text-xl font-bold text-gray-900">Add New Resident</h2>
                 <button
                   onClick={() => setShowAddForm(false)}
@@ -579,19 +588,160 @@ export default function ResidentManagement() {
                   </svg>
                 </button>
               </div>
-              <div className="text-center py-8">
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-blue-600 text-2xl">👤</span>
+              <form 
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const formData = new FormData(e.currentTarget);
+                  const newResident: Resident = {
+                    id: (residents.length + 1).toString(),
+                    firstName: formData.get('firstName') as string,
+                    lastName: formData.get('lastName') as string,
+                    email: formData.get('email') as string,
+                    phone: formData.get('phone') as string,
+                    dateOfBirth: formData.get('dateOfBirth') as string,
+                    admissionDate: new Date().toISOString().split('T')[0],
+                    room: formData.get('room') as string,
+                    program: formData.get('program') as string,
+                    status: 'Pending',
+                    emergencyContact: {
+                      name: formData.get('emergencyName') as string,
+                      relationship: formData.get('emergencyRelationship') as string,
+                      phone: formData.get('emergencyPhone') as string,
+                    },
+                    medicalInfo: {
+                      allergies: [],
+                      medications: [],
+                      conditions: []
+                    },
+                    progressNotes: []
+                  };
+                  setResidents([...residents, newResident]);
+                  setShowAddForm(false);
+                }}
+                className="p-6 overflow-y-auto max-h-[70vh]"
+              >
+                <div className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">First Name *</label>
+                      <input
+                        type="text"
+                        name="firstName"
+                        required
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Last Name *</label>
+                      <input
+                        type="text"
+                        name="lastName"
+                        required
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                      <input
+                        type="email"
+                        name="email"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                      <input
+                        type="tel"
+                        name="phone"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
+                      <input
+                        type="date"
+                        name="dateOfBirth"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Room Assignment</label>
+                      <input
+                        type="text"
+                        name="room"
+                        placeholder="e.g., A-101"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Program *</label>
+                    <select
+                      name="program"
+                      required
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="">Select a program</option>
+                      <option value="30-Day Detox Program">30-Day Detox Program</option>
+                      <option value="60-Day Intensive Program">60-Day Intensive Program</option>
+                      <option value="90-Day Recovery Program">90-Day Recovery Program</option>
+                    </select>
+                  </div>
+
+                  <div className="border-t pt-6">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Emergency Contact</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Contact Name</label>
+                        <input
+                          type="text"
+                          name="emergencyName"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Relationship</label>
+                        <input
+                          type="text"
+                          name="emergencyRelationship"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                    </div>
+                    <div className="mt-4">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Contact Phone</label>
+                      <input
+                        type="tel"
+                        name="emergencyPhone"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end space-x-4 pt-6 border-t">
+                    <button
+                      type="button"
+                      onClick={() => setShowAddForm(false)}
+                      className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                    >
+                      Add Resident
+                    </button>
+                  </div>
                 </div>
-                <h3 className="text-lg font-medium text-gray-900 mb-2">Add Resident Form</h3>
-                <p className="text-gray-600 mb-6">Comprehensive resident intake form coming soon...</p>
-                <button
-                  onClick={() => setShowAddForm(false)}
-                  className="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
-                >
-                  Close
-                </button>
-              </div>
+              </form>
             </div>
           </div>
         )}
