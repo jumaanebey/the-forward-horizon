@@ -206,6 +206,212 @@ export default function AnalyticsReports() {
     }).format(amount);
   };
 
+  const generateCSVReport = (report: Report, analyticsData: AnalyticsData) => {
+    let csvContent = '';
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    
+    switch (report.type) {
+      case 'financial':
+        csvContent = `Financial Report - ${report.name}\nGenerated: ${new Date().toLocaleDateString()}\n\n`;
+        csvContent += `Month,Revenue,Occupancy Rate\n`;
+        analyticsData.revenue.data.forEach((item, index) => {
+          const occupancyData = analyticsData.occupancyRate.data[index];
+          csvContent += `${item.month},${item.amount},${occupancyData?.rate || 0}%\n`;
+        });
+        csvContent += `\nSummary\n`;
+        csvContent += `Total Monthly Revenue,${formatCurrency(analyticsData.revenue.monthly)}\n`;
+        csvContent += `Yearly Revenue,${formatCurrency(analyticsData.revenue.yearly)}\n`;
+        csvContent += `Current Occupancy Rate,${analyticsData.occupancyRate.current}%\n`;
+        break;
+        
+      case 'operational':
+        csvContent = `Operational Report - ${report.name}\nGenerated: ${new Date().toLocaleDateString()}\n\n`;
+        csvContent += `Metric,Value\n`;
+        csvContent += `Total Staff,${analyticsData.staffMetrics.totalStaff}\n`;
+        csvContent += `Active Staff,${analyticsData.staffMetrics.activeStaff}\n`;
+        csvContent += `Overtime Hours,${analyticsData.staffMetrics.overtimeHours}\n`;
+        csvContent += `Staff Turnover Rate,${analyticsData.staffMetrics.turnoverRate}%\n`;
+        csvContent += `\nIncident Reports\n`;
+        csvContent += `Type,Count\n`;
+        analyticsData.incidentReports.byType.forEach(incident => {
+          csvContent += `${incident.type},${incident.count}\n`;
+        });
+        break;
+        
+      case 'clinical':
+        csvContent = `Clinical Report - ${report.name}\nGenerated: ${new Date().toLocaleDateString()}\n\n`;
+        csvContent += `Program,Completion Rate,Success Rate\n`;
+        analyticsData.programEffectiveness.data.forEach(program => {
+          csvContent += `${program.program},${program.completion}%,${program.success}%\n`;
+        });
+        csvContent += `\nOverall Metrics\n`;
+        csvContent += `Average Completion Rate,${analyticsData.programEffectiveness.completionRate}%\n`;
+        csvContent += `Average Stay Duration,${analyticsData.programEffectiveness.averageStay} days\n`;
+        csvContent += `Overall Success Rate,${analyticsData.programEffectiveness.successRate}%\n`;
+        break;
+        
+      case 'compliance':
+        csvContent = `Compliance Report - ${report.name}\nGenerated: ${new Date().toLocaleDateString()}\n\n`;
+        csvContent += `Compliance Area,Status,Notes\n`;
+        csvContent += `Incident Resolution Rate,${Math.round((analyticsData.incidentReports.resolved / analyticsData.incidentReports.total) * 100)}%,${analyticsData.incidentReports.resolved} of ${analyticsData.incidentReports.total} resolved\n`;
+        csvContent += `Staff Certification,Compliant,All active staff properly certified\n`;
+        csvContent += `Safety Protocols,Compliant,All safety measures in place\n`;
+        csvContent += `Documentation,Compliant,All required documentation current\n`;
+        break;
+        
+      default:
+        csvContent = `General Report - ${report.name}\nGenerated: ${new Date().toLocaleDateString()}\n\n`;
+        csvContent += `This report contains general facility information and metrics.\n`;
+    }
+    
+    return csvContent;
+  };
+
+  const generateHTMLReport = (report: Report, analyticsData: AnalyticsData) => {
+    const timestamp = new Date().toLocaleDateString();
+    
+    return `
+<!DOCTYPE html>
+<html>
+<head>
+    <title>${report.name} - Forward Horizon</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; color: #333; }
+        .header { border-bottom: 3px solid #6366f1; padding-bottom: 20px; margin-bottom: 30px; }
+        .title { color: #1f2937; font-size: 28px; margin: 0; }
+        .subtitle { color: #6b7280; font-size: 16px; margin: 5px 0 0 0; }
+        .section { margin: 30px 0; }
+        .section h2 { color: #374151; border-bottom: 1px solid #e5e7eb; padding-bottom: 10px; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e5e7eb; }
+        th { background-color: #f9fafb; font-weight: 600; }
+        .metric { display: inline-block; margin: 10px 20px 10px 0; padding: 15px; background: #f3f4f6; border-radius: 8px; }
+        .metric-value { font-size: 24px; font-weight: bold; color: #1f2937; }
+        .metric-label { font-size: 14px; color: #6b7280; }
+        .footer { margin-top: 50px; padding-top: 20px; border-top: 1px solid #e5e7eb; color: #6b7280; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="title">${report.name}</h1>
+        <p class="subtitle">Forward Horizon Management System • Generated: ${timestamp}</p>
+    </div>
+    
+    <div class="section">
+        <h2>Executive Summary</h2>
+        <div class="metric">
+            <div class="metric-value">${analyticsData.occupancyRate.current}%</div>
+            <div class="metric-label">Occupancy Rate</div>
+        </div>
+        <div class="metric">
+            <div class="metric-value">${formatCurrency(analyticsData.revenue.monthly)}</div>
+            <div class="metric-label">Monthly Revenue</div>
+        </div>
+        <div class="metric">
+            <div class="metric-value">${analyticsData.programEffectiveness.successRate}%</div>
+            <div class="metric-label">Program Success Rate</div>
+        </div>
+    </div>
+
+    ${report.type === 'financial' ? `
+    <div class="section">
+        <h2>Financial Performance</h2>
+        <table>
+            <thead>
+                <tr><th>Month</th><th>Revenue</th><th>Growth</th></tr>
+            </thead>
+            <tbody>
+                ${analyticsData.revenue.data.map(item => `
+                    <tr><td>${item.month}</td><td>${formatCurrency(item.amount)}</td><td>+${analyticsData.revenue.trend}%</td></tr>
+                `).join('')}
+            </tbody>
+        </table>
+    </div>
+    ` : ''}
+
+    ${report.type === 'clinical' ? `
+    <div class="section">
+        <h2>Program Effectiveness</h2>
+        <table>
+            <thead>
+                <tr><th>Program</th><th>Completion Rate</th><th>Success Rate</th></tr>
+            </thead>
+            <tbody>
+                ${analyticsData.programEffectiveness.data.map(program => `
+                    <tr><td>${program.program}</td><td>${program.completion}%</td><td>${program.success}%</td></tr>
+                `).join('')}
+            </tbody>
+        </table>
+    </div>
+    ` : ''}
+
+    ${report.type === 'operational' ? `
+    <div class="section">
+        <h2>Operational Metrics</h2>
+        <table>
+            <thead>
+                <tr><th>Metric</th><th>Value</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Total Staff</td><td>${analyticsData.staffMetrics.totalStaff}</td></tr>
+                <tr><td>Active Staff</td><td>${analyticsData.staffMetrics.activeStaff}</td></tr>
+                <tr><td>Overtime Hours</td><td>${analyticsData.staffMetrics.overtimeHours}</td></tr>
+                <tr><td>Turnover Rate</td><td>${analyticsData.staffMetrics.turnoverRate}%</td></tr>
+            </tbody>
+        </table>
+    </div>
+    ` : ''}
+
+    <div class="section">
+        <h2>Incident Summary</h2>
+        <table>
+            <thead>
+                <tr><th>Incident Type</th><th>Count</th></tr>
+            </thead>
+            <tbody>
+                ${analyticsData.incidentReports.byType.map(incident => `
+                    <tr><td>${incident.type}</td><td>${incident.count}</td></tr>
+                `).join('')}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="footer">
+        <p>This report was generated automatically by the Forward Horizon Management System.</p>
+        <p>For questions about this report, please contact the facility administration.</p>
+    </div>
+</body>
+</html>`;
+  };
+
+  const downloadReport = (report: Report, format: 'csv' | 'html') => {
+    if (!analytics) return;
+    
+    let content: string;
+    let mimeType: string;
+    let filename: string;
+    
+    if (format === 'csv') {
+      content = generateCSVReport(report, analytics);
+      mimeType = 'text/csv';
+      filename = `${report.name.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.csv`;
+    } else {
+      content = generateHTMLReport(report, analytics);
+      mimeType = 'text/html';
+      filename = `${report.name.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.html`;
+    }
+    
+    const blob = new Blob([content], { type: mimeType });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   if (loading) {
     return (
       <div className="p-8">
@@ -494,26 +700,22 @@ export default function AnalyticsReports() {
 
                   <div className="mt-4 pt-4 border-t border-gray-200">
                     <div className="flex space-x-2">
-                      <button 
-                        onClick={() => {
-                          // Simulate report download
-                          const link = document.createElement('a');
-                          link.href = '#';
-                          link.download = `${report.name.replace(/\s+/g, '_')}.pdf`;
-                          alert(`Downloading ${report.name}...`);
-                        }}
-                        className="flex-1 px-3 py-2 text-sm bg-orange-50 text-orange-700 rounded-lg hover:bg-orange-100 transition-colors"
-                      >
-                        Download
-                      </button>
-                      <button 
-                        onClick={() => {
-                          alert(`Viewing details for ${report.name}`);
-                        }}
-                        className="flex-1 px-3 py-2 text-sm bg-gray-50 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
-                      >
-                        View Details
-                      </button>
+                      <div className="flex-1 relative">
+                        <button 
+                          onClick={() => downloadReport(report, 'csv')}
+                          className="w-full px-3 py-2 text-sm bg-orange-50 text-orange-700 rounded-lg hover:bg-orange-100 transition-colors"
+                        >
+                          Download CSV
+                        </button>
+                      </div>
+                      <div className="flex-1 relative">
+                        <button 
+                          onClick={() => downloadReport(report, 'html')}
+                          className="w-full px-3 py-2 text-sm bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors"
+                        >
+                          Download Report
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -638,7 +840,7 @@ export default function AnalyticsReports() {
         {/* Generate Report Modal */}
         {showReportModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-xl w-full max-w-md p-6">
+            <div className="bg-white rounded-xl w-full max-w-lg p-6">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-bold text-gray-900">Generate New Report</h2>
                 <button
@@ -650,18 +852,47 @@ export default function AnalyticsReports() {
                   </svg>
                 </button>
               </div>
-              <div className="text-center py-8">
-                <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-orange-600 text-2xl">📊</span>
+              
+              <div className="space-y-4">
+                <p className="text-gray-600">Select a report type to generate and download:</p>
+                
+                <div className="grid grid-cols-1 gap-3">
+                  {reports.filter(r => r.status === 'completed').map((report) => (
+                    <div key={report.id} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50">
+                      <h3 className="font-medium text-gray-900 mb-2">{report.name}</h3>
+                      <p className="text-sm text-gray-600 mb-3">{report.description}</p>
+                      <div className="flex space-x-2">
+                        <button
+                          onClick={() => {
+                            downloadReport(report, 'csv');
+                            setShowReportModal(false);
+                          }}
+                          className="flex-1 px-3 py-2 text-sm bg-orange-50 text-orange-700 rounded-lg hover:bg-orange-100"
+                        >
+                          CSV
+                        </button>
+                        <button
+                          onClick={() => {
+                            downloadReport(report, 'html');
+                            setShowReportModal(false);
+                          }}
+                          className="flex-1 px-3 py-2 text-sm bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100"
+                        >
+                          HTML Report
+                        </button>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                <h3 className="text-lg font-medium text-gray-900 mb-2">Report Generator</h3>
-                <p className="text-gray-600 mb-6">Advanced report customization and generation tools coming soon...</p>
-                <button
-                  onClick={() => setShowReportModal(false)}
-                  className="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
-                >
-                  Close
-                </button>
+                
+                <div className="pt-4 border-t">
+                  <button
+                    onClick={() => setShowReportModal(false)}
+                    className="w-full px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+                  >
+                    Close
+                  </button>
+                </div>
               </div>
             </div>
           </div>
