@@ -23,8 +23,12 @@ export default function ModernDashboard() {
   const [metrics, setMetrics] = useState<MetricCard[]>([]);
   const [recentActivity, setRecentActivity] = useState<Activity[]>([]);
   const [loading, setLoading] = useState(true);
+  const [currentDate, setCurrentDate] = useState<Date | null>(null);
 
   useEffect(() => {
+    // Set current date on client side to avoid SSR hydration mismatch
+    setCurrentDate(new Date());
+    
     // Simulate data loading
     setTimeout(() => {
       setMetrics([
@@ -115,7 +119,7 @@ export default function ModernDashboard() {
 
       setLoading(false);
     }, 1000);
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const getMetricColorClasses = (color: string) => {
     const colors = {
@@ -173,8 +177,18 @@ export default function ModernDashboard() {
             </div>
             <div className="flex items-center space-x-4">
               <div className="text-right">
-                <p className="text-sm font-medium text-gray-900">{new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
-                <p className="text-xs text-gray-500">{new Date().tolocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</p>
+                {currentDate ? (
+                  <>
+                    <p className="text-sm font-medium text-gray-900">
+                      {currentDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      {currentDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
+                    </p>
+                  </>
+                ) : (
+                  <div className="h-8 w-32 bg-gray-200 animate-pulse rounded"></div>
+                )}
               </div>
             </div>
           </div>
