@@ -124,6 +124,58 @@ export default function CalendarScheduling() {
           location: 'Family Room',
           status: 'scheduled',
           priority: 'high'
+        },
+        {
+          id: '7',
+          title: 'Monthly Board Meeting',
+          description: 'Monthly board of directors meeting',
+          type: 'meeting',
+          startTime: '14:00',
+          endTime: '16:00',
+          date: '2024-01-28',
+          attendees: ['Board Members', 'Angela Davis'],
+          location: 'Main Conference Room',
+          status: 'scheduled',
+          priority: 'high'
+        },
+        {
+          id: '8',
+          title: 'New Resident Orientation',
+          description: 'Orientation for new admissions',
+          type: 'group',
+          startTime: '09:00',
+          endTime: '12:00',
+          date: '2024-01-29',
+          attendees: ['New Residents', 'Orientation Team'],
+          location: 'Orientation Room',
+          status: 'scheduled',
+          priority: 'medium'
+        },
+        {
+          id: '9',
+          title: 'Medical Reviews',
+          description: 'Weekly medical case reviews',
+          type: 'medical',
+          startTime: '10:00',
+          endTime: '11:30',
+          date: '2024-01-30',
+          attendees: ['Dr. Sarah Johnson', 'Medical Team'],
+          location: 'Medical Conference Room',
+          status: 'scheduled',
+          priority: 'high'
+        },
+        {
+          id: '10',
+          title: 'Community Outreach Event',
+          description: 'Local community engagement activity',
+          type: 'activity',
+          startTime: '13:00',
+          endTime: '17:00',
+          date: '2024-01-31',
+          attendees: ['Volunteers', 'Community Team'],
+          location: 'Community Center',
+          status: 'scheduled',
+          priority: 'medium'
         }
       ];
 
@@ -232,6 +284,61 @@ export default function CalendarScheduling() {
     }
   };
 
+  const navigateToEventDate = (eventDate: string) => {
+    const eventDateObj = new Date(eventDate);
+    setSelectedDate(eventDateObj);
+    setActiveTab('calendar');
+    
+    // Scroll to the calendar section
+    setTimeout(() => {
+      const calendarSection = document.getElementById('calendar-grid');
+      if (calendarSection) {
+        calendarSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
+  };
+
+  const formatDateForCalendar = (date: Date) => {
+    return date.toISOString().split('T')[0];
+  };
+
+  const isToday = (date: Date) => {
+    const today = new Date();
+    return formatDateForCalendar(date) === formatDateForCalendar(today);
+  };
+
+  const isSameDate = (date1: Date, date2: Date) => {
+    return formatDateForCalendar(date1) === formatDateForCalendar(date2);
+  };
+
+  const getEventsForDate = (date: Date) => {
+    const dateString = formatDateForCalendar(date);
+    return events.filter(event => event.date === dateString);
+  };
+
+  const getDaysInMonth = (date: Date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startingDayOfWeek = firstDay.getDay();
+    
+    const days = [];
+    
+    // Add empty cells for days before the first day of the month
+    for (let i = 0; i < startingDayOfWeek; i++) {
+      days.push(null);
+    }
+    
+    // Add all days of the month
+    for (let day = 1; day <= daysInMonth; day++) {
+      days.push(new Date(year, month, day));
+    }
+    
+    return days;
+  };
+
   const formatTime = (time: string) => {
     const [hours, minutes] = time.split(':');
     const hour = parseInt(hours);
@@ -240,8 +347,8 @@ export default function CalendarScheduling() {
     return `${displayHour}:${minutes} ${ampm}`;
   };
 
-  const todayEvents = events.filter(event => 
-    event.date === currentDate?.toISOString().split('T')[0]
+  const selectedDateEvents = events.filter(event => 
+    event.date === formatDateForCalendar(selectedDate)
   ).sort((a, b) => a.startTime.localeCompare(b.startTime));
 
   const upcomingAppointments = appointments.filter(apt => 
@@ -393,18 +500,18 @@ export default function CalendarScheduling() {
               <div className="px-6 py-4 border-b border-gray-200">
                 <div className="flex justify-between items-center">
                   <h2 className="text-lg font-semibold text-gray-900">
-                    Today's Schedule - {currentDate?.toLocaleDateString('en-US', { 
+                    {isSameDate(selectedDate, new Date()) ? "Today's Schedule" : "Selected Date Schedule"} - {selectedDate.toLocaleDateString('en-US', { 
                       weekday: 'long', 
                       year: 'numeric', 
                       month: 'long', 
                       day: 'numeric' 
                     })}
                   </h2>
-                  <div className="text-sm text-gray-500">{todayEvents.length} events</div>
+                  <div className="text-sm text-gray-500">{selectedDateEvents.length} events</div>
                 </div>
               </div>
               <div className="p-6">
-                {todayEvents.length === 0 ? (
+                {selectedDateEvents.length === 0 ? (
                   <div className="text-center py-8">
                     <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                       <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -412,11 +519,11 @@ export default function CalendarScheduling() {
                       </svg>
                     </div>
                     <h3 className="text-lg font-medium text-gray-900 mb-2">No events scheduled</h3>
-                    <p className="text-gray-500">Your calendar is clear for today</p>
+                    <p className="text-gray-500">No events scheduled for this date</p>
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    {todayEvents.map((event) => (
+                    {selectedDateEvents.map((event) => (
                       <div 
                         key={event.id} 
                         className={`p-4 rounded-lg border-l-4 cursor-pointer hover:shadow-md transition-shadow ${getEventTypeColor(event.type)}`}
@@ -455,6 +562,109 @@ export default function CalendarScheduling() {
                     ))}
                   </div>
                 )}
+              </div>
+            </div>
+
+            {/* Calendar Grid */}
+            <div id="calendar-grid" className="bg-white rounded-xl shadow-sm border border-gray-200">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <div className="flex justify-between items-center">
+                  <h2 className="text-lg font-semibold text-gray-900">
+                    {selectedDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+                  </h2>
+                  <div className="flex items-center space-x-2">
+                    <button
+                      onClick={() => {
+                        const prevMonth = new Date(selectedDate);
+                        prevMonth.setMonth(prevMonth.getMonth() - 1);
+                        setSelectedDate(prevMonth);
+                      }}
+                      className="p-2 hover:bg-gray-100 rounded-lg"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                      </svg>
+                    </button>
+                    <button
+                      onClick={() => setSelectedDate(new Date())}
+                      className="px-3 py-1 text-sm bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-100"
+                    >
+                      Today
+                    </button>
+                    <button
+                      onClick={() => {
+                        const nextMonth = new Date(selectedDate);
+                        nextMonth.setMonth(nextMonth.getMonth() + 1);
+                        setSelectedDate(nextMonth);
+                      }}
+                      className="p-2 hover:bg-gray-100 rounded-lg"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="p-6">
+                {/* Calendar Header */}
+                <div className="grid grid-cols-7 gap-1 mb-4">
+                  {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
+                    <div key={day} className="p-2 text-center text-sm font-medium text-gray-500">
+                      {day}
+                    </div>
+                  ))}
+                </div>
+                
+                {/* Calendar Days */}
+                <div className="grid grid-cols-7 gap-1">
+                  {getDaysInMonth(selectedDate).map((day, index) => {
+                    if (!day) {
+                      return <div key={index} className="h-24"></div>;
+                    }
+                    
+                    const dayEvents = getEventsForDate(day);
+                    const isSelected = isSameDate(day, selectedDate);
+                    const isTodayDate = isToday(day);
+                    
+                    return (
+                      <div
+                        key={index}
+                        onClick={() => setSelectedDate(day)}
+                        className={`h-24 p-2 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 ${
+                          isSelected ? 'bg-indigo-50 border-indigo-200' : ''
+                        } ${isTodayDate ? 'bg-blue-50 border-blue-200' : ''}`}
+                      >
+                        <div className={`text-sm font-medium mb-1 ${
+                          isTodayDate ? 'text-blue-600' : 
+                          isSelected ? 'text-indigo-600' : 'text-gray-900'
+                        }`}>
+                          {day.getDate()}
+                        </div>
+                        <div className="space-y-1">
+                          {dayEvents.slice(0, 2).map((event) => (
+                            <div
+                              key={event.id}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedEvent(event);
+                              }}
+                              className={`text-xs p-1 rounded truncate cursor-pointer hover:opacity-80 ${getEventTypeColor(event.type)}`}
+                            >
+                              {event.title}
+                            </div>
+                          ))}
+                          {dayEvents.length > 2 && (
+                            <div className="text-xs text-gray-500 p-1">
+                              +{dayEvents.length - 2} more
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           </div>
