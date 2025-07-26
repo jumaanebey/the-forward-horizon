@@ -508,10 +508,26 @@ export default function CalendarScheduling() {
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <button className="text-indigo-600 hover:text-indigo-900 mr-3">
+                        <button 
+                          onClick={() => {
+                            // For now, just show an alert - could open edit modal in future
+                            alert(`Edit appointment for ${appointment.residentName}`);
+                          }}
+                          className="text-indigo-600 hover:text-indigo-900 mr-3"
+                        >
                           Edit
                         </button>
-                        <button className="text-red-600 hover:text-red-900">
+                        <button 
+                          onClick={() => {
+                            const updatedAppointments = appointments.map(apt => 
+                              apt.id === appointment.id 
+                                ? { ...apt, status: 'cancelled' as const }
+                                : apt
+                            );
+                            setAppointments(updatedAppointments);
+                          }}
+                          className="text-red-600 hover:text-red-900"
+                        >
                           Cancel
                         </button>
                       </td>

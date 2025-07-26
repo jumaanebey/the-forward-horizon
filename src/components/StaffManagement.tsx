@@ -760,11 +760,11 @@ export default function StaffManagement() {
           </div>
         )}
 
-        {/* Add Staff Form Placeholder */}
+        {/* Add Staff Form */}
         {showAddForm && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-xl w-full max-w-md p-6">
-              <div className="flex justify-between items-center mb-4">
+            <div className="bg-white rounded-xl w-full max-w-2xl max-h-[90vh] overflow-hidden">
+              <div className="flex justify-between items-center p-6 border-b">
                 <h2 className="text-xl font-bold text-gray-900">Add New Staff Member</h2>
                 <button
                   onClick={() => setShowAddForm(false)}
@@ -775,19 +775,151 @@ export default function StaffManagement() {
                   </svg>
                 </button>
               </div>
-              <div className="text-center py-8">
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-green-600 text-2xl">👨‍⚕️</span>
+              <form 
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const formData = new FormData(e.currentTarget);
+                  const newStaff: Staff = {
+                    id: (staff.length + 1).toString(),
+                    firstName: formData.get('firstName') as string,
+                    lastName: formData.get('lastName') as string,
+                    email: formData.get('email') as string,
+                    phone: formData.get('phone') as string,
+                    position: formData.get('position') as string,
+                    department: formData.get('department') as Staff['department'],
+                    status: 'Active',
+                    hireDate: new Date().toISOString().split('T')[0],
+                    certifications: [],
+                    schedule: {
+                      monday: 'Off',
+                      tuesday: 'Off',
+                      wednesday: 'Off',
+                      thursday: 'Off',
+                      friday: 'Off',
+                      saturday: 'Off',
+                      sunday: 'Off'
+                    },
+                    contactInfo: {
+                      emergencyContact: formData.get('emergencyName') as string,
+                      emergencyPhone: formData.get('emergencyPhone') as string,
+                    },
+                    assignments: []
+                  };
+                  setStaff([...staff, newStaff]);
+                  setShowAddForm(false);
+                }}
+                className="p-6 overflow-y-auto max-h-[70vh]"
+              >
+                <div className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">First Name *</label>
+                      <input
+                        type="text"
+                        name="firstName"
+                        required
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Last Name *</label>
+                      <input
+                        type="text"
+                        name="lastName"
+                        required
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Email *</label>
+                      <input
+                        type="email"
+                        name="email"
+                        required
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                      <input
+                        type="tel"
+                        name="phone"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Position *</label>
+                      <input
+                        type="text"
+                        name="position"
+                        required
+                        placeholder="e.g., Registered Nurse"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Department *</label>
+                      <select
+                        name="department"
+                        required
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                      >
+                        <option value="">Select department</option>
+                        <option value="Medical">Medical</option>
+                        <option value="Administration">Administration</option>
+                        <option value="Counseling">Counseling</option>
+                        <option value="Nursing">Nursing</option>
+                        <option value="Security">Security</option>
+                        <option value="Maintenance">Maintenance</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="border-t pt-6">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Emergency Contact</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Contact Name</label>
+                        <input
+                          type="text"
+                          name="emergencyName"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Contact Phone</label>
+                        <input
+                          type="tel"
+                          name="emergencyPhone"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end space-x-4 pt-6 border-t">
+                    <button
+                      type="button"
+                      onClick={() => setShowAddForm(false)}
+                      className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                    >
+                      Add Staff
+                    </button>
+                  </div>
                 </div>
-                <h3 className="text-lg font-medium text-gray-900 mb-2">Staff Registration Form</h3>
-                <p className="text-gray-600 mb-6">Comprehensive staff onboarding form coming soon...</p>
-                <button
-                  onClick={() => setShowAddForm(false)}
-                  className="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
-                >
-                  Close
-                </button>
-              </div>
+              </form>
             </div>
           </div>
         )}

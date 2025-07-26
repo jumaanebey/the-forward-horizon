@@ -604,11 +604,11 @@ export default function ProgramManagement() {
           </div>
         )}
 
-        {/* Create Program Form Placeholder */}
+        {/* Create Program Form */}
         {showCreateForm && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-xl w-full max-w-md p-6">
-              <div className="flex justify-between items-center mb-4">
+            <div className="bg-white rounded-xl w-full max-w-2xl max-h-[90vh] overflow-hidden">
+              <div className="flex justify-between items-center p-6 border-b">
                 <h2 className="text-xl font-bold text-gray-900">Create New Program</h2>
                 <button
                   onClick={() => setShowCreateForm(false)}
@@ -619,19 +619,118 @@ export default function ProgramManagement() {
                   </svg>
                 </button>
               </div>
-              <div className="text-center py-8">
-                <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-purple-600 text-2xl">📋</span>
+              <form 
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const formData = new FormData(e.currentTarget);
+                  const newProgram: Program = {
+                    id: (programs.length + 1).toString(),
+                    name: formData.get('name') as string,
+                    description: formData.get('description') as string,
+                    duration: parseInt(formData.get('duration') as string),
+                    type: formData.get('type') as Program['type'],
+                    status: 'Active',
+                    capacity: parseInt(formData.get('capacity') as string),
+                    currentEnrollment: 0,
+                    createdDate: new Date().toISOString().split('T')[0],
+                    requirements: [(formData.get('requirements') as string || '').split('\n').filter(r => r.trim())].flat(),
+                    milestones: []
+                  };
+                  setPrograms([...programs, newProgram]);
+                  setShowCreateForm(false);
+                }}
+                className="p-6 overflow-y-auto max-h-[70vh]"
+              >
+                <div className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Program Name *</label>
+                    <input
+                      type="text"
+                      name="name"
+                      required
+                      placeholder="e.g., 45-Day Recovery Program"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Description *</label>
+                    <textarea
+                      name="description"
+                      required
+                      rows={3}
+                      placeholder="Describe the program objectives and approach..."
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Duration (days) *</label>
+                      <input
+                        type="number"
+                        name="duration"
+                        required
+                        min="1"
+                        placeholder="30"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Type *</label>
+                      <select
+                        name="type"
+                        required
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      >
+                        <option value="">Select type</option>
+                        <option value="Detox">Detox</option>
+                        <option value="Residential">Residential</option>
+                        <option value="Outpatient">Outpatient</option>
+                        <option value="Intensive">Intensive</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Capacity *</label>
+                      <input
+                        type="number"
+                        name="capacity"
+                        required
+                        min="1"
+                        placeholder="20"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Requirements</label>
+                    <textarea
+                      name="requirements"
+                      rows={4}
+                      placeholder="Enter each requirement on a new line&#10;e.g., Medical clearance required&#10;Insurance verification&#10;Completed intake assessment"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">Enter each requirement on a separate line</p>
+                  </div>
+
+                  <div className="flex justify-end space-x-4 pt-6 border-t">
+                    <button
+                      type="button"
+                      onClick={() => setShowCreateForm(false)}
+                      className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
+                    >
+                      Create Program
+                    </button>
+                  </div>
                 </div>
-                <h3 className="text-lg font-medium text-gray-900 mb-2">Program Builder</h3>
-                <p className="text-gray-600 mb-6">Comprehensive program creation form coming soon...</p>
-                <button
-                  onClick={() => setShowCreateForm(false)}
-                  className="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
-                >
-                  Close
-                </button>
-              </div>
+              </form>
             </div>
           </div>
         )}

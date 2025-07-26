@@ -494,10 +494,24 @@ export default function AnalyticsReports() {
 
                   <div className="mt-4 pt-4 border-t border-gray-200">
                     <div className="flex space-x-2">
-                      <button className="flex-1 px-3 py-2 text-sm bg-orange-50 text-orange-700 rounded-lg hover:bg-orange-100 transition-colors">
+                      <button 
+                        onClick={() => {
+                          // Simulate report download
+                          const link = document.createElement('a');
+                          link.href = '#';
+                          link.download = `${report.name.replace(/\s+/g, '_')}.pdf`;
+                          alert(`Downloading ${report.name}...`);
+                        }}
+                        className="flex-1 px-3 py-2 text-sm bg-orange-50 text-orange-700 rounded-lg hover:bg-orange-100 transition-colors"
+                      >
                         Download
                       </button>
-                      <button className="flex-1 px-3 py-2 text-sm bg-gray-50 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors">
+                      <button 
+                        onClick={() => {
+                          alert(`Viewing details for ${report.name}`);
+                        }}
+                        className="flex-1 px-3 py-2 text-sm bg-gray-50 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
+                      >
                         View Details
                       </button>
                     </div>
