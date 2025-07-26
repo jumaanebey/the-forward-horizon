@@ -1,0 +1,601 @@
+'use client';
+import { useState, useEffect } from 'react';
+
+interface Resident {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  dateOfBirth: string;
+  admissionDate: string;
+  room: string;
+  program: string;
+  status: 'Active' | 'Pending' | 'Graduated' | 'Inactive' | 'On Leave';
+  emergencyContact: {
+    name: string;
+    relationship: string;
+    phone: string;
+  };
+  medicalInfo: {
+    allergies: string[];
+    medications: string[];
+    conditions: string[];
+  };
+  progressNotes: {
+    id: string;
+    date: string;
+    note: string;
+    author: string;
+  }[];
+}
+
+export default function ResidentManagement() {
+  const [residents, setResidents] = useState<Resident[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterStatus, setFilterStatus] = useState('All');
+  const [filterProgram, setFilterProgram] = useState('All');
+  const [selectedResident, setSelectedResident] = useState<Resident | null>(null);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [activeTab, setActiveTab] = useState('overview');
+
+  useEffect(() => {
+    loadResidents();
+  }, []);
+
+  const loadResidents = async () => {
+    setLoading(true);
+    // Simulate API call
+    setTimeout(() => {
+      const mockResidents: Resident[] = [
+        {
+          id: '1',
+          firstName: 'John',
+          lastName: 'Smith',
+          email: 'john.smith@email.com',
+          phone: '(555) 123-4567',
+          dateOfBirth: '1985-03-15',
+          admissionDate: '2024-01-15',
+          room: 'A-101',
+          program: '90-Day Recovery Program',
+          status: 'Active',
+          emergencyContact: {
+            name: 'Mary Smith',
+            relationship: 'Spouse',
+            phone: '(555) 987-6543'
+          },
+          medicalInfo: {
+            allergies: ['Penicillin', 'Shellfish'],
+            medications: ['Metformin 500mg', 'Lisinopril 10mg'],
+            conditions: ['Type 2 Diabetes', 'Hypertension']
+          },
+          progressNotes: [
+            {
+              id: '1',
+              date: '2024-01-20',
+              note: 'Patient showing good progress in group therapy sessions. Participating actively.',
+              author: 'Dr. Johnson'
+            },
+            {
+              id: '2',
+              date: '2024-01-18',
+              note: 'Completed first week orientation successfully. No issues reported.',
+              author: 'Nurse Davis'
+            }
+          ]
+        },
+        {
+          id: '2',
+          firstName: 'Sarah',
+          lastName: 'Johnson',
+          email: 'sarah.j@email.com',
+          phone: '(555) 234-5678',
+          dateOfBirth: '1992-07-22',
+          admissionDate: '2024-02-10',
+          room: 'B-203',
+          program: '60-Day Intensive Program',
+          status: 'Active',
+          emergencyContact: {
+            name: 'Robert Johnson',
+            relationship: 'Father',
+            phone: '(555) 876-5432'
+          },
+          medicalInfo: {
+            allergies: ['Latex'],
+            medications: ['Sertraline 50mg'],
+            conditions: ['Depression', 'Anxiety']
+          },
+          progressNotes: [
+            {
+              id: '3',
+              date: '2024-02-15',
+              note: 'Excellent engagement in individual counseling. Working on coping strategies.',
+              author: 'Counselor Williams'
+            }
+          ]
+        },
+        {
+          id: '3',
+          firstName: 'Michael',
+          lastName: 'Brown',
+          email: 'mike.brown@email.com',
+          phone: '(555) 345-6789',
+          dateOfBirth: '1980-11-08',
+          admissionDate: '2024-03-01',
+          room: 'A-105',
+          program: '30-Day Detox Program',
+          status: 'Pending',
+          emergencyContact: {
+            name: 'Lisa Brown',
+            relationship: 'Sister',
+            phone: '(555) 765-4321'
+          },
+          medicalInfo: {
+            allergies: [],
+            medications: [],
+            conditions: ['Substance Use Disorder']
+          },
+          progressNotes: [
+            {
+              id: '4',
+              date: '2024-03-02',
+              note: 'Initial assessment completed. Starting medical detox protocol.',
+              author: 'Dr. Martinez'
+            }
+          ]
+        }
+      ];
+      setResidents(mockResidents);
+      setLoading(false);
+    }, 800);
+  };
+
+  const filteredResidents = residents.filter(resident => {
+    const matchesSearch = 
+      resident.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      resident.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      resident.room.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      resident.email.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesStatus = filterStatus === 'All' || resident.status === filterStatus;
+    const matchesProgram = filterProgram === 'All' || resident.program === filterProgram;
+    
+    return matchesSearch && matchesStatus && matchesProgram;
+  });
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'Active': return 'bg-green-100 text-green-800';
+      case 'Pending': return 'bg-yellow-100 text-yellow-800';
+      case 'Graduated': return 'bg-blue-100 text-blue-800';
+      case 'On Leave': return 'bg-purple-100 text-purple-800';
+      case 'Inactive': return 'bg-gray-100 text-gray-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const programs = ['All', '30-Day Detox Program', '60-Day Intensive Program', '90-Day Recovery Program'];
+  const statuses = ['All', 'Active', 'Pending', 'Graduated', 'On Leave', 'Inactive'];
+
+  if (loading) {
+    return (
+      <div className="p-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="animate-pulse space-y-6">
+            <div className="h-8 bg-gray-200 rounded w-1/4"></div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {[1, 2, 3].map(i => (
+                <div key={i} className="h-32 bg-gray-200 rounded-xl"></div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="p-8">
+      <div className="max-w-7xl mx-auto space-y-6">
+        {/* Header */}
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">Resident Management</h1>
+            <p className="text-gray-600 mt-1">Manage resident profiles, medical records, and progress tracking</p>
+          </div>
+          <button
+            onClick={() => setShowAddForm(true)}
+            className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors font-medium"
+          >
+            Add New Resident
+          </button>
+        </div>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+            <div className="flex items-center">
+              <div className="p-3 bg-blue-100 rounded-lg">
+                <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">Total Residents</p>
+                <p className="text-2xl font-bold text-gray-900">{residents.length}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+            <div className="flex items-center">
+              <div className="p-3 bg-green-100 rounded-lg">
+                <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">Active</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {residents.filter(r => r.status === 'Active').length}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+            <div className="flex items-center">
+              <div className="p-3 bg-yellow-100 rounded-lg">
+                <svg className="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">Pending</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {residents.filter(r => r.status === 'Pending').length}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+            <div className="flex items-center">
+              <div className="p-3 bg-purple-100 rounded-lg">
+                <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                </svg>
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">Graduated</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {residents.filter(r => r.status === 'Graduated').length}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Filters */}
+        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Search</label>
+              <input
+                type="text"
+                placeholder="Search residents..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
+              <select
+                value={filterStatus}
+                onChange={(e) => setFilterStatus(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                {statuses.map(status => (
+                  <option key={status} value={status}>{status}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Program</label>
+              <select
+                value={filterProgram}
+                onChange={(e) => setFilterProgram(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                {programs.map(program => (
+                  <option key={program} value={program}>{program}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+        </div>
+
+        {/* Residents Table */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-200">
+            <h2 className="text-lg font-semibold text-gray-900">
+              Residents ({filteredResidents.length})
+            </h2>
+          </div>
+          
+          {filteredResidents.length === 0 ? (
+            <div className="p-12 text-center">
+              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">No residents found</h3>
+              <p className="text-gray-500">Try adjusting your search or filter criteria</p>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Resident</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Room</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Program</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Admission Date</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {filteredResidents.map((resident) => (
+                    <tr key={resident.id} className="hover:bg-gray-50">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div>
+                          <div className="text-sm font-medium text-gray-900">
+                            {resident.firstName} {resident.lastName}
+                          </div>
+                          <div className="text-sm text-gray-500">{resident.email}</div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {resident.room}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {resident.program}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(resident.status)}`}>
+                          {resident.status}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {new Date(resident.admissionDate).toLocaleDateString()}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <button
+                          onClick={() => setSelectedResident(resident)}
+                          className="text-blue-600 hover:text-blue-900 mr-3"
+                        >
+                          View Details
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+
+        {/* Resident Detail Modal */}
+        {selectedResident && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-xl w-full max-w-4xl max-h-[90vh] overflow-hidden">
+              <div className="flex justify-between items-center p-6 border-b">
+                <h2 className="text-xl font-bold text-gray-900">
+                  {selectedResident.firstName} {selectedResident.lastName}
+                </h2>
+                <button
+                  onClick={() => setSelectedResident(null)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              {/* Tabs */}
+              <div className="border-b">
+                <div className="flex">
+                  {[
+                    { id: 'overview', label: 'Overview' },
+                    { id: 'medical', label: 'Medical Info' },
+                    { id: 'progress', label: 'Progress Notes' },
+                    { id: 'emergency', label: 'Emergency Contact' }
+                  ].map((tab) => (
+                    <button
+                      key={tab.id}
+                      onClick={() => setActiveTab(tab.id)}
+                      className={`px-6 py-3 text-sm font-medium border-b-2 ${
+                        activeTab === tab.id
+                          ? 'border-blue-500 text-blue-600'
+                          : 'border-transparent text-gray-500 hover:text-gray-700'
+                      }`}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="p-6 overflow-y-auto max-h-[60vh]">
+                {activeTab === 'overview' && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                      <p className="text-gray-900">{selectedResident.firstName} {selectedResident.lastName}</p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                      <p className="text-gray-900">{selectedResident.email}</p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                      <p className="text-gray-900">{selectedResident.phone}</p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
+                      <p className="text-gray-900">{new Date(selectedResident.dateOfBirth).toLocaleDateString()}</p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Room</label>
+                      <p className="text-gray-900">{selectedResident.room}</p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Program</label>
+                      <p className="text-gray-900">{selectedResident.program}</p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(selectedResident.status)}`}>
+                        {selectedResident.status}
+                      </span>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Admission Date</label>
+                      <p className="text-gray-900">{new Date(selectedResident.admissionDate).toLocaleDateString()}</p>
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === 'medical' && (
+                  <div className="space-y-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Allergies</label>
+                      <div className="flex flex-wrap gap-2">
+                        {selectedResident.medicalInfo.allergies.length > 0 ? (
+                          selectedResident.medicalInfo.allergies.map((allergy, index) => (
+                            <span key={index} className="px-3 py-1 bg-red-100 text-red-800 text-sm rounded-full">
+                              {allergy}
+                            </span>
+                          ))
+                        ) : (
+                          <span className="text-gray-500">No known allergies</span>
+                        )}
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Current Medications</label>
+                      <div className="space-y-2">
+                        {selectedResident.medicalInfo.medications.length > 0 ? (
+                          selectedResident.medicalInfo.medications.map((medication, index) => (
+                            <div key={index} className="p-3 bg-blue-50 rounded-lg">
+                              <span className="text-blue-900">{medication}</span>
+                            </div>
+                          ))
+                        ) : (
+                          <span className="text-gray-500">No current medications</span>
+                        )}
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Medical Conditions</label>
+                      <div className="space-y-2">
+                        {selectedResident.medicalInfo.conditions.length > 0 ? (
+                          selectedResident.medicalInfo.conditions.map((condition, index) => (
+                            <div key={index} className="p-3 bg-yellow-50 rounded-lg">
+                              <span className="text-yellow-900">{condition}</span>
+                            </div>
+                          ))
+                        ) : (
+                          <span className="text-gray-500">No documented conditions</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === 'progress' && (
+                  <div className="space-y-4">
+                    {selectedResident.progressNotes.length > 0 ? (
+                      selectedResident.progressNotes.map((note) => (
+                        <div key={note.id} className="p-4 bg-gray-50 rounded-lg">
+                          <div className="flex justify-between items-start mb-2">
+                            <span className="text-sm font-medium text-gray-900">{note.author}</span>
+                            <span className="text-sm text-gray-500">
+                              {new Date(note.date).toLocaleDateString()}
+                            </span>
+                          </div>
+                          <p className="text-gray-700">{note.note}</p>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="text-center py-8">
+                        <span className="text-gray-500">No progress notes available</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {activeTab === 'emergency' && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Contact Name</label>
+                      <p className="text-gray-900">{selectedResident.emergencyContact.name}</p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Relationship</label>
+                      <p className="text-gray-900">{selectedResident.emergencyContact.relationship}</p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                      <p className="text-gray-900">{selectedResident.emergencyContact.phone}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Add Resident Form Placeholder */}
+        {showAddForm && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-xl w-full max-w-md p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-bold text-gray-900">Add New Resident</h2>
+                <button
+                  onClick={() => setShowAddForm(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              <div className="text-center py-8">
+                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-blue-600 text-2xl">👤</span>
+                </div>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">Add Resident Form</h3>
+                <p className="text-gray-600 mb-6">Comprehensive resident intake form coming soon...</p>
+                <button
+                  onClick={() => setShowAddForm(false)}
+                  className="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
