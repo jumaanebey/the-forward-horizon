@@ -20,12 +20,14 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizeCss: false,
     optimizePackageImports: ['react', 'react-dom', 'react-hot-toast'],
-    turbo: {
-      rules: {
-        '*.svg': {
-          loaders: ['@svgr/webpack'],
-          as: '*.js',
-        },
+  },
+
+  // Turbopack configuration (moved from experimental.turbo)
+  turbopack: {
+    rules: {
+      '*.svg': {
+        loaders: ['@svgr/webpack'],
+        as: '*.js',
       },
     },
   },

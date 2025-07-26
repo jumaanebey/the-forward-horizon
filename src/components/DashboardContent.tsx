@@ -512,6 +512,7 @@ export default function DashboardContent() {
         onClose={() => setShowAIPredictions(false)}
       />
 
+
     </div>
   );
 }
