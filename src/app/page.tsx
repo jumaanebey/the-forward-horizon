@@ -4,6 +4,7 @@ import ModernLayout from '@/components/ModernLayout';
 import ModernDashboard from '@/components/ModernDashboard';
 import ResidentManagement from '@/components/ResidentManagement';
 import ProgramManagement from '@/components/ProgramManagement';
+import StaffManagement from '@/components/StaffManagement';
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -17,24 +18,7 @@ export default function Home() {
       case 'programs':
         return <ProgramManagement />;
       case 'staff':
-        return (
-          <div className="p-8">
-            <div className="max-w-7xl mx-auto">
-              <div className="bg-white rounded-2xl shadow-soft border border-gray-100 p-12 text-center">
-                <div className="w-20 h-20 bg-gradient-to-r from-green-500 to-green-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                  <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 012 2v6a2 2 0 01-2 2H8a2 2 0 01-2-2V8a2 2 0 012-2V6z" />
-                  </svg>
-                </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-3">Staff Management</h3>
-                <p className="text-gray-600 mb-6 max-w-md mx-auto">Manage staff schedules, roles, and assignments across your facility operations.</p>
-                <div className="inline-flex items-center px-4 py-2 bg-green-50 text-green-700 rounded-lg text-sm font-medium">
-                  🚧 Coming Soon
-                </div>
-              </div>
-            </div>
-          </div>
-        );
+        return <StaffManagement />;
       case 'reports':
         return (
           <div className="p-8">
