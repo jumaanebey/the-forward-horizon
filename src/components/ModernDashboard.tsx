@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import AIAssistant from './AIAssistant';
 
 interface MetricCard {
   title: string;
@@ -539,6 +540,18 @@ export default function ModernDashboard({ onNavigate }: ModernDashboardProps) {
           </div>
         </div>
       </div>
+      {/* AI Assistant */}
+      <AIAssistant 
+        businessData={{
+          residents: 124,
+          occupancyRate: 89.2,
+          monthlyRevenue: 284760,
+          activePrograms: 18,
+          staffMembers: 42,
+          recentIncidents: 3
+        }}
+        onNavigate={onNavigate}
+      />
     </div>
   );
 }
