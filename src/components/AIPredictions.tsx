@@ -423,11 +423,11 @@ export default function AIPredictions({ isOpen, onClose }: AIPredictionsProps) {
                 <div className="bg-blue-50 p-4 rounded-lg">
                   <h4 className="font-medium text-blue-900 mb-2">Example Queries:</h4>
                   <div className="space-y-2 text-sm text-blue-800">
-                    <p>• "Predict occupancy for next month"</p>
-                    <p>• "Show me revenue trends"</p>
-                    <p>• "Recommend ways to improve efficiency"</p>
-                    <p>• "Analyze staff performance"</p>
-                    <p>• "What are the maintenance needs?"</p>
+                    <p>• &quot;Predict occupancy for next month&quot;</p>
+                    <p>• &quot;Show me revenue trends&quot;</p>
+                    <p>• &quot;Recommend ways to improve efficiency&quot;</p>
+                    <p>• &quot;Analyze staff performance&quot;</p>
+                    <p>• &quot;What are the maintenance needs?&quot;</p>
                   </div>
                 </div>
               </div>
