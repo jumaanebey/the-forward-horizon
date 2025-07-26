@@ -60,7 +60,7 @@ export default function AuthForm({ onAuth }: { onAuth?: () => void }) {
         <div className="mt-4 text-center">
           {mode === "signIn" ? (
             <span>
-              Don't have an account?{' '}
+              Don&apos;t have an account?{' '}
               <button type="button" className="text-blue-600 underline" onClick={() => setMode("signUp")}>Sign Up</button>
             </span>
           ) : (

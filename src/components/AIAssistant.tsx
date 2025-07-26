@@ -327,7 +327,7 @@ export default function AIAssistant({ isOpen, onClose }: AIAssistantProps) {
                 </div>
               ) : insights.length === 0 ? (
                 <div className="text-center py-8 text-gray-600">
-                  No insights available. Click "Refresh Insights" to generate new recommendations.
+                  No insights available. Click &quot;Refresh Insights&quot; to generate new recommendations.
                 </div>
               ) : (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -388,7 +388,7 @@ export default function AIAssistant({ isOpen, onClose }: AIAssistantProps) {
                 </div>
               ) : predictions.length === 0 ? (
                 <div className="text-center py-8 text-gray-600">
-                  No predictions available. Click "Refresh Predictions" to generate new forecasts.
+                  No predictions available. Click &quot;Refresh Predictions&quot; to generate new forecasts.
                 </div>
               ) : (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -442,7 +442,7 @@ export default function AIAssistant({ isOpen, onClose }: AIAssistantProps) {
                 {chatHistory.length === 0 ? (
                   <div className="text-center text-gray-500 py-8">
                     <div className="text-4xl mb-2">🤖</div>
-                    <p>Hello! I'm your AI assistant. Ask me anything about your facility management.</p>
+                    <p>Hello! I&apos;m your AI assistant. Ask me anything about your facility management.</p>
                   </div>
                 ) : (
                   chatHistory.map((chat, index) => (
