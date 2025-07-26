@@ -1,8 +1,7 @@
 'use client';
 import { useState } from 'react';
-import SimpleLayout from '@/components/SimpleLayout';
-import SimpleDashboard from '@/components/SimpleDashboard';
-import SimpleResidents from '@/components/SimpleResidents';
+import ModernLayout from '@/components/ModernLayout';
+import ModernDashboard from '@/components/ModernDashboard';
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -10,54 +9,110 @@ export default function Home() {
   const renderContent = () => {
     switch (activeTab) {
       case 'dashboard':
-        return <SimpleDashboard />;
+        return <ModernDashboard />;
       case 'residents':
-        return <SimpleResidents />;
+        return (
+          <div className="p-8">
+            <div className="max-w-7xl mx-auto">
+              <div className="bg-white rounded-2xl shadow-soft border border-gray-100 p-12 text-center">
+                <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                  <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-3">Resident Management</h3>
+                <p className="text-gray-600 mb-6 max-w-md mx-auto">Comprehensive resident management features are being built. This will include profiles, medical records, and program tracking.</p>
+                <div className="inline-flex items-center px-4 py-2 bg-blue-50 text-blue-700 rounded-lg text-sm font-medium">
+                  🚧 Coming Soon
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      case 'programs':
+        return (
+          <div className="p-8">
+            <div className="max-w-7xl mx-auto">
+              <div className="bg-white rounded-2xl shadow-soft border border-gray-100 p-12 text-center">
+                <div className="w-20 h-20 bg-gradient-to-r from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                  <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-3">Program Management</h3>
+                <p className="text-gray-600 mb-6 max-w-md mx-auto">Track treatment programs, milestones, and resident progress through their recovery journey.</p>
+                <div className="inline-flex items-center px-4 py-2 bg-purple-50 text-purple-700 rounded-lg text-sm font-medium">
+                  🚧 Coming Soon
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      case 'staff':
+        return (
+          <div className="p-8">
+            <div className="max-w-7xl mx-auto">
+              <div className="bg-white rounded-2xl shadow-soft border border-gray-100 p-12 text-center">
+                <div className="w-20 h-20 bg-gradient-to-r from-green-500 to-green-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                  <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 012 2v6a2 2 0 01-2 2H8a2 2 0 01-2-2V8a2 2 0 012-2V6z" />
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-3">Staff Management</h3>
+                <p className="text-gray-600 mb-6 max-w-md mx-auto">Manage staff schedules, roles, and assignments across your facility operations.</p>
+                <div className="inline-flex items-center px-4 py-2 bg-green-50 text-green-700 rounded-lg text-sm font-medium">
+                  🚧 Coming Soon
+                </div>
+              </div>
+            </div>
+          </div>
+        );
       case 'reports':
         return (
-          <div className="bg-white rounded-lg shadow p-8 text-center">
-            <div className="text-gray-400 mb-4">
-              <svg className="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2-2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-              </svg>
+          <div className="p-8">
+            <div className="max-w-7xl mx-auto">
+              <div className="bg-white rounded-2xl shadow-soft border border-gray-100 p-12 text-center">
+                <div className="w-20 h-20 bg-gradient-to-r from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                  <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2-2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-3">Analytics & Reports</h3>
+                <p className="text-gray-600 mb-6 max-w-md mx-auto">Generate comprehensive reports and analytics to track facility performance and outcomes.</p>
+                <div className="inline-flex items-center px-4 py-2 bg-orange-50 text-orange-700 rounded-lg text-sm font-medium">
+                  🚧 Coming Soon
+                </div>
+              </div>
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Reports Coming Soon</h3>
-            <p className="text-gray-600">Advanced reporting features will be available in the next update.</p>
           </div>
         );
       case 'calendar':
         return (
-          <div className="bg-white rounded-lg shadow p-8 text-center">
-            <div className="text-gray-400 mb-4">
-              <svg className="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
+          <div className="p-8">
+            <div className="max-w-7xl mx-auto">
+              <div className="bg-white rounded-2xl shadow-soft border border-gray-100 p-12 text-center">
+                <div className="w-20 h-20 bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                  <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-3">Calendar & Scheduling</h3>
+                <p className="text-gray-600 mb-6 max-w-md mx-auto">Schedule appointments, meetings, and activities across your facility with an integrated calendar system.</p>
+                <div className="inline-flex items-center px-4 py-2 bg-indigo-50 text-indigo-700 rounded-lg text-sm font-medium">
+                  🚧 Coming Soon
+                </div>  
+              </div>
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Calendar Coming Soon</h3>
-            <p className="text-gray-600">Scheduling and calendar features will be available in the next update.</p>
-          </div>
-        );
-      case 'settings':
-        return (
-          <div className="bg-white rounded-lg shadow p-8 text-center">
-            <div className="text-gray-400 mb-4">
-              <svg className="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-            </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Settings Coming Soon</h3>
-            <p className="text-gray-600">System configuration options will be available in the next update.</p>
           </div>
         );
       default:
-        return <SimpleDashboard />;
+        return <ModernDashboard />;
     }
   };
 
   return (
-    <SimpleLayout activeTab={activeTab} setActiveTab={setActiveTab}>
+    <ModernLayout activeTab={activeTab} setActiveTab={setActiveTab}>
       {renderContent()}
-    </SimpleLayout>
+    </ModernLayout>
   );
 }
