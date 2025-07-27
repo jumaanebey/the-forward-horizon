@@ -53,7 +53,7 @@ export default function AIAssistant({ businessData, onNavigate }: AIAssistantPro
     
     if (input.includes('occupancy') || input.includes('capacity')) {
       return {
-        content: `Current occupancy is at ${businessData?.occupancyRate || 89.2}% with ${businessData?.residents || 124} active residents. This is above our target of 85%, indicating strong demand for our services.`,
+        content: `Current occupancy is at ${businessData?.occupancyRate || 72.0}% with ${businessData?.residents || 36} active residents. This is approaching our target of 85%, indicating steady demand for our services.`,
         actions: [
           { label: 'View Residents', action: () => onNavigate?.('residents') },
           { label: 'Generate Report', action: () => onNavigate?.('reports') }
