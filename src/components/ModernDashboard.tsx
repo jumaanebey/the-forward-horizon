@@ -39,50 +39,50 @@ export default function ModernDashboard({ onNavigate }: ModernDashboardProps) {
       setMetrics([
         {
           title: 'Total Residents',
-          value: 36,
-          change: 8.2,
-          changeType: 'increase',
+          value: 0,
+          change: 0,
+          changeType: 'neutral',
           icon: '👥',
           color: 'blue'
         },
         {
           title: 'Occupancy Rate',
-          value: '72.0%',
-          change: 5.1,
-          changeType: 'increase',
+          value: '0%',
+          change: 0,
+          changeType: 'neutral',
           icon: '🏠',
           color: 'green'
         },
         {
           title: 'Monthly Revenue',
-          value: '$284,760',
-          change: 12.3,
-          changeType: 'increase',
+          value: '$0',
+          change: 0,
+          changeType: 'neutral',
           icon: '💰',
           color: 'purple'
         },
         {
           title: 'Active Programs',
-          value: 18,
-          change: -2.1,
-          changeType: 'decrease',
+          value: 'In Development',
+          change: 0,
+          changeType: 'neutral',
           icon: '📋',
           color: 'orange'
         },
         {
           title: 'Staff Members',
-          value: 42,
+          value: 2,
           change: 0,
           changeType: 'neutral',
           icon: '👨‍⚕️',
           color: 'blue'
         },
         {
-          title: 'Incidents (30d)',
-          value: 3,
-          change: -25.0,
-          changeType: 'decrease',
-          icon: '⚠️',
+          title: 'Facility Status',
+          value: 'Pre-Opening',
+          change: 0,
+          changeType: 'neutral',
+          icon: '🏗️',
           color: 'red'
         }
       ]);
@@ -90,35 +90,35 @@ export default function ModernDashboard({ onNavigate }: ModernDashboardProps) {
       setRecentActivity([
         {
           id: '1',
-          type: 'admission',
-          title: 'New Resident Admission',
-          description: 'Sarah Johnson admitted to Room B-204',
-          timestamp: '2 hours ago',
-          user: 'Dr. Smith'
+          type: 'milestone',
+          title: 'Facility Preparation',
+          description: 'Facility licensing application submitted',
+          timestamp: '3 days ago',
+          user: 'Administrative Team'
         },
         {
           id: '2',
           type: 'milestone',
-          title: 'Program Milestone',
-          description: 'Mike Brown completed 30-day milestone',
-          timestamp: '4 hours ago',
-          user: 'Counselor Davis'
+          title: 'Staff Onboarding',
+          description: 'Initial staff training program scheduled',
+          timestamp: '1 week ago',
+          user: 'HR Department'
         },
         {
           id: '3',
-          type: 'payment',
-          title: 'Payment Received',
-          description: '$3,200 payment processed for Room A-101',
-          timestamp: '6 hours ago',
-          user: 'Finance Team'
+          type: 'milestone',
+          title: 'Marketing Launch',
+          description: 'Website and marketing campaigns activated',
+          timestamp: '2 weeks ago',
+          user: 'Marketing Team'
         },
         {
           id: '4',
-          type: 'discharge',
-          title: 'Successful Discharge',
-          description: 'Emily Chen completed 90-day program',
-          timestamp: '1 day ago',
-          user: 'Dr. Wilson'
+          type: 'milestone',
+          title: 'Facility Setup',
+          description: 'Initial facility inspection completed',
+          timestamp: '3 weeks ago',
+          user: 'Operations Team'
         }
       ]);
 
@@ -235,13 +235,13 @@ export default function ModernDashboard({ onNavigate }: ModernDashboardProps) {
                 </div>
                 <div>
                   <p className="text-sm text-gray-500 font-semibold leading-relaxed">Residents</p>
-                  <p className="text-2xl font-bold text-gray-900 leading-relaxed">36</p>
+                  <p className="text-2xl font-bold text-gray-900 leading-relaxed">0</p>
                 </div>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
-                <div className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full" style={{width: '72%'}}></div>
+                <div className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full" style={{width: '0%'}}></div>
               </div>
-              <p className="text-xs text-gray-500 mt-2 font-medium">+8.2% from last month</p>
+              <p className="text-xs text-gray-500 mt-2 font-medium">Facility opening soon</p>
             </div>
             <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
               <div className="flex items-center space-x-3 mb-3">
