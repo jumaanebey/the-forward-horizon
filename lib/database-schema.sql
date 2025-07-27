@@ -194,6 +194,142 @@ CREATE POLICY "Staff can view all documents" ON documents FOR SELECT USING (true
 INSERT INTO staff (first_name, last_name, email, role, department, hire_date) 
 VALUES ('Admin', 'User', 'admin@theforwardhorizon.com', 'Administrator', 'Management', CURRENT_DATE);
 
+-- Housing inventory tables
+CREATE TABLE houses (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  address TEXT NOT NULL,
+  total_beds INTEGER NOT NULL DEFAULT 0,
+  house_type VARCHAR(50) DEFAULT 'main' CHECK (house_type IN ('main', 'annex', 'transitional')),
+  amenities TEXT[], -- Array of amenities
+  status VARCHAR(20) DEFAULT 'preparation' CHECK (status IN ('operational', 'preparation', 'maintenance')),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE TABLE rooms (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  house_id UUID REFERENCES houses(id) ON DELETE CASCADE,
+  room_number VARCHAR(20) NOT NULL,
+  bed_count INTEGER NOT NULL DEFAULT 1,
+  room_type VARCHAR(20) DEFAULT 'double' CHECK (room_type IN ('single', 'double', 'triple', 'quad')),
+  amenities TEXT[], -- Array of room amenities
+  accessibility_features TEXT[], -- Array of accessibility features
+  monthly_rate DECIMAL(10,2) NOT NULL,
+  program_type VARCHAR(50) DEFAULT 'general' CHECK (program_type IN ('veterans', 'recovery', 'reentry', 'general')),
+  status VARCHAR(20) DEFAULT 'available' CHECK (status IN ('available', 'occupied', 'maintenance', 'reserved')),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  UNIQUE(house_id, room_number)
+);
+
+CREATE TABLE room_assignments (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  room_id UUID REFERENCES rooms(id) ON DELETE CASCADE,
+  resident_id UUID REFERENCES residents(id) ON DELETE CASCADE,
+  bed_number INTEGER NOT NULL,
+  assigned_date DATE NOT NULL DEFAULT CURRENT_DATE,
+  checkout_date DATE,
+  status VARCHAR(20) DEFAULT 'active' CHECK (status IN ('active', 'completed', 'terminated')),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  UNIQUE(room_id, bed_number) -- Ensure one person per bed
+);
+
+CREATE TABLE waitlist (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  first_name VARCHAR(100) NOT NULL,
+  last_name VARCHAR(100) NOT NULL,
+  email VARCHAR(255),
+  phone VARCHAR(20),
+  program_type VARCHAR(50) NOT NULL,
+  requested_date DATE NOT NULL,
+  priority_score INTEGER DEFAULT 50 CHECK (priority_score BETWEEN 0 AND 100),
+  special_needs TEXT[],
+  contact_info TEXT,
+  status VARCHAR(20) DEFAULT 'active' CHECK (status IN ('active', 'contacted', 'scheduled', 'inactive')),
+  lead_source VARCHAR(100), -- Track how they found us
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Add indexes for housing tables
+CREATE INDEX idx_rooms_house_id ON rooms(house_id);
+CREATE INDEX idx_rooms_status ON rooms(status);
+CREATE INDEX idx_rooms_program_type ON rooms(program_type);
+CREATE INDEX idx_room_assignments_room_id ON room_assignments(room_id);
+CREATE INDEX idx_room_assignments_resident_id ON room_assignments(resident_id);
+CREATE INDEX idx_room_assignments_status ON room_assignments(status);
+CREATE INDEX idx_waitlist_program_type ON waitlist(program_type);
+CREATE INDEX idx_waitlist_status ON waitlist(status);
+CREATE INDEX idx_waitlist_requested_date ON waitlist(requested_date);
+
+-- Create triggers for housing tables
+CREATE TRIGGER update_houses_updated_at BEFORE UPDATE ON houses FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_rooms_updated_at BEFORE UPDATE ON rooms FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_room_assignments_updated_at BEFORE UPDATE ON room_assignments FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_waitlist_updated_at BEFORE UPDATE ON waitlist FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- Function to update house total_beds when rooms change
+CREATE OR REPLACE FUNCTION update_house_total_beds()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF TG_OP = 'DELETE' THEN
+    UPDATE houses 
+    SET total_beds = (
+      SELECT COALESCE(SUM(bed_count), 0) 
+      FROM rooms 
+      WHERE house_id = OLD.house_id
+    )
+    WHERE id = OLD.house_id;
+    RETURN OLD;
+  ELSE
+    UPDATE houses 
+    SET total_beds = (
+      SELECT COALESCE(SUM(bed_count), 0) 
+      FROM rooms 
+      WHERE house_id = NEW.house_id
+    )
+    WHERE id = NEW.house_id;
+    RETURN NEW;
+  END IF;
+END;
+$$ language 'plpgsql';
+
+-- Create trigger to auto-update house total_beds
+CREATE TRIGGER update_house_beds_on_room_change
+  AFTER INSERT OR UPDATE OR DELETE ON rooms
+  FOR EACH ROW EXECUTE FUNCTION update_house_total_beds();
+
+-- Insert initial housing data for Forward Horizon
+INSERT INTO houses (name, address, total_beds, house_type, amenities, status) VALUES 
+('Forward Horizon Main House', '123 Recovery Way, Pasadena, CA 91101', 0, 'main', 
+ ARRAY['Common Kitchen', 'Living Room', 'Laundry Facilities', 'Study Room', 'Garden/Patio', 'Parking', 'Security System'], 
+ 'preparation');
+
+-- Get the house ID for room insertions
+DO $$
+DECLARE
+    house_uuid UUID;
+BEGIN
+    SELECT id INTO house_uuid FROM houses WHERE name = 'Forward Horizon Main House';
+    
+    -- Insert rooms for Forward Horizon Main House
+    INSERT INTO rooms (house_id, room_number, bed_count, room_type, amenities, monthly_rate, program_type, accessibility_features) VALUES 
+    (house_uuid, 'A-101', 2, 'double', ARRAY['Private Bathroom', 'AC/Heat', 'Window'], 800.00, 'veterans', ARRAY['Ground Floor']),
+    (house_uuid, 'A-102', 2, 'double', ARRAY['Private Bathroom', 'AC/Heat', 'Window'], 800.00, 'veterans', ARRAY['Ground Floor']),
+    (house_uuid, 'B-201', 2, 'double', ARRAY['Private Bathroom', 'AC/Heat', 'Window'], 750.00, 'recovery', NULL),
+    (house_uuid, 'B-202', 2, 'double', ARRAY['Private Bathroom', 'AC/Heat', 'Window'], 750.00, 'recovery', NULL),
+    (house_uuid, 'C-301', 2, 'double', ARRAY['Private Bathroom', 'AC/Heat', 'Window'], 725.00, 'reentry', NULL),
+    (house_uuid, 'C-302', 2, 'double', ARRAY['Private Bathroom', 'AC/Heat', 'Window'], 725.00, 'reentry', NULL),
+    (house_uuid, 'D-401', 2, 'double', ARRAY['Private Bathroom', 'AC/Heat', 'Window'], 700.00, 'general', NULL),
+    (house_uuid, 'D-402', 2, 'double', ARRAY['Private Bathroom', 'AC/Heat', 'Window'], 700.00, 'general', NULL),
+    (house_uuid, 'E-501', 1, 'single', ARRAY['Private Bathroom', 'AC/Heat', 'Window', 'Desk'], 950.00, 'veterans', ARRAY['ADA Compliant']),
+    (house_uuid, 'E-502', 1, 'single', ARRAY['Private Bathroom', 'AC/Heat', 'Window', 'Desk'], 950.00, 'veterans', ARRAY['ADA Compliant']),
+    (house_uuid, 'E-503', 3, 'triple', ARRAY['Shared Bathroom', 'AC/Heat', 'Window'], 600.00, 'general', NULL),
+    (house_uuid, 'E-504', 3, 'triple', ARRAY['Shared Bathroom', 'AC/Heat', 'Window'], 600.00, 'general', NULL);
+END $$;
+
 -- Insert some initial programs in development
 INSERT INTO programs (name, description, status) VALUES 
 ('Veterans Recovery Program', 'Specialized program for military veterans', 'development'),
