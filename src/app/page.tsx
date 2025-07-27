@@ -7,6 +7,7 @@ import ProgramManagement from '@/components/ProgramManagement';
 import StaffManagement from '@/components/StaffManagement';
 import AnalyticsReports from '@/components/AnalyticsReports';
 import CalendarScheduling from '@/components/CalendarScheduling';
+import DocumentManagement from '@/components/DocumentManagement';
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -25,6 +26,8 @@ export default function Home() {
         return <AnalyticsReports />;
       case 'calendar':
         return <CalendarScheduling />;
+      case 'documents':
+        return <DocumentManagement />;
       default:
         return <ModernDashboard onNavigate={setActiveTab} />;
     }

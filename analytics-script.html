@@ -1,0 +1,77 @@
+<!-- Forward Horizon - Analytics & SEO Setup -->
+<!-- Add this to your HTML <head> section -->
+
+<!-- Google Analytics (Replace G-XXXXXXXXXX with your actual tracking ID) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-XXXXXXXXXX');
+</script>
+
+<!-- Google Search Console Verification (Replace with your verification code) -->
+<meta name="google-site-verification" content="YOUR_VERIFICATION_CODE" />
+
+<!-- Social Media Meta Tags -->
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://theforwardhorizon.com/">
+<meta property="og:title" content="Forward Horizon - Transitional Housing for Veterans, Recovery & Re-entry">
+<meta property="og:description" content="Structured transitional housing for veterans, individuals in recovery, and returning citizens. Rebuilding lives through accountability, community, and fresh starts.">
+<meta property="og:image" content="https://theforwardhorizon.com/og-image.jpg">
+<meta property="og:site_name" content="Forward Horizon">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="https://theforwardhorizon.com/">
+<meta property="twitter:title" content="Forward Horizon - Transitional Housing">
+<meta property="twitter:description" content="Structured transitional housing for veterans, individuals in recovery, and returning citizens.">
+<meta property="twitter:image" content="https://theforwardhorizon.com/twitter-image.jpg">
+
+<!-- Enhanced SEO Meta Tags -->
+<meta name="keywords" content="transitional housing, veterans housing, sober living, re-entry housing, returning citizens, recovery housing, veteran support, post-incarceration housing, second chance housing">
+<meta name="author" content="Forward Horizon">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://theforwardhorizon.com/">
+
+<!-- PWA Manifest Link -->
+<link rel="manifest" href="/manifest.json">
+
+<!-- PWA Registration Script -->
+<script src="/pwa-register.js"></script>
+
+<!-- Conversion Tracking Events -->
+<script>
+// Track application form submissions
+function trackApplicationSubmit() {
+  gtag('event', 'form_submit', {
+    'form_name': 'application_form',
+    'page_location': window.location.href
+  });
+}
+
+// Track phone number clicks
+function trackPhoneClick(phoneNumber) {
+  gtag('event', 'phone_click', {
+    'phone_number': phoneNumber,
+    'page_location': window.location.href
+  });
+}
+
+// Track resource downloads
+function trackResourceDownload(resourceName) {
+  gtag('event', 'download', {
+    'file_name': resourceName,
+    'page_location': window.location.href
+  });
+}
+
+// Track contact form submissions
+function trackContactSubmit() {
+  gtag('event', 'form_submit', {
+    'form_name': 'contact_form',
+    'page_location': window.location.href
+  });
+}
+</script> 
