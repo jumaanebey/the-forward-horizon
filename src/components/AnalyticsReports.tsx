@@ -60,56 +60,53 @@ export default function AnalyticsReports() {
     setTimeout(() => {
       const mockAnalytics: AnalyticsData = {
         occupancyRate: {
-          current: 89.2,
-          trend: 5.1,
+          current: 0,
+          trend: 0,
           data: [
-            { month: 'Jul', rate: 82.5 },
-            { month: 'Aug', rate: 85.3 },
-            { month: 'Sep', rate: 87.1 },
-            { month: 'Oct', rate: 84.9 },
-            { month: 'Nov', rate: 88.2 },
-            { month: 'Dec', rate: 89.2 }
+            { month: 'Jul', rate: 0 },
+            { month: 'Aug', rate: 0 },
+            { month: 'Sep', rate: 0 },
+            { month: 'Oct', rate: 0 },
+            { month: 'Nov', rate: 0 },
+            { month: 'Dec', rate: 0 }
           ]
         },
         revenue: {
-          monthly: 284760,
-          yearly: 3417120,
-          trend: 12.3,
+          monthly: 0,
+          yearly: 0,
+          trend: 0,
           data: [
-            { month: 'Jul', amount: 245000 },
-            { month: 'Aug', amount: 268000 },
-            { month: 'Sep', amount: 272000 },
-            { month: 'Oct', amount: 259000 },
-            { month: 'Nov', amount: 278000 },
-            { month: 'Dec', amount: 284760 }
+            { month: 'Jul', amount: 0 },
+            { month: 'Aug', amount: 0 },
+            { month: 'Sep', amount: 0 },
+            { month: 'Oct', amount: 0 },
+            { month: 'Nov', amount: 0 },
+            { month: 'Dec', amount: 0 }
           ]
         },
         programEffectiveness: {
-          completionRate: 78.4,
-          averageStay: 67,
-          successRate: 82.1,
+          completionRate: 0,
+          averageStay: 0,
+          successRate: 0,
           data: [
-            { program: '30-Day Detox', completion: 92.3, success: 85.7 },
-            { program: '60-Day Intensive', completion: 78.9, success: 81.2 },
-            { program: '90-Day Recovery', completion: 71.2, success: 88.4 }
+            { program: 'Programs in Development', completion: 0, success: 0 },
+            { program: 'Awaiting First Residents', completion: 0, success: 0 },
+            { program: 'Opening Soon', completion: 0, success: 0 }
           ]
         },
         staffMetrics: {
-          totalStaff: 42,
-          activeStaff: 38,
-          overtimeHours: 124,
-          turnoverRate: 8.2
+          totalStaff: 2,
+          activeStaff: 2,
+          overtimeHours: 0,
+          turnoverRate: 0
         },
         incidentReports: {
-          total: 23,
-          resolved: 20,
-          pending: 3,
+          total: 0,
+          resolved: 0,
+          pending: 0,
           byType: [
-            { type: 'Medical Emergency', count: 8 },
-            { type: 'Behavioral Incident', count: 6 },
-            { type: 'Safety Concern', count: 4 },
-            { type: 'Equipment Issue', count: 3 },
-            { type: 'Other', count: 2 }
+            { type: 'No incidents yet', count: 0 },
+            { type: 'Facility opening soon', count: 0 }
           ]
         }
       };
