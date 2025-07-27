@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forward Horizon - Analytics Test</title>
+    
+    <!-- Google Analytics (G-YG37LQ8KKE) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YG37LQ8KKE"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YG37LQ8KKE');
+    </script>
+</head>
+<body>
+    <h1>Forward Horizon Analytics Test</h1>
+    <p>This page is testing Google Analytics tracking.</p>
+    <p>If you can see this page, analytics should be working!</p>
+    
+    <button onclick="trackTestEvent()">Test Analytics Event</button>
+    
+    <script>
+    function trackTestEvent() {
+        gtag('event', 'test_button_click', {
+            'button_name': 'analytics_test',
+            'page_location': window.location.href
+        });
+        alert('Analytics event sent! Check your Google Analytics dashboard.');
+    }
+    </script>
+</body>
+</html> 

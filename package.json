@@ -10,8 +10,12 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.52.1",
+    "@types/nodemailer": "^6.4.17",
     "critters": "^0.0.23",
+    "marked": "^16.1.1",
     "next": "^15.4.4",
+    "nodemailer": "^7.0.5",
+    "puppeteer": "^24.15.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-hot-toast": "^2.5.2",
