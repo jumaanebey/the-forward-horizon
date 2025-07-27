@@ -39,7 +39,7 @@ export default function ModernDashboard({ onNavigate }: ModernDashboardProps) {
       setMetrics([
         {
           title: 'Total Residents',
-          value: 124,
+          value: 36,
           change: 8.2,
           changeType: 'increase',
           icon: '👥',
@@ -47,7 +47,7 @@ export default function ModernDashboard({ onNavigate }: ModernDashboardProps) {
         },
         {
           title: 'Occupancy Rate',
-          value: '89.2%',
+          value: '72.0%',
           change: 5.1,
           changeType: 'increase',
           icon: '🏠',
@@ -235,11 +235,11 @@ export default function ModernDashboard({ onNavigate }: ModernDashboardProps) {
                 </div>
                 <div>
                   <p className="text-sm text-gray-500 font-semibold leading-relaxed">Residents</p>
-                  <p className="text-2xl font-bold text-gray-900 leading-relaxed">124</p>
+                  <p className="text-2xl font-bold text-gray-900 leading-relaxed">36</p>
                 </div>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
-                <div className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full" style={{width: '82%'}}></div>
+                <div className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full" style={{width: '72%'}}></div>
               </div>
               <p className="text-xs text-gray-500 mt-2 font-medium">+8.2% from last month</p>
             </div>
@@ -250,11 +250,11 @@ export default function ModernDashboard({ onNavigate }: ModernDashboardProps) {
                 </div>
                 <div>
                   <p className="text-sm text-gray-500 font-semibold leading-relaxed">Occupancy</p>
-                  <p className="text-2xl font-bold text-gray-900 leading-relaxed">89%</p>
+                  <p className="text-2xl font-bold text-gray-900 leading-relaxed">72%</p>
                 </div>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
-                <div className="bg-gradient-to-r from-green-500 to-green-600 h-2 rounded-full" style={{width: '89%'}}></div>
+                <div className="bg-gradient-to-r from-green-500 to-green-600 h-2 rounded-full" style={{width: '72%'}}></div>
               </div>
               <p className="text-xs text-green-600 mt-2 font-medium">↗ +5.1% from target</p>
             </div>
@@ -543,8 +543,8 @@ export default function ModernDashboard({ onNavigate }: ModernDashboardProps) {
       {/* AI Assistant */}
       <AIAssistant 
         businessData={{
-          residents: 124,
-          occupancyRate: 89.2,
+          residents: 36,
+          occupancyRate: 72.0,
           monthlyRevenue: 284760,
           activePrograms: 18,
           staffMembers: 42,
