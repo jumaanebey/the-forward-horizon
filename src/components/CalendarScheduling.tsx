@@ -45,6 +45,59 @@ export default function CalendarScheduling() {
 
   const loadData = async () => {
     setLoading(true);
+    try {
+      const response = await fetch('/api/calendar');
+      const data = await response.json();
+      
+      const formattedEvents: CalendarEvent[] = data.events.map((event: any) => ({
+        id: event.id,
+        title: event.title,
+        description: event.description || '',
+        type: 'appointment',
+        startTime: event.startTime,
+        endTime: event.endTime,
+        date: new Date(event.startTime).toISOString().split('T')[0],
+        attendees: event.attendees || [],
+        location: event.location || '',
+        status: event.status || 'scheduled',
+        priority: 'medium'
+      }));
+
+      setEvents(formattedEvents);
+    } catch (error) {
+      console.error('Error loading calendar events:', error);
+      // Fallback to empty state for startup
+      setEvents([]);
+    }
+    
+    // For now, keep appointments empty since we don't have residents yet
+    setAppointments([]);
+    setLoading(false);
+  };
+
+  const createEvent = async (eventData: Partial<CalendarEvent>) => {
+    try {
+      const response = await fetch('/api/calendar', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(eventData),
+      });
+
+      if (response.ok) {
+        loadData(); // Reload events
+        return true;
+      }
+    } catch (error) {
+      console.error('Error creating event:', error);
+    }
+    return false;
+  };
+
+  // Legacy mock data (commented out for reference)
+  /*const loadDataOld = async () => {
+    setLoading(true);
     setTimeout(() => {
       const mockEvents: CalendarEvent[] = [
         {
