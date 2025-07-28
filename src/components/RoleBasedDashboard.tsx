@@ -101,6 +101,10 @@ export default function RoleBasedDashboard({ onNavigate }: RoleBasedDashboardPro
     }
   };
 
+  const canToggleViews = () => {
+    return currentUser && ['admin', 'manager'].includes(currentUser.role);
+  };
+
   if (showLogin) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
@@ -196,37 +200,93 @@ export default function RoleBasedDashboard({ onNavigate }: RoleBasedDashboardPro
           <div className="flex items-center space-x-4">
             <h1 className="text-lg font-semibold text-gray-900">Forward Horizon</h1>
             
+            {/* View Toggle - Only show for logged-in admins/managers OR always show basic toggle */}
             <div className="flex items-center space-x-2">
-              <Button
-                variant={viewMode === 'user' ? 'default' : 'outline'}
-                size="sm"
-                onClick={switchToUserView}
-                className="flex items-center space-x-1"
-              >
-                <User className="w-4 h-4" />
-                <span>Public View</span>
-              </Button>
-              
-              <Button
-                variant={viewMode === 'management' ? 'default' : 'outline'}
-                size="sm"
-                onClick={switchToManagementView}
-                className="flex items-center space-x-1"
-              >
-                <Shield className="w-4 h-4" />
-                <span>Management</span>
-              </Button>
+              {canToggleViews() ? (
+                <>
+                  <Button
+                    variant={viewMode === 'user' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={switchToUserView}
+                    className="flex items-center space-x-1"
+                  >
+                    <User className="w-4 h-4" />
+                    <span>Public View</span>
+                  </Button>
+                  
+                  <Button
+                    variant={viewMode === 'management' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={switchToManagementView}
+                    className="flex items-center space-x-1"
+                  >
+                    <Shield className="w-4 h-4" />
+                    <span>Management</span>
+                  </Button>
+                  
+                  {/* Admin indicator */}
+                  <div className="flex items-center space-x-1 px-2 py-1 bg-blue-50 rounded text-xs text-blue-700">
+                    <Settings className="w-3 h-3" />
+                    <span>Admin Controls</span>
+                  </div>
+                </>
+              ) : (
+                /* Non-admin view - show basic toggle */
+                <>
+                  <Button
+                    variant={viewMode === 'user' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={switchToUserView}
+                    className="flex items-center space-x-1"
+                  >
+                    <User className="w-4 h-4" />
+                    <span>Public View</span>
+                  </Button>
+                  
+                  <Button
+                    variant={viewMode === 'management' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={switchToManagementView}
+                    className="flex items-center space-x-1"
+                  >
+                    <Shield className="w-4 h-4" />
+                    <span>Management</span>
+                  </Button>
+                </>
+              )}
             </div>
           </div>
 
           <div className="flex items-center space-x-3">
+            {/* Current View Indicator */}
+            <div className="flex items-center space-x-2">
+              {viewMode === 'user' ? (
+                <Badge variant="outline" className="text-green-700 border-green-300 bg-green-50">
+                  <User className="w-3 h-3 mr-1" />
+                  Public View
+                </Badge>
+              ) : (
+                <Badge variant="outline" className="text-blue-700 border-blue-300 bg-blue-50">
+                  <Shield className="w-3 h-3 mr-1" />
+                  Management View
+                </Badge>
+              )}
+            </div>
+
             {currentUser ? (
               <div className="flex items-center space-x-3">
                 <div className="text-right">
                   <p className="text-sm font-medium">{currentUser.firstName} {currentUser.lastName}</p>
-                  <Badge variant="secondary" className="text-xs">
-                    {currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1)}
-                  </Badge>
+                  <div className="flex items-center space-x-1">
+                    <Badge variant="secondary" className="text-xs">
+                      {currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1)}
+                    </Badge>
+                    {canToggleViews() && (
+                      <Badge variant="default" className="text-xs bg-blue-600">
+                        Admin
+                      </Badge>
+                    )}
+                  </div>
                 </div>
                 <Button
                   variant="outline"
@@ -259,23 +319,59 @@ export default function RoleBasedDashboard({ onNavigate }: RoleBasedDashboardPro
       </div>
 
       {/* Dashboard Content */}
-      {viewMode === 'user' ? (
-        <UserDashboard userRole="user" />
-      ) : viewMode === 'management' && currentUser ? (
-        <ManagementDashboard user={currentUser} />
-      ) : (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-          <Card className="text-center p-8">
-            <Shield className="w-16 h-16 mx-auto text-gray-400 mb-4" />
-            <h2 className="text-xl font-semibold mb-2">Access Required</h2>
-            <p className="text-gray-600 mb-4">Please log in to access the management dashboard</p>
-            <Button onClick={() => setShowLogin(true)}>
-              <LogIn className="w-4 h-4 mr-2" />
-              Staff Login
-            </Button>
-          </Card>
-        </div>
-      )}
+      <div className="relative">
+        {/* Admin Notice when viewing public interface */}
+        {viewMode === 'user' && canToggleViews() && (
+          <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mx-4 mt-4 rounded-r">
+            <div className="flex items-center">
+              <Settings className="w-5 h-5 text-blue-600 mr-2" />
+              <div>
+                <p className="text-sm font-medium text-blue-800">
+                  Admin Preview: Public Interface
+                </p>
+                <p className="text-xs text-blue-600">
+                  This is what visitors see. Switch to "Management" to access operational controls.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Admin Notice when viewing management interface */}
+        {viewMode === 'management' && canToggleViews() && (
+          <div className="bg-orange-50 border-l-4 border-orange-400 p-4 mx-4 mt-4 rounded-r">
+            <div className="flex items-center">
+              <Shield className="w-5 h-5 text-orange-600 mr-2" />
+              <div>
+                <p className="text-sm font-medium text-orange-800">
+                  Admin Access: Management Dashboard
+                </p>
+                <p className="text-xs text-orange-600">
+                  Full operational access with sensitive data. Switch to "Public View" to see visitor interface.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {viewMode === 'user' ? (
+          <UserDashboard userRole="user" />
+        ) : viewMode === 'management' && currentUser ? (
+          <ManagementDashboard user={currentUser} />
+        ) : (
+          <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+            <Card className="text-center p-8">
+              <Shield className="w-16 h-16 mx-auto text-gray-400 mb-4" />
+              <h2 className="text-xl font-semibold mb-2">Access Required</h2>
+              <p className="text-gray-600 mb-4">Please log in to access the management dashboard</p>
+              <Button onClick={() => setShowLogin(true)}>
+                <LogIn className="w-4 h-4 mr-2" />
+                Staff Login
+              </Button>
+            </Card>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
