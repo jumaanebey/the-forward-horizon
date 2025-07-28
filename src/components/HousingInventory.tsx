@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { housingAPI, House as DBHouse, Room as DBRoom, WaitlistEntry as DBWaitlistEntry } from '../../lib/supabase';
 
 interface Room {
   id: string;
@@ -62,10 +63,101 @@ export default function HousingInventory() {
     loadInventoryData();
   }, []);
 
+  const transformSupabaseData = (roomsData: any[]): House[] => {
+    // Group rooms by house
+    const housesMap = new Map();
+    
+    roomsData.forEach((room: any) => {
+      const houseKey = room.houses?.name || 'Forward Horizon Main House';
+      
+      if (!housesMap.has(houseKey)) {
+        housesMap.set(houseKey, {
+          id: room.house_id || '1',
+          name: houseKey,
+          address: '123 Recovery Way, Pasadena, CA 91101',
+          total_beds: 0,
+          occupied_beds: 0,
+          available_beds: 0,
+          house_type: 'main' as const,
+          status: 'preparation' as const,
+          amenities: [
+            'Common Kitchen',
+            'Living Room', 
+            'Laundry Facilities',
+            'Study Room',
+            'Garden/Patio',
+            'Parking',
+            'Security System'
+          ],
+          rooms: []
+        });
+      }
+      
+      const house = housesMap.get(houseKey);
+      const occupiedBeds = room.room_assignments?.filter((a: any) => a.status === 'active').length || 0;
+      
+      house.rooms.push({
+        id: room.id,
+        room_number: room.room_number,
+        house_name: houseKey,
+        bed_count: room.bed_count,
+        occupied_beds: occupiedBeds,
+        room_type: room.room_type,
+        amenities: room.amenities || [],
+        status: room.status,
+        monthly_rate: room.monthly_rate,
+        program_type: room.program_type,
+        accessibility_features: room.accessibility_features,
+        last_updated: room.updated_at
+      });
+      
+      house.total_beds += room.bed_count;
+      house.occupied_beds += occupiedBeds;
+    });
+    
+    // Calculate available beds
+    housesMap.forEach((house) => {
+      house.available_beds = house.total_beds - house.occupied_beds;
+    });
+    
+    return Array.from(housesMap.values());
+  };
+
   const loadInventoryData = async () => {
     setLoading(true);
     
-    // For startup phase - show realistic facility preparation data
+    try {
+      // Try to load data from Supabase first
+      const [housesData, waitlistData] = await Promise.all([
+        housingAPI.getRoomsWithOccupancy(),
+        housingAPI.getWaitlist()
+      ]);
+
+      if (housesData && housesData.length > 0) {
+        // Transform Supabase data to component format
+        const transformedHouses = transformSupabaseData(housesData);
+        setHouses(transformedHouses);
+        setWaitlist(waitlistData || []);
+        
+        // For upcoming availability, simulate based on current status
+        const upcoming: UpcomingAvailability[] = [{
+          id: '1',
+          room_number: 'All Rooms',
+          house_name: 'Forward Horizon Main House',
+          expected_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+          bed_count: 24,
+          reason: 'new_unit',
+          priority: 'high'
+        }];
+        setUpcomingAvailability(upcoming);
+        setLoading(false);
+        return;
+      }
+    } catch (error) {
+      console.log('Supabase not configured yet, using mock data:', error);
+    }
+    
+    // Fallback to mock data for startup phase
     setTimeout(() => {
       const mockHouses: House[] = [
         {
