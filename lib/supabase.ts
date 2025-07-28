@@ -80,3 +80,135 @@ export interface Incident {
   created_at: string
   updated_at: string
 }
+
+// Housing inventory interfaces
+export interface House {
+  id: string
+  name: string
+  address: string
+  total_beds: number
+  house_type: 'main' | 'annex' | 'transitional'
+  amenities: string[]
+  status: 'operational' | 'preparation' | 'maintenance'
+  created_at: string
+  updated_at: string
+}
+
+export interface Room {
+  id: string
+  house_id: string
+  room_number: string
+  bed_count: number
+  room_type: 'single' | 'double' | 'triple' | 'quad'
+  amenities: string[]
+  accessibility_features?: string[]
+  monthly_rate: number
+  program_type: 'veterans' | 'recovery' | 'reentry' | 'general'
+  status: 'available' | 'occupied' | 'maintenance' | 'reserved'
+  created_at: string
+  updated_at: string
+}
+
+export interface RoomAssignment {
+  id: string
+  room_id: string
+  resident_id: string
+  bed_number: number
+  assigned_date: string
+  checkout_date?: string
+  status: 'active' | 'completed' | 'terminated'
+  created_at: string
+  updated_at: string
+}
+
+export interface WaitlistEntry {
+  id: string
+  first_name: string
+  last_name: string
+  email?: string
+  phone?: string
+  program_type: string
+  requested_date: string
+  priority_score: number
+  special_needs?: string[]
+  contact_info?: string
+  status: 'active' | 'contacted' | 'scheduled' | 'inactive'
+  lead_source?: string
+  created_at: string
+  updated_at: string
+}
+
+// Housing inventory API functions
+export const housingAPI = {
+  // Get all houses with room data
+  async getHousesWithRooms() {
+    const { data, error } = await supabase
+      .from('houses')
+      .select(`
+        *,
+        rooms (
+          *,
+          room_assignments!inner (
+            id,
+            bed_number,
+            status
+          )
+        )
+      `)
+    
+    if (error) throw error
+    return data
+  },
+
+  // Get rooms with occupancy data
+  async getRoomsWithOccupancy() {
+    const { data, error } = await supabase
+      .from('rooms')
+      .select(`
+        *,
+        houses (name),
+        room_assignments!left (
+          id,
+          bed_number,
+          status
+        )
+      `)
+    
+    if (error) throw error
+    return data
+  },
+
+  // Get waitlist entries
+  async getWaitlist() {
+    const { data, error } = await supabase
+      .from('waitlist')
+      .select('*')
+      .order('priority_score', { ascending: false })
+    
+    if (error) throw error
+    return data
+  },
+
+  // Add new waitlist entry
+  async addWaitlistEntry(entry: Omit<WaitlistEntry, 'id' | 'created_at' | 'updated_at'>) {
+    const { data, error } = await supabase
+      .from('waitlist')
+      .insert(entry)
+      .select()
+    
+    if (error) throw error
+    return data
+  },
+
+  // Update room status
+  async updateRoomStatus(roomId: string, status: Room['status']) {
+    const { data, error } = await supabase
+      .from('rooms')
+      .update({ status })
+      .eq('id', roomId)
+      .select()
+    
+    if (error) throw error
+    return data
+  }
+}
