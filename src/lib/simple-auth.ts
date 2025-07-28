@@ -49,13 +49,21 @@ export class SimpleAuth {
       }
     ];
 
+    console.log('Authentication attempt:', { email, password });
+    console.log('Available demo users:', demoUsers.map(u => ({ email: u.email, password: u.password })));
+    
     const matchedUser = demoUsers.find(u => u.email === email && u.password === password);
+    console.log('Matched user:', matchedUser);
+    
     if (matchedUser) {
+      console.log('Authentication successful');
       return {
         user: matchedUser.user,
         token: matchedUser.token
       };
     }
+    
+    console.log('Authentication failed - no match found');
 
     // Fallback to database if supabase is available
     if (!supabase) {
