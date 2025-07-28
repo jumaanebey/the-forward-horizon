@@ -568,37 +568,104 @@ export default function HousingInventory() {
             </div>
           </div>
 
-          {/* Houses Overview */}
+          {/* Bed Availability Grid */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <h3 className="text-lg font-medium text-gray-900 mb-4">Housing Units</h3>
-            <div className="space-y-4">
+            <h3 className="text-lg font-medium text-gray-900 mb-4">Bed Availability Overview</h3>
+            <div className="space-y-6">
               {houses.map((house) => (
                 <div key={house.id} className="border border-gray-200 rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <div>
-                      <h4 className="text-md font-medium text-gray-900">{house.name}</h4>
-                      <p className="text-sm text-gray-500">{house.address}</p>
-                    </div>
+                  <div className="flex items-center justify-between mb-4">
+                    <h4 className="text-md font-medium text-gray-900">{house.name}</h4>
                     <span className={`px-3 py-1 rounded-full text-xs font-medium ${getHouseStatusColor(house.status)}`}>
                       {house.status.charAt(0).toUpperCase() + house.status.slice(1)}
                     </span>
                   </div>
-                  <div className="grid grid-cols-3 gap-4 text-sm">
-                    <div>
-                      <p className="text-gray-500">Total Beds</p>
-                      <p className="font-semibold">{house.total_beds}</p>
-                    </div>
-                    <div>
-                      <p className="text-gray-500">Available</p>
-                      <p className="font-semibold text-green-600">{house.available_beds}</p>
-                    </div>
-                    <div>
-                      <p className="text-gray-500">Occupancy</p>
-                      <p className="font-semibold">{getOccupancyRate(house)}%</p>
+
+                  {/* Room Grid */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    {house.rooms.map((room) => (
+                      <div key={room.id} className={`border rounded-lg p-3 ${
+                        room.status === 'available' ? 'border-green-200 bg-green-50' :
+                        room.status === 'occupied' ? 'border-red-200 bg-red-50' :
+                        room.status === 'maintenance' ? 'border-yellow-200 bg-yellow-50' :
+                        'border-purple-200 bg-purple-50'
+                      }`}>
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-sm font-medium text-gray-900">{room.room_number}</span>
+                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${getProgramTypeColor(room.program_type)}`}>
+                            {room.program_type.charAt(0).toUpperCase()}
+                          </span>
+                        </div>
+                        
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-xs text-gray-500">{room.room_type}</span>
+                          <span className="text-xs font-medium">${room.monthly_rate}</span>
+                        </div>
+                        
+                        {/* Bed indicators */}
+                        <div className="flex items-center space-x-1 mb-2">
+                          {Array.from({ length: room.bed_count }, (_, i) => (
+                            <div
+                              key={i}
+                              className={`w-4 h-4 rounded border-2 ${
+                                i < room.occupied_beds 
+                                  ? 'bg-red-400 border-red-500' 
+                                  : 'bg-white border-green-500'
+                              }`}
+                              title={`Bed ${i + 1}: ${i < room.occupied_beds ? 'Occupied' : 'Available'}`}
+                            />
+                          ))}
+                        </div>
+                        
+                        <div className="text-xs text-gray-600">
+                          {room.bed_count - room.occupied_beds} of {room.bed_count} available
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Summary */}
+                  <div className="mt-4 pt-4 border-t border-gray-200">
+                    <div className="grid grid-cols-3 gap-4 text-sm">
+                      <div className="text-center">
+                        <p className="text-gray-500">Total Beds</p>
+                        <p className="font-semibold text-lg">{house.total_beds}</p>
+                      </div>
+                      <div className="text-center">
+                        <p className="text-gray-500">Available</p>
+                        <p className="font-semibold text-lg text-green-600">{house.available_beds}</p>
+                      </div>
+                      <div className="text-center">
+                        <p className="text-gray-500">Occupancy</p>
+                        <p className="font-semibold text-lg">{getOccupancyRate(house)}%</p>
+                      </div>
                     </div>
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+
+          {/* Legend */}
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <h3 className="text-lg font-medium text-gray-900 mb-4">Legend</h3>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="flex items-center space-x-2">
+                <div className="w-4 h-4 bg-white border-2 border-green-500 rounded"></div>
+                <span className="text-sm text-gray-600">Available Bed</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <div className="w-4 h-4 bg-red-400 border-2 border-red-500 rounded"></div>
+                <span className="text-sm text-gray-600">Occupied Bed</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">V</span>
+                <span className="text-sm text-gray-600">Veterans Program</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">R</span>
+                <span className="text-sm text-gray-600">Recovery Program</span>
+              </div>
             </div>
           </div>
         </div>
@@ -697,8 +764,23 @@ export default function HousingInventory() {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {room.room_type.charAt(0).toUpperCase() + room.room_type.slice(1)}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {room.occupied_beds}/{room.bed_count}
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center space-x-2">
+                        <span className="text-sm text-gray-900">{room.occupied_beds}/{room.bed_count}</span>
+                        <div className="flex space-x-1">
+                          {Array.from({ length: room.bed_count }, (_, i) => (
+                            <div
+                              key={i}
+                              className={`w-3 h-3 rounded-full ${
+                                i < room.occupied_beds 
+                                  ? 'bg-red-400' 
+                                  : 'bg-green-400'
+                              }`}
+                              title={i < room.occupied_beds ? 'Occupied' : 'Available'}
+                            />
+                          ))}
+                        </div>
+                      </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${getProgramTypeColor(room.program_type)}`}>
