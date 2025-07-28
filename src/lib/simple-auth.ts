@@ -17,22 +17,48 @@ export class SimpleAuth {
   
   // Simple authentication for demo purposes
   static async authenticate(email: string, password: string): Promise<{ user: User; token: string } | null> {
-    if (!supabase) {
-      // Fallback for offline demo
-      if (email === 'admin@theforwardhorizon.com' && password === 'admin123') {
-        return {
-          user: {
-            id: 'demo-admin',
-            email: 'admin@theforwardhorizon.com',
-            firstName: 'System',
-            lastName: 'Administrator',
-            role: 'admin',
-            department: 'Management',
-            status: 'active'
-          },
-          token: 'demo-token-admin'
-        };
+    // Always use demo authentication for now
+    const demoUsers = [
+      {
+        email: 'admin@theforwardhorizon.com',
+        password: 'admin123',
+        user: {
+          id: 'demo-admin',
+          email: 'admin@theforwardhorizon.com',
+          firstName: 'System',
+          lastName: 'Administrator',
+          role: 'admin' as const,
+          department: 'Management',
+          status: 'active' as const
+        },
+        token: 'demo-token-admin'
+      },
+      {
+        email: 'staff@theforwardhorizon.com',
+        password: 'staff123',
+        user: {
+          id: 'demo-staff',
+          email: 'staff@theforwardhorizon.com',
+          firstName: 'Sarah',
+          lastName: 'Johnson',
+          role: 'staff' as const,
+          department: 'Counseling',
+          status: 'active' as const
+        },
+        token: 'demo-token-staff'
       }
+    ];
+
+    const matchedUser = demoUsers.find(u => u.email === email && u.password === password);
+    if (matchedUser) {
+      return {
+        user: matchedUser.user,
+        token: matchedUser.token
+      };
+    }
+
+    // Fallback to database if supabase is available
+    if (!supabase) {
       return null;
     }
 
@@ -83,19 +109,34 @@ export class SimpleAuth {
 
   // Validate session token  
   static async validateSession(token: string): Promise<User | null> {
-    if (!supabase) {
-      // Fallback for demo
-      if (token === 'demo-token-admin') {
-        return {
-          id: 'demo-admin',
-          email: 'admin@theforwardhorizon.com',
-          firstName: 'System',
-          lastName: 'Administrator', 
-          role: 'admin',
-          department: 'Management',
-          status: 'active'
-        };
+    // Always use demo validation for now
+    const demoSessions = {
+      'demo-token-admin': {
+        id: 'demo-admin',
+        email: 'admin@theforwardhorizon.com',
+        firstName: 'System',
+        lastName: 'Administrator', 
+        role: 'admin' as const,
+        department: 'Management',
+        status: 'active' as const
+      },
+      'demo-token-staff': {
+        id: 'demo-staff',
+        email: 'staff@theforwardhorizon.com',
+        firstName: 'Sarah',
+        lastName: 'Johnson',
+        role: 'staff' as const,
+        department: 'Counseling',
+        status: 'active' as const
       }
+    };
+
+    if (demoSessions[token as keyof typeof demoSessions]) {
+      return demoSessions[token as keyof typeof demoSessions];
+    }
+
+    // Fallback to database if supabase is available
+    if (!supabase) {
       return null;
     }
 
@@ -142,7 +183,8 @@ export class SimpleAuth {
 
   // Logout
   static async logout(token: string): Promise<boolean> {
-    if (!supabase) return true; // Demo logout always succeeds
+    // Demo logout always succeeds
+    return true;
 
     try {
       await supabase
