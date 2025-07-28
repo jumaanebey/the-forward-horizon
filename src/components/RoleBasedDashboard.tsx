@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 import UserDashboard from './UserDashboard';
 import ManagementDashboard from './ManagementDashboard';
-import { AuthManager, User as UserType } from '@/lib/auth';
+import { SimpleAuth, User as UserType } from '@/lib/simple-auth';
 
 interface RoleBasedDashboardProps {
   onNavigate?: (tab: string) => void;
@@ -42,7 +42,7 @@ export default function RoleBasedDashboard({ onNavigate }: RoleBasedDashboardPro
   const checkExistingSession = async () => {
     const token = localStorage.getItem('fh_session_token');
     if (token) {
-      const user = await AuthManager.validateSession(token);
+      const user = await SimpleAuth.validateSession(token);
       if (user) {
         setCurrentUser(user);
         setViewMode(user.role === 'user' ? 'user' : 'management');
@@ -58,7 +58,7 @@ export default function RoleBasedDashboard({ onNavigate }: RoleBasedDashboardPro
     setLoginError('');
 
     try {
-      const auth = await AuthManager.authenticate(loginForm.email, loginForm.password);
+      const auth = await SimpleAuth.authenticate(loginForm.email, loginForm.password);
       
       if (auth) {
         setCurrentUser(auth.user);
@@ -80,7 +80,7 @@ export default function RoleBasedDashboard({ onNavigate }: RoleBasedDashboardPro
   const handleLogout = async () => {
     const token = localStorage.getItem('fh_session_token');
     if (token) {
-      await AuthManager.logout(token);
+      await SimpleAuth.logout(token);
       localStorage.removeItem('fh_session_token');
     }
     setCurrentUser(null);
