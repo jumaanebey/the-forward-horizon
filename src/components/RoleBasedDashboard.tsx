@@ -58,20 +58,24 @@ export default function RoleBasedDashboard({ onNavigate }: RoleBasedDashboardPro
     setLoginError('');
 
     try {
+      console.log('Login form data:', loginForm);
       const auth = await SimpleAuth.authenticate(loginForm.email, loginForm.password);
+      console.log('Authentication result:', auth);
       
       if (auth) {
+        console.log('Login successful, setting user and redirecting');
         setCurrentUser(auth.user);
         localStorage.setItem('fh_session_token', auth.token);
         setViewMode(auth.user.role === 'user' ? 'user' : 'management');
         setShowLogin(false);
         setLoginForm({ email: '', password: '' });
       } else {
+        console.log('Authentication failed');
         setLoginError('Invalid email or password');
       }
     } catch (error) {
-      setLoginError('Login failed. Please try again.');
       console.error('Login error:', error);
+      setLoginError('Login failed. Please try again.');
     } finally {
       setLoading(false);
     }
