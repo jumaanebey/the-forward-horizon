@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import ModernLayout from '@/components/ModernLayout';
-import ModernDashboard from '@/components/ModernDashboard';
+import RoleBasedDashboard from '@/components/RoleBasedDashboard';
 import ResidentManagement from '@/components/ResidentManagement';
 import ProgramManagement from '@/components/ProgramManagement';
 import StaffManagement from '@/components/StaffManagement';
@@ -16,7 +16,7 @@ export default function Home() {
   const renderContent = () => {
     switch (activeTab) {
       case 'dashboard':
-        return <ModernDashboard onNavigate={setActiveTab} />;
+        return <RoleBasedDashboard onNavigate={setActiveTab} />;
       case 'residents':
         return <ResidentManagement />;
       case 'programs':

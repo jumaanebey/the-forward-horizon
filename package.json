@@ -9,8 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@radix-ui/react-tabs": "^1.1.12",
     "@supabase/supabase-js": "^2.52.1",
+    "@types/bcryptjs": "^2.4.6",
     "@types/nodemailer": "^6.4.17",
+    "bcryptjs": "^3.0.2",
     "critters": "^0.0.23",
     "google-auth-library": "^10.2.0",
     "googleapis": "^154.0.0",
