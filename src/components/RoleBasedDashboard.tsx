@@ -1,0 +1,281 @@
+// Role-Based Dashboard Router
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { 
+  LogIn, 
+  Eye, 
+  EyeOff, 
+  User, 
+  Shield, 
+  Settings,
+  LogOut
+} from 'lucide-react';
+import UserDashboard from './UserDashboard';
+import ManagementDashboard from './ManagementDashboard';
+import { AuthManager, User as UserType } from '@/lib/auth';
+
+interface RoleBasedDashboardProps {
+  onNavigate?: (tab: string) => void;
+}
+
+type ViewMode = 'login' | 'user' | 'management';
+
+export default function RoleBasedDashboard({ onNavigate }: RoleBasedDashboardProps) {
+  const [viewMode, setViewMode] = useState<ViewMode>('user'); // Default to user view
+  const [currentUser, setCurrentUser] = useState<UserType | null>(null);
+  const [showLogin, setShowLogin] = useState(false);
+  const [loginForm, setLoginForm] = useState({ email: '', password: '' });
+  const [showPassword, setShowPassword] = useState(false);
+  const [loginError, setLoginError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    // Check for existing session
+    checkExistingSession();
+  }, []);
+
+  const checkExistingSession = async () => {
+    const token = localStorage.getItem('fh_session_token');
+    if (token) {
+      const user = await AuthManager.validateSession(token);
+      if (user) {
+        setCurrentUser(user);
+        setViewMode(user.role === 'user' ? 'user' : 'management');
+      } else {
+        localStorage.removeItem('fh_session_token');
+      }
+    }
+  };
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setLoginError('');
+
+    try {
+      const auth = await AuthManager.authenticate(loginForm.email, loginForm.password);
+      
+      if (auth) {
+        setCurrentUser(auth.user);
+        localStorage.setItem('fh_session_token', auth.token);
+        setViewMode(auth.user.role === 'user' ? 'user' : 'management');
+        setShowLogin(false);
+        setLoginForm({ email: '', password: '' });
+      } else {
+        setLoginError('Invalid email or password');
+      }
+    } catch (error) {
+      setLoginError('Login failed. Please try again.');
+      console.error('Login error:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    const token = localStorage.getItem('fh_session_token');
+    if (token) {
+      await AuthManager.logout(token);
+      localStorage.removeItem('fh_session_token');
+    }
+    setCurrentUser(null);
+    setViewMode('user');
+    setShowLogin(false);
+  };
+
+  const switchToUserView = () => {
+    setViewMode('user');
+    setShowLogin(false);
+  };
+
+  const switchToManagementView = () => {
+    if (currentUser && currentUser.role !== 'user') {
+      setViewMode('management');
+    } else {
+      setShowLogin(true);
+    }
+  };
+
+  if (showLogin) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <Card className="w-full max-w-md">
+          <CardHeader className="text-center">
+            <CardTitle className="flex items-center justify-center space-x-2">
+              <Shield className="w-6 h-6 text-blue-600" />
+              <span>Staff Login</span>
+            </CardTitle>
+            <p className="text-gray-600">Access management dashboard</p>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">Email</label>
+                <Input
+                  type="email"
+                  value={loginForm.email}
+                  onChange={(e) => setLoginForm(prev => ({ ...prev, email: e.target.value }))}
+                  placeholder="Enter your email"
+                  required
+                  disabled={loading}
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-1">Password</label>
+                <div className="relative">
+                  <Input
+                    type={showPassword ? 'text' : 'password'}
+                    value={loginForm.password}
+                    onChange={(e) => setLoginForm(prev => ({ ...prev, password: e.target.value }))}
+                    placeholder="Enter your password"
+                    required
+                    disabled={loading}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    disabled={loading}
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              {loginError && (
+                <div className="text-red-600 text-sm bg-red-50 p-2 rounded">
+                  {loginError}
+                </div>
+              )}
+
+              <div className="space-y-2">
+                <Button 
+                  type="submit" 
+                  className="w-full" 
+                  disabled={loading}
+                >
+                  {loading ? 'Signing In...' : 'Sign In'}
+                </Button>
+                
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={switchToUserView}
+                  disabled={loading}
+                >
+                  Back to Public View
+                </Button>
+              </div>
+            </form>
+
+            {/* Demo Credentials (Remove in production) */}
+            <div className="mt-6 p-3 bg-yellow-50 border border-yellow-200 rounded text-sm">
+              <p className="font-medium text-yellow-800 mb-1">Demo Access:</p>
+              <p className="text-yellow-700">Email: admin@theforwardhorizon.com</p>
+              <p className="text-yellow-700">Password: admin123</p>
+              <p className="text-xs text-yellow-600 mt-1">*Demo credentials for development</p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative">
+      {/* View Mode Toggle Bar */}
+      <div className="bg-white border-b border-gray-200 p-4 sticky top-0 z-10">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <h1 className="text-lg font-semibold text-gray-900">Forward Horizon</h1>
+            
+            <div className="flex items-center space-x-2">
+              <Button
+                variant={viewMode === 'user' ? 'default' : 'outline'}
+                size="sm"
+                onClick={switchToUserView}
+                className="flex items-center space-x-1"
+              >
+                <User className="w-4 h-4" />
+                <span>Public View</span>
+              </Button>
+              
+              <Button
+                variant={viewMode === 'management' ? 'default' : 'outline'}
+                size="sm"
+                onClick={switchToManagementView}
+                className="flex items-center space-x-1"
+              >
+                <Shield className="w-4 h-4" />
+                <span>Management</span>
+              </Button>
+            </div>
+          </div>
+
+          <div className="flex items-center space-x-3">
+            {currentUser ? (
+              <div className="flex items-center space-x-3">
+                <div className="text-right">
+                  <p className="text-sm font-medium">{currentUser.firstName} {currentUser.lastName}</p>
+                  <Badge variant="secondary" className="text-xs">
+                    {currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1)}
+                  </Badge>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleLogout}
+                  className="flex items-center space-x-1"
+                >
+                  <LogOut className="w-4 h-4" />
+                  <span>Logout</span>
+                </Button>
+              </div>
+            ) : (
+              <div className="flex items-center space-x-2">
+                <Badge variant="outline">Public Access</Badge>
+                {viewMode === 'user' && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShowLogin(true)}
+                    className="flex items-center space-x-1"
+                  >
+                    <LogIn className="w-4 h-4" />
+                    <span>Staff Login</span>
+                  </Button>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Dashboard Content */}
+      {viewMode === 'user' ? (
+        <UserDashboard userRole="user" />
+      ) : viewMode === 'management' && currentUser ? (
+        <ManagementDashboard user={currentUser} />
+      ) : (
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <Card className="text-center p-8">
+            <Shield className="w-16 h-16 mx-auto text-gray-400 mb-4" />
+            <h2 className="text-xl font-semibold mb-2">Access Required</h2>
+            <p className="text-gray-600 mb-4">Please log in to access the management dashboard</p>
+            <Button onClick={() => setShowLogin(true)}>
+              <LogIn className="w-4 h-4 mr-2" />
+              Staff Login
+            </Button>
+          </Card>
+        </div>
+      )}
+    </div>
+  );
+}
