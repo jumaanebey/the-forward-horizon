@@ -1,9 +1,12 @@
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co'
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-key'
 
-export const supabase = createClient(supabaseUrl, supabaseKey)
+// Only create client if valid URL is provided
+export const supabase = (supabaseUrl.includes('placeholder') || supabaseKey.includes('placeholder')) 
+  ? null 
+  : createClient(supabaseUrl, supabaseKey)
 
 // Database types
 export interface Resident {
@@ -142,6 +145,8 @@ export interface WaitlistEntry {
 export const housingAPI = {
   // Get all houses with room data
   async getHousesWithRooms() {
+    if (!supabase) throw new Error('Supabase not configured')
+    
     const { data, error } = await supabase
       .from('houses')
       .select(`
@@ -162,6 +167,8 @@ export const housingAPI = {
 
   // Get rooms with occupancy data
   async getRoomsWithOccupancy() {
+    if (!supabase) throw new Error('Supabase not configured')
+    
     const { data, error } = await supabase
       .from('rooms')
       .select(`
@@ -180,6 +187,8 @@ export const housingAPI = {
 
   // Get waitlist entries
   async getWaitlist() {
+    if (!supabase) throw new Error('Supabase not configured')
+    
     const { data, error } = await supabase
       .from('waitlist')
       .select('*')
@@ -191,6 +200,8 @@ export const housingAPI = {
 
   // Add new waitlist entry
   async addWaitlistEntry(entry: Omit<WaitlistEntry, 'id' | 'created_at' | 'updated_at'>) {
+    if (!supabase) throw new Error('Supabase not configured')
+    
     const { data, error } = await supabase
       .from('waitlist')
       .insert(entry)
@@ -202,6 +213,8 @@ export const housingAPI = {
 
   // Update room status
   async updateRoomStatus(roomId: string, status: Room['status']) {
+    if (!supabase) throw new Error('Supabase not configured')
+    
     const { data, error } = await supabase
       .from('rooms')
       .update({ status })
