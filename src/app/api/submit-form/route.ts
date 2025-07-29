@@ -155,7 +155,7 @@ The Forward Horizon Reentry Team`
 
 export async function POST(request: NextRequest) {
   try {
-    console.log('API route called! - v2.0');
+    console.log('API route called! - v3.0 - LATEST VERSION');
     
     // Handle both JSON and form data
     let firstName, email, formType;
