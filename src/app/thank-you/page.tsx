@@ -72,12 +72,24 @@ function ThankYouContent() {
   const content = getContent();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 flex items-center justify-center p-4">
-      <div className="max-w-2xl w-full">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-green-50 flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse animation-delay-2000"></div>
+        <div className="absolute top-40 left-40 w-60 h-60 bg-green-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse animation-delay-4000"></div>
+      </div>
+      
+      <div className="max-w-2xl w-full relative z-10">
         {/* Success Card */}
-        <div className="bg-white rounded-2xl shadow-2xl p-8 md:p-12 text-center">
-          {/* Icon */}
-          <div className="text-6xl mb-6">{content.icon}</div>
+        <div className="bg-white/90 backdrop-blur-sm rounded-3xl shadow-2xl p-8 md:p-12 text-center border border-white/20 transform hover:scale-105 transition-all duration-300">
+          {/* Animated Icon */}
+          <div className="text-7xl mb-6 animate-bounce">{content.icon}</div>
+          
+          {/* Sparkle Animation */}
+          <div className="absolute top-8 right-8 text-2xl animate-spin">✨</div>
+          <div className="absolute top-12 left-8 text-xl animate-pulse">🌟</div>
+          <div className="absolute bottom-12 right-12 text-lg animate-bounce animation-delay-1000">💫</div>
           
           {/* Main Content */}
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -93,30 +105,36 @@ function ThankYouContent() {
           </p>
 
           {/* Next Steps */}
-          <div className="bg-gray-50 rounded-xl p-6 mb-8">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">What happens next:</h3>
+          <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 mb-8 border border-blue-100">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center justify-center">
+              <span className="mr-2">🎯</span>
+              What happens next:
+            </h3>
             <ul className="space-y-3">
               {content.nextSteps.map((step, index) => (
-                <li key={index} className="flex items-start text-left">
-                  <span className="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-0.5 flex-shrink-0">
+                <li key={index} className="flex items-start text-left group">
+                  <span className="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full w-7 h-7 flex items-center justify-center text-sm font-bold mr-3 mt-0.5 flex-shrink-0 shadow-lg group-hover:scale-110 transition-transform duration-200">
                     {index + 1}
                   </span>
-                  <span className="text-gray-700">{step}</span>
+                  <span className="text-gray-700 group-hover:text-gray-900 transition-colors">{step}</span>
                 </li>
               ))}
             </ul>
           </div>
 
           {/* Contact Info */}
-          <div className="bg-blue-50 rounded-xl p-6 mb-8">
-            <h3 className="text-lg font-semibold text-gray-900 mb-3">Need immediate assistance?</h3>
-            <div className="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-6">
-              <a href="tel:+16266030954" className="flex items-center text-blue-600 hover:text-blue-800 font-semibold">
-                <span className="mr-2">📞</span>
+          <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-xl p-6 mb-8 border border-green-100">
+            <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center justify-center">
+              <span className="mr-2">🤝</span>
+              Need immediate assistance?
+            </h3>
+            <div className="flex flex-col sm:flex-row items-center justify-center space-y-3 sm:space-y-0 sm:space-x-8">
+              <a href="tel:+16266030954" className="flex items-center text-blue-600 hover:text-blue-800 font-semibold bg-white px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 hover:-translate-y-1">
+                <span className="mr-2 text-lg">📞</span>
                 (626) 603-0954
               </a>
-              <a href="mailto:admin@theforwardhorizon.com" className="flex items-center text-blue-600 hover:text-blue-800 font-semibold">
-                <span className="mr-2">✉️</span>
+              <a href="mailto:admin@theforwardhorizon.com" className="flex items-center text-blue-600 hover:text-blue-800 font-semibold bg-white px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 hover:-translate-y-1">
+                <span className="mr-2 text-lg">✉️</span>
                 admin@theforwardhorizon.com
               </a>
             </div>
@@ -126,23 +144,34 @@ function ThankYouContent() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a 
               href={content.ctaLink}
-              className="bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-blue-700 transition duration-300"
+              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 transform"
             >
+              <span className="mr-2">🚀</span>
               {content.cta}
             </a>
             <a 
               href="/"
-              className="border-2 border-blue-600 text-blue-600 px-8 py-4 rounded-lg font-semibold hover:bg-blue-50 transition duration-300"
+              className="border-2 border-gradient bg-gradient-to-r from-transparent to-transparent hover:from-blue-50 hover:to-purple-50 border-blue-600 text-blue-600 px-8 py-4 rounded-lg font-semibold hover:border-purple-600 hover:text-purple-600 transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-1 transform"
             >
+              <span className="mr-2">🏠</span>
               Return Home
             </a>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="text-center mt-8 text-gray-600">
-          <p>Forward Horizon - Rebuilding Lives Together</p>
-          <p className="text-sm mt-2">Serving Los Angeles County, Orange County, Riverside County & San Bernardino County</p>
+        <div className="text-center mt-8 text-gray-600 bg-white/40 backdrop-blur-sm rounded-2xl p-6 border border-white/30">
+          <p className="font-semibold text-gray-800 flex items-center justify-center">
+            <span className="mr-2">🌟</span>
+            Forward Horizon - Rebuilding Lives Together
+            <span className="ml-2">🌟</span>
+          </p>
+          <p className="text-sm mt-2 text-gray-600">Serving Los Angeles County, Orange County, Riverside County & San Bernardino County</p>
+          <div className="flex justify-center space-x-2 mt-3 text-2xl">
+            <span className="animate-pulse">🏡</span>
+            <span className="animate-pulse animation-delay-1000">💙</span>
+            <span className="animate-pulse animation-delay-2000">🤝</span>
+          </div>
         </div>
       </div>
     </div>
@@ -151,12 +180,50 @@ function ThankYouContent() {
 
 export default function ThankYouPage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 flex items-center justify-center">
-        <div className="text-2xl font-semibold text-gray-700">Loading...</div>
-      </div>
-    }>
-      <ThankYouContent />
-    </Suspense>
+    <>
+      <style jsx global>{`
+        .animation-delay-1000 {
+          animation-delay: 1s;
+        }
+        .animation-delay-2000 {
+          animation-delay: 2s;
+        }
+        .animation-delay-4000 {
+          animation-delay: 4s;
+        }
+        
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-10px); }
+        }
+        
+        .animate-float {
+          animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes shimmer {
+          0% { background-position: -200% center; }
+          100% { background-position: 200% center; }
+        }
+        
+        .animate-shimmer {
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+          background-size: 200% 100%;
+          animation: shimmer 2s infinite;
+        }
+      `}</style>
+      
+      <Suspense fallback={
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-green-50 flex items-center justify-center">
+          <div className="text-2xl font-semibold text-gray-700 animate-pulse">
+            <span className="mr-2">✨</span>
+            Loading your success page...
+            <span className="ml-2">🚀</span>
+          </div>
+        </div>
+      }>
+        <ThankYouContent />
+      </Suspense>
+    </>
   );
 }

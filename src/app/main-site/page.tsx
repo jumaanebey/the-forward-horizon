@@ -31,6 +31,35 @@ export default function MainSite() {
     <style>
         /* Custom styles for the main site */
         body { margin: 0; padding: 0; }
+        
+        /* Custom animations */
+        @keyframes sparkle {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+        }
+        
+        .animate-sparkle {
+            animation: sparkle 2s ease-in-out infinite;
+        }
+        
+        /* Enhanced button styles */
+        .btn-gradient {
+            background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+            background-size: 200% 200%;
+            animation: gradient-shift 3s ease infinite;
+        }
+        
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* Form field enhancements */
+        .form-field:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
+        }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -109,8 +138,8 @@ export default function MainSite() {
                             <textarea id="message" name="message" rows="4" required class="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Tell us how we can help you or how you'd like to get involved..."></textarea>
                         </div>
 
-                        <button type="submit" class="w-full bg-blue-600 text-white py-4 px-4 rounded-lg font-semibold hover:bg-blue-700 transition duration-300 min-h-[48px] text-base">
-                            Send Message
+                        <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 px-4 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 min-h-[48px] text-base shadow-lg hover:shadow-xl hover:-translate-y-1 transform">
+                            <span class="mr-2">✨</span>Send Message<span class="ml-2">🚀</span>
                         </button>
 
                         <p class="text-xs text-gray-500 text-center">We'll respond within 24 hours during business days</p>
@@ -160,15 +189,61 @@ export default function MainSite() {
     </section>
 
     <script>
-        // Simple form handling - let the form submit naturally
+        // Enhanced form handling with proper redirect support
         document.getElementById('contact-form').addEventListener('submit', function(e) {
-            const submitButton = this.querySelector('button[type="submit"]');
+            e.preventDefault(); // Prevent default form submission
             
-            // Show loading state
-            submitButton.textContent = 'Sending...';
+            const form = this;
+            const submitButton = form.querySelector('button[type="submit"]');
+            const formData = new FormData(form);
+            
+            // Show delightful loading state
+            submitButton.innerHTML = '✨ Sending your message...';
             submitButton.disabled = true;
+            submitButton.style.background = 'linear-gradient(45deg, #3b82f6, #8b5cf6)';
             
-            // Let the form submit naturally to the API, which will redirect
+            // Submit form via fetch to handle the response properly
+            fetch('/api/submit-form', {
+                method: 'POST',
+                body: formData
+            })
+            .then(async response => {
+                const contentType = response.headers.get('content-type');
+                
+                if (contentType && contentType.includes('text/html')) {
+                    // Handle HTML redirect response
+                    const htmlContent = await response.text();
+                    document.body.innerHTML = htmlContent;
+                } else {
+                    // Handle JSON response (fallback)
+                    const data = await response.json();
+                    if (data.success) {
+                        // Redirect manually if API doesn't redirect
+                        const firstName = formData.get('firstName');
+                        const inquiryType = formData.get('inquiry_type');
+                        window.location.href = \`https://app.theforwardhorizon.com/thank-you?type=\${inquiryType}&name=\${firstName}\`;
+                    } else {
+                        throw new Error(data.error || 'Something went wrong');
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Form submission error:', error);
+                
+                // Show delightful error state
+                submitButton.innerHTML = '❌ Oops! Please try again';
+                submitButton.style.background = '#ef4444';
+                submitButton.disabled = false;
+                
+                // Reset button after 3 seconds
+                setTimeout(() => {
+                    submitButton.innerHTML = 'Send Message';
+                    submitButton.style.background = '#2563eb';
+                }, 3000);
+                
+                // Show user-friendly error message
+                alert('There was an issue sending your message. Please try again or call us at (626) 603-0954.');
+            });
         });
     </script>
 </body>
