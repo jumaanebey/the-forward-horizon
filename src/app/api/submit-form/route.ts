@@ -5,6 +5,21 @@ import path from 'path';
 
 // Email templates for each audience
 const emailTemplates = {
+  general: {
+    subject: "Thank you for contacting Forward Horizon",
+    pdfFile: "Forward_Horizon_Marketing_Funnel_Strategy.pdf",
+    body: `Thank you for contacting Forward Horizon!
+
+We received your message and will respond within 24 hours during business days.
+
+Forward Horizon provides transitional housing for veterans, individuals in recovery, and returning citizens. We're here to help you on your journey.
+
+Visit our website: https://theforwardhorizon.com
+Call us: (626) 603-0954
+
+Best regards,
+The Forward Horizon Team`
+  },
   veterans: {
     subject: "Your Veterans Benefits Guide + Housing Checklist",
     pdfFile: "Veterans_Benefits_Guide.pdf",
@@ -72,10 +87,13 @@ The Forward Horizon Reentry Team`
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('API route called!');
+    
     // Handle both JSON and form data
     let firstName, email, formType;
     
     const contentType = request.headers.get('content-type');
+    console.log('Content type:', contentType);
     
     if (contentType?.includes('application/json')) {
       const data = await request.json();
@@ -87,15 +105,24 @@ export async function POST(request: NextRequest) {
       const formData = await request.formData();
       firstName = formData.get('firstName')?.toString();
       email = formData.get('email')?.toString();
-      formType = formData.get('inqury_type')?.toString() || formData.get('inquiry_type')?.toString();
+      formType = formData.get('inquiry_type')?.toString(); // Fixed typo
     }
+    
+    console.log('Received data:', { firstName, email, formType });
 
     // Validate input
-    if (!firstName || !email || !formType) {
+    if (!firstName || !email) {
+      console.log('Missing required fields:', { firstName, email, formType });
       return NextResponse.json(
         { error: 'Missing required fields' },
         { status: 400 }
       );
+    }
+
+    // Set default formType if missing
+    if (!formType) {
+      formType = 'general';
+      console.log('No formType provided, using default:', formType);
     }
 
     if (!emailTemplates[formType as keyof typeof emailTemplates]) {
