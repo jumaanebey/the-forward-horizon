@@ -112,6 +112,14 @@ export async function POST(request: NextRequest) {
     console.log(`Lead captured: ${firstName} (${email}) - ${formType}`);
     console.log('Email template would be:', template.subject);
 
+    // Debug logging
+    console.log('Form submission received:');
+    console.log('firstName:', firstName);
+    console.log('email:', email);
+    console.log('formType:', formType);
+    console.log('EMAIL_USER configured:', !!process.env.EMAIL_USER);
+    console.log('EMAIL_PASS configured:', !!process.env.EMAIL_PASS);
+
     // Check if email is configured
     if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
       console.log('Email not configured - storing lead for manual follow-up');
