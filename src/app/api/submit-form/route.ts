@@ -136,14 +136,15 @@ export async function POST(request: NextRequest) {
       'other': 'general'
     };
 
-    const templateKey = formTypeMapping[formType] || formType;
+    let templateKey = formTypeMapping[formType] || formType;
     console.log('FormType mapping:', formType, '->', templateKey);
 
     if (!emailTemplates[templateKey as keyof typeof emailTemplates]) {
-      return NextResponse.json(
-        { error: 'Invalid form type' },
-        { status: 400 }
-      );
+      console.log('Template not found for key:', templateKey);
+      console.log('Available templates:', Object.keys(emailTemplates));
+      // Fallback to general template
+      templateKey = 'general';
+      console.log('Using fallback template:', templateKey);
     }
 
     // Get email template
