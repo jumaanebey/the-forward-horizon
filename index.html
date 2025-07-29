@@ -1319,11 +1319,16 @@
                 submitButton.disabled = true;
                 
                 try {
+                    // Try fetch first
                     const response = await fetch('https://app.theforwardhorizon.com/api/submit-form', {
                         method: 'POST',
                         body: formData,
                         mode: 'cors'
                     });
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}`);
+                    }
                     
                     const result = await response.json();
                     
@@ -1336,10 +1341,34 @@
                         throw new Error(result.error || 'Submission failed');
                     }
                 } catch (error) {
-                    alert('There was an error submitting your form. Please try again or call us at (626) 603-0954.');
-                    console.error('Form submission error:', error);
+                    console.error('Fetch failed, trying form submission:', error);
+                    
+                    // Fallback: Direct form submission to API
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = 'https://app.theforwardhorizon.com/api/submit-form';
+                    form.style.display = 'none';
+                    
+                    // Copy form data
+                    for (let [key, value] of formData.entries()) {
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = key;
+                        input.value = value;
+                        form.appendChild(input);
+                    }
+                    
+                    // Add redirect parameters
+                    const redirectInput = document.createElement('input');
+                    redirectInput.type = 'hidden';
+                    redirectInput.name = 'redirect';
+                    redirectInput.value = 'true';
+                    form.appendChild(redirectInput);
+                    
+                    document.body.appendChild(form);
+                    form.submit();
                 } finally {
-                    // Reset button
+                    // Reset button (in case of error)
                     submitButton.textContent = originalText;
                     submitButton.disabled = false;
                 }

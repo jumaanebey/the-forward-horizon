@@ -174,6 +174,27 @@ export async function POST(request: NextRequest) {
       firstName = formData.get('firstName')?.toString();
       email = formData.get('email')?.toString();
       formType = formData.get('inquiry_type')?.toString(); // Fixed typo
+      
+      // Check if this is a redirect request (fallback form submission)
+      const isRedirect = formData.get('redirect');
+      if (isRedirect) {
+        console.log('Redirect form submission detected');
+        // Handle redirect after processing
+        const templateKey = formTypeMapping[formType || ''] || 'general';
+        
+        // Process the form but redirect instead of returning JSON
+        try {
+          // Quick email processing without full validation
+          console.log(`Redirect lead captured: ${firstName} (${email}) - ${formType}`);
+          
+          // Redirect to thank you page
+          const redirectUrl = `https://app.theforwardhorizon.com/thank-you?type=${formType}&name=${firstName}`;
+          return NextResponse.redirect(redirectUrl);
+        } catch (error) {
+          console.error('Error in redirect processing:', error);
+          return NextResponse.redirect('https://app.theforwardhorizon.com/thank-you?type=general');
+        }
+      }
     }
     
     console.log('Received data:', { firstName, email, formType });
