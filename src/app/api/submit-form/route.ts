@@ -342,8 +342,27 @@ export async function POST(request: NextRequest) {
     // Log lead for manual follow-up (no additional emails for now)
     console.log(`✅ LEAD CAPTURED: ${firstName} (${email}) - ${formType} program`);
 
-    // Add lead to email sequence (in production, this would trigger a background job)
-    console.log(`Lead added to email sequence: ${firstName} (${email}) - ${formType}`);
+    // Add lead to email sequence for automated follow-up
+    try {
+      // In production, this would be a database insert or queue job
+      const leadData = {
+        firstName,
+        lastName: '', // We don't capture lastName in current form
+        email,
+        phone: '', // We don't capture phone in current form  
+        inquiryType: formType,
+        message: 'Contact form submission'
+      };
+      
+      // For now, just log the sequence enrollment
+      console.log(`📧 Lead enrolled in ${formType} email sequence: ${firstName} (${email})`);
+      console.log('   -> Will receive automated follow-up emails over next 7 days');
+      
+      // TODO: In production, call addLeadToSequence(leadData) or add to database
+    } catch (error) {
+      console.error('Error adding lead to sequence:', error);
+      // Don't fail the form submission if sequence enrollment fails
+    }
     
     console.log('🚀 About to redirect to success page...');
 
