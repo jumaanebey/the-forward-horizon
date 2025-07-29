@@ -345,18 +345,13 @@ Forward Horizon Team`
     // Add lead to email sequence (in production, this would trigger a background job)
     console.log(`Lead added to email sequence: ${firstName} (${email}) - ${formType}`);
 
-    const response = NextResponse.json({
-      success: true,
-      message: 'Guide sent successfully',
-      emailSequenceStarted: true
-    });
-
-    // Add CORS headers
-    response.headers.set('Access-Control-Allow-Origin', '*');
-    response.headers.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    response.headers.set('Access-Control-Allow-Headers', 'Content-Type');
-
-    return response;
+    // Always redirect to success page for better UX
+    const redirectUrl = `https://app.theforwardhorizon.com/thank-you?type=${formType}&name=${encodeURIComponent(firstName)}`;
+    
+    // Log success for debugging
+    console.log('Form processed successfully, redirecting to:', redirectUrl);
+    
+    return NextResponse.redirect(redirectUrl);
 
   } catch (error) {
     console.error('Error sending email:', error);
