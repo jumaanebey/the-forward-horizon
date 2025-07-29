@@ -72,7 +72,23 @@ The Forward Horizon Reentry Team`
 
 export async function POST(request: NextRequest) {
   try {
-    const { firstName, email, formType } = await request.json();
+    // Handle both JSON and form data
+    let firstName, email, formType;
+    
+    const contentType = request.headers.get('content-type');
+    
+    if (contentType?.includes('application/json')) {
+      const data = await request.json();
+      firstName = data.firstName;
+      email = data.email;
+      formType = data.formType;
+    } else {
+      // Handle form data
+      const formData = await request.formData();
+      firstName = formData.get('firstName')?.toString();
+      email = formData.get('email')?.toString();
+      formType = formData.get('inqury_type')?.toString() || formData.get('inquiry_type')?.toString();
+    }
 
     // Validate input
     if (!firstName || !email || !formType) {
