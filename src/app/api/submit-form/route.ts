@@ -333,28 +333,12 @@ export async function POST(request: NextRequest) {
       console.log('Sending email without PDF attachment');
     }
 
-    // Send email
+    // Send email to user only (no spam)
     await transporter.sendMail(mailOptions);
+    console.log(`Professional email sent to: ${email}`);
 
-    // Also send notification to Forward Horizon team
-    const notificationOptions = {
-      from: process.env.EMAIL_USER,
-      to: process.env.NOTIFICATION_EMAIL || process.env.EMAIL_USER,
-      subject: `New Lead: ${formType} form submission`,
-      text: `New lead captured:
-
-Name: ${firstName}
-Email: ${email}
-Form Type: ${formType}
-Date: ${new Date().toLocaleDateString()}
-Time: ${new Date().toLocaleTimeString()}
-
-Follow up with this lead within 24 hours for best conversion rates.
-
-Forward Horizon Team`
-    };
-
-    await transporter.sendMail(notificationOptions);
+    // Log lead for manual follow-up (no additional emails for now)
+    console.log(`✅ LEAD CAPTURED: ${firstName} (${email}) - ${formType} program`);
 
     // Add lead to email sequence (in production, this would trigger a background job)
     console.log(`Lead added to email sequence: ${firstName} (${email}) - ${formType}`);
