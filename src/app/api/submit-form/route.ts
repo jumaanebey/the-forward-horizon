@@ -188,31 +188,41 @@ export async function POST(request: NextRequest) {
     const pdfPath = path.join(process.cwd(), template.pdfFile);
     
     // Check if PDF exists
-    if (!fs.existsSync(pdfPath)) {
-      console.error(`PDF not found: ${pdfPath}`);
-      return NextResponse.json(
-        { error: 'Resource temporarily unavailable' },
-        { status: 500 }
-      );
+    let pdfExists = false;
+    try {
+      pdfExists = fs.existsSync(pdfPath);
+    } catch (error) {
+      console.log('PDF check failed:', error);
+    }
+    
+    if (!pdfExists) {
+      console.log(`PDF not found: ${pdfPath} - sending email without attachment`);
     }
 
     // Personalize email body
     const personalizedBody = template.body.replace(/\{firstName\}/g, firstName);
 
     // Email options
-    const mailOptions = {
+    const mailOptions: any = {
       from: process.env.EMAIL_USER,
       to: email,
       subject: template.subject,
-      text: personalizedBody,
-      attachments: [
+      text: personalizedBody + '\n\nNote: Your guide will be sent in a separate email with the PDF attachment.',
+    };
+
+    // Add PDF attachment if it exists
+    if (pdfExists) {
+      mailOptions.attachments = [
         {
           filename: template.pdfFile,
           path: pdfPath,
           contentType: 'application/pdf'
         }
-      ]
-    };
+      ];
+      console.log('PDF attachment added');
+    } else {
+      console.log('Sending email without PDF attachment');
+    }
 
     // Send email
     await transporter.sendMail(mailOptions);
