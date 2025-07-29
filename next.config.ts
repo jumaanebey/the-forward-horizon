@@ -118,6 +118,17 @@ const nextConfig: NextConfig = {
     ];
   },
 
+  // Rewrites for routing
+  async rewrites() {
+    return [
+      // Serve main website at root
+      {
+        source: '/',
+        destination: '/main-site',
+      },
+    ];
+  },
+
   // Redirects for performance
   async redirects() {
     return [
