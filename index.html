@@ -1321,7 +1321,8 @@
                 try {
                     const response = await fetch('https://app.theforwardhorizon.com/api/submit-form', {
                         method: 'POST',
-                        body: formData
+                        body: formData,
+                        mode: 'cors'
                     });
                     
                     const result = await response.json();
