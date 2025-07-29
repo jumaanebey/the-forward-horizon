@@ -3,6 +3,18 @@ import nodemailer from 'nodemailer';
 import fs from 'fs';
 import path from 'path';
 
+// Handle preflight requests
+export async function OPTIONS(request: NextRequest) {
+  return new NextResponse(null, {
+    status: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+    },
+  });
+}
+
 // Email templates for each audience
 const emailTemplates = {
   general: {
@@ -312,17 +324,31 @@ Forward Horizon Team`
     // Add lead to email sequence (in production, this would trigger a background job)
     console.log(`Lead added to email sequence: ${firstName} (${email}) - ${formType}`);
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       success: true,
       message: 'Guide sent successfully',
       emailSequenceStarted: true
     });
 
+    // Add CORS headers
+    response.headers.set('Access-Control-Allow-Origin', '*');
+    response.headers.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    response.headers.set('Access-Control-Allow-Headers', 'Content-Type');
+
+    return response;
+
   } catch (error) {
     console.error('Error sending email:', error);
-    return NextResponse.json(
+    const errorResponse = NextResponse.json(
       { error: 'Failed to send guide. Please try again.' },
       { status: 500 }
     );
+
+    // Add CORS headers to error response
+    errorResponse.headers.set('Access-Control-Allow-Origin', '*');
+    errorResponse.headers.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    errorResponse.headers.set('Access-Control-Allow-Headers', 'Content-Type');
+
+    return errorResponse;
   }
 }
