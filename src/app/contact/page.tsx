@@ -1,5 +1,12 @@
 'use client';
 
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Contact Forward Horizon - Get Help Today',
+  description: 'Contact Forward Horizon for transitional housing, veteran support, recovery housing, and reentry services. We\'re here to help 24/7.',
+}
+
 export default function ContactPage() {
   return (
     <div className="min-h-screen bg-gray-50">
