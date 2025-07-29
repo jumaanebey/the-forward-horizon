@@ -256,7 +256,26 @@ export async function POST(request: NextRequest) {
       console.log('Email not configured - redirecting to success page anyway');
       
       const redirectUrl = `https://app.theforwardhorizon.com/thank-you?type=${formType}&name=${encodeURIComponent(firstName)}`;
-      return NextResponse.redirect(redirectUrl, 302);
+      
+      const htmlRedirect = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+          <meta http-equiv="refresh" content="0; url=${redirectUrl}">
+          <script>window.location.href = "${redirectUrl}";</script>
+      </head>
+      <body>
+          <p>Redirecting to success page...</p>
+          <p>If you are not redirected, <a href="${redirectUrl}">click here</a>.</p>
+      </body>
+      </html>`;
+      
+      return new NextResponse(htmlRedirect, {
+        status: 200,
+        headers: {
+          'Content-Type': 'text/html',
+        },
+      });
     }
 
     // Create transporter (using Gmail SMTP for demo - in production use service like SendGrid)
@@ -346,7 +365,26 @@ Forward Horizon Team`
     // Log success for debugging
     console.log('Form processed successfully, redirecting to:', redirectUrl);
     
-    return NextResponse.redirect(redirectUrl, 302);
+    // Try HTML redirect instead of server redirect
+    const htmlRedirect = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta http-equiv="refresh" content="0; url=${redirectUrl}">
+        <script>window.location.href = "${redirectUrl}";</script>
+    </head>
+    <body>
+        <p>Redirecting to success page...</p>
+        <p>If you are not redirected, <a href="${redirectUrl}">click here</a>.</p>
+    </body>
+    </html>`;
+    
+    return new NextResponse(htmlRedirect, {
+      status: 200,
+      headers: {
+        'Content-Type': 'text/html',
+      },
+    });
 
   } catch (error) {
     console.error('Error sending email:', error);
