@@ -37,13 +37,18 @@
   ],
   "redirects": [
     {
+      "source": "/",
+      "destination": "/main-site",
+      "permanent": false
+    },
+    {
       "source": "/admin",
-      "destination": "/?view=management",
+      "destination": "/dashboard?view=management",
       "permanent": false
     },
     {
       "source": "/login",
-      "destination": "/?view=login",
+      "destination": "/dashboard?view=login",
       "permanent": false
     }
   ],
