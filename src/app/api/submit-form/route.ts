@@ -21,25 +21,81 @@ Best regards,
 The Forward Horizon Team`
   },
   veterans: {
-    subject: "Your Veterans Benefits Guide + Housing Checklist",
+    subject: "🇺🇸 Your Veterans Benefits Guide + Housing Checklist",
     pdfFile: "Veterans_Benefits_Guide.pdf",
-    body: `Thank you for downloading your Veterans Benefits Guide!
-
-Your service to our country deserves recognition, and your transition to civilian housing should be supported every step of the way.
-
-This comprehensive guide includes:
-• Complete VA benefits overview and eligibility
-• Step-by-step housing application process
-• Financial planning templates and budgeting guidance
-• Essential documentation checklists
-• Emergency contacts and resources
-
-Ready to take the next step? Visit Forward Horizon to learn about our veterans housing program and submit your application: https://theforwardhorizon.com
-
-Questions? Call us at (626) 603-0954 - we're here to help.
-
-Semper Fi,
-The Forward Horizon Team`
+    body: `<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veterans Benefits Guide</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f8fafc;">
+    <table role="presentation" style="width: 100%; border-collapse: collapse;">
+        <tr>
+            <td style="padding: 40px 20px;">
+                <table role="presentation" style="max-width: 600px; margin: 0 auto; background-color: white; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                    <!-- Header -->
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); padding: 40px 30px; text-align: center; border-radius: 8px 8px 0 0;">
+                            <div style="font-size: 48px; margin-bottom: 16px;">🇺🇸</div>
+                            <h1 style="color: white; font-size: 28px; margin: 0; font-weight: bold;">Thank You for Your Service!</h1>
+                            <p style="color: #bfdbfe; font-size: 16px; margin: 16px 0 0 0;">Your Veterans Benefits Guide is ready</p>
+                        </td>
+                    </tr>
+                    
+                    <!-- Content -->
+                    <tr>
+                        <td style="padding: 40px 30px;">
+                            <p style="font-size: 18px; color: #374151; margin: 0 0 24px 0; line-height: 1.6;">
+                                Dear Veteran,
+                            </p>
+                            
+                            <p style="font-size: 16px; color: #6b7280; margin: 0 0 24px 0; line-height: 1.6;">
+                                Your service to our country deserves recognition, and your transition to civilian housing should be supported every step of the way.
+                            </p>
+                            
+                            <div style="background-color: #f3f4f6; padding: 24px; border-radius: 8px; margin: 24px 0;">
+                                <h3 style="color: #1f2937; font-size: 18px; margin: 0 0 16px 0;">Your comprehensive guide includes:</h3>
+                                <ul style="color: #4b5563; margin: 0; padding-left: 20px; line-height: 1.8;">
+                                    <li>Complete VA benefits overview and eligibility</li>
+                                    <li>Step-by-step housing application process</li>
+                                    <li>Financial planning templates and budgeting guidance</li>
+                                    <li>Essential documentation checklists</li>
+                                    <li>Emergency contacts and resources</li>
+                                </ul>
+                            </div>
+                            
+                            <div style="text-align: center; margin: 32px 0;">
+                                <a href="https://theforwardhorizon.com" style="background-color: #1e40af; color: white; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block;">Learn About Veterans Housing</a>
+                            </div>
+                            
+                            <div style="background-color: #dbeafe; padding: 20px; border-radius: 8px; text-align: center; margin: 24px 0;">
+                                <h4 style="color: #1e40af; margin: 0 0 12px 0;">Need to speak with someone?</h4>
+                                <p style="color: #1e40af; margin: 0; font-weight: bold;">📞 (626) 603-0954</p>
+                                <p style="color: #3b82f6; margin: 8px 0 0 0; font-size: 14px;">Available 24/7 for veteran crisis support</p>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <!-- Footer -->
+                    <tr>
+                        <td style="background-color: #f9fafb; padding: 30px; border-radius: 0 0 8px 8px; text-align: center;">
+                            <p style="color: #1e40af; font-weight: bold; margin: 0 0 8px 0; font-size: 18px;">Semper Fi,</p>
+                            <p style="color: #6b7280; margin: 0 0 16px 0;">The Forward Horizon Veterans Team</p>
+                            <div style="border-top: 1px solid #e5e7eb; padding-top: 16px; margin-top: 16px;">
+                                <p style="color: #9ca3af; font-size: 14px; margin: 0;">Forward Horizon - Serving Those Who Served</p>
+                                <p style="color: #9ca3af; font-size: 12px; margin: 4px 0 0 0;">Los Angeles County, Orange County, Riverside County & San Bernardino County</p>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>`,
+    htmlBody: true
   },
   recovery: {
     subject: "Your Recovery Housing Preparation Guide",
@@ -207,8 +263,14 @@ export async function POST(request: NextRequest) {
       from: process.env.EMAIL_USER,
       to: email,
       subject: template.subject,
-      text: personalizedBody + '\n\nNote: Your guide will be sent in a separate email with the PDF attachment.',
     };
+
+    // Use HTML if available, otherwise plain text
+    if (template.htmlBody) {
+      mailOptions.html = template.body.replace(/\{firstName\}/g, firstName);
+    } else {
+      mailOptions.text = personalizedBody + '\n\nNote: Your guide will be sent in a separate email with the PDF attachment.';
+    }
 
     // Add PDF attachment if it exists
     if (pdfExists) {

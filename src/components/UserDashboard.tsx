@@ -192,21 +192,37 @@ export default function UserDashboard({ userRole }: UserDashboardProps) {
             <CardContent className="space-y-4">
               <div>
                 <h4 className="font-medium">Address</h4>
-                <p className="text-gray-600">123 Recovery Way<br />Pasadena, CA 91101</p>
+                <p className="text-gray-600">Pasadena, CA<br />Los Angeles County</p>
+                <p className="text-xs text-gray-500 mt-1">Exact location provided upon acceptance</p>
               </div>
               
               <div className="space-y-2">
-                <Button variant="outline" className="w-full" size="sm">
+                <Button 
+                  variant="outline" 
+                  className="w-full" 
+                  size="sm"
+                  onClick={() => window.open('tel:+16268887776', '_self')}
+                >
                   <Phone className="w-4 h-4 mr-2" />
-                  Call for Information
+                  Call (626) 888-7776
                 </Button>
-                <Button variant="outline" className="w-full" size="sm">
+                <Button 
+                  variant="outline" 
+                  className="w-full" 
+                  size="sm"
+                  onClick={() => window.open('mailto:info@theforwardhorizon.com', '_self')}
+                >
                   <Mail className="w-4 h-4 mr-2" />
                   Email Inquiry
                 </Button>
-                <Button variant="outline" className="w-full" size="sm">
+                <Button 
+                  variant="outline" 
+                  className="w-full" 
+                  size="sm"
+                  onClick={() => window.open('https://theforwardhorizon.com', '_blank')}
+                >
                   <Calendar className="w-4 h-4 mr-2" />
-                  Schedule Tour
+                  Get Started Online
                 </Button>
               </div>
             </CardContent>
@@ -244,6 +260,44 @@ export default function UserDashboard({ userRole }: UserDashboardProps) {
                 <p className="text-sm text-gray-600">Move in and start your personalized recovery program with our support team.</p>
               </div>
             </div>
+          </CardContent>
+        </Card>
+
+        {/* Call to Action Footer */}
+        <Card className="bg-gradient-to-r from-blue-50 to-green-50 border-blue-200">
+          <CardContent className="p-8 text-center">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Ready to Begin Your Recovery Journey?</h2>
+            <p className="text-gray-700 mb-6 max-w-2xl mx-auto">
+              Take the first step towards healing and independence. Our comprehensive programs are designed to support you every step of the way.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Button 
+                size="lg"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3"
+                onClick={() => window.open('https://theforwardhorizon.com', '_blank')}
+              >
+                Start Your Application
+              </Button>
+              <Button 
+                variant="outline" 
+                size="lg"
+                className="px-8 py-3"
+                onClick={() => window.open('tel:+16268887776', '_self')}
+              >
+                <Phone className="w-4 h-4 mr-2" />
+                Call Now: (626) 888-7776
+              </Button>
+            </div>
+            <p className="text-sm text-gray-600 mt-4">
+              Visit our main website: <a 
+                href="https://theforwardhorizon.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:text-blue-800 underline font-medium"
+              >
+                theforwardhorizon.com
+              </a>
+            </p>
           </CardContent>
         </Card>
       </div>
