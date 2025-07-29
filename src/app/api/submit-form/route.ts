@@ -253,15 +253,10 @@ export async function POST(request: NextRequest) {
 
     // Check if email is configured
     if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-      console.log('Email not configured - storing lead for manual follow-up');
+      console.log('Email not configured - redirecting to success page anyway');
       
-      // Return success but explain email will be sent manually
-      return NextResponse.json({
-        success: true,
-        message: 'Thank you! Your information has been received. We will send your guide and follow up within 24 hours.',
-        leadCaptured: true,
-        emailPending: true
-      });
+      const redirectUrl = `https://app.theforwardhorizon.com/thank-you?type=${formType}&name=${encodeURIComponent(firstName)}`;
+      return NextResponse.redirect(redirectUrl, 302);
     }
 
     // Create transporter (using Gmail SMTP for demo - in production use service like SendGrid)
@@ -351,7 +346,7 @@ Forward Horizon Team`
     // Log success for debugging
     console.log('Form processed successfully, redirecting to:', redirectUrl);
     
-    return NextResponse.redirect(redirectUrl);
+    return NextResponse.redirect(redirectUrl, 302);
 
   } catch (error) {
     console.error('Error sending email:', error);
