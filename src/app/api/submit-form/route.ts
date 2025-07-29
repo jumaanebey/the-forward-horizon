@@ -315,8 +315,10 @@ export async function POST(request: NextRequest) {
     // Use HTML if available, otherwise plain text
     if (template.htmlBody) {
       mailOptions.html = template.body.replace(/\{firstName\}/g, firstName);
+      console.log('Using HTML email template');
     } else {
       mailOptions.text = personalizedBody + '\n\nNote: Your guide will be sent in a separate email with the PDF attachment.';
+      console.log('Using plain text email template');
     }
 
     // Add PDF attachment if it exists
@@ -342,6 +344,8 @@ export async function POST(request: NextRequest) {
 
     // Add lead to email sequence (in production, this would trigger a background job)
     console.log(`Lead added to email sequence: ${firstName} (${email}) - ${formType}`);
+    
+    console.log('🚀 About to redirect to success page...');
 
     // Always redirect to success page for better UX
     const redirectUrl = `https://app.theforwardhorizon.com/thank-you?type=${formType}&name=${encodeURIComponent(firstName)}`;
