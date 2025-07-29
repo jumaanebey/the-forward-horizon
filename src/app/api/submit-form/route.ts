@@ -125,7 +125,21 @@ export async function POST(request: NextRequest) {
       console.log('No formType provided, using default:', formType);
     }
 
-    if (!emailTemplates[formType as keyof typeof emailTemplates]) {
+    // Map form values to template keys
+    const formTypeMapping: { [key: string]: string } = {
+      'veteran-housing': 'veterans',
+      'sober-living': 'recovery', 
+      'Re-entry-housing': 'reentry',
+      'volunteer': 'general',
+      'donate': 'general',
+      'partner': 'general',
+      'other': 'general'
+    };
+
+    const templateKey = formTypeMapping[formType] || formType;
+    console.log('FormType mapping:', formType, '->', templateKey);
+
+    if (!emailTemplates[templateKey as keyof typeof emailTemplates]) {
       return NextResponse.json(
         { error: 'Invalid form type' },
         { status: 400 }
@@ -133,7 +147,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get email template
-    const template = emailTemplates[formType as keyof typeof emailTemplates];
+    const template = emailTemplates[templateKey as keyof typeof emailTemplates];
 
     // Log the lead capture (for now, until email is configured)
     console.log(`Lead captured: ${firstName} (${email}) - ${formType}`);
