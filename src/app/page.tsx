@@ -1,6 +1,5 @@
-'use client';
-import RoleBasedDashboard from '@/components/RoleBasedDashboard';
+import { redirect } from 'next/navigation';
 
 export default function Home() {
-  return <RoleBasedDashboard />;
+  redirect('/main-site');
 }
