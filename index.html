@@ -1306,72 +1306,16 @@
                 });
             });
 
-            // Form handling with proper submission
-            document.getElementById('contact-form').addEventListener('submit', async function(e) {
-                e.preventDefault();
-                
-                const formData = new FormData(this);
+            // Simple form handling - let the form submit naturally
+            document.getElementById('contact-form').addEventListener('submit', function(e) {
                 const submitButton = this.querySelector('button[type="submit"]');
-                const originalText = submitButton.textContent;
                 
                 // Show loading state
                 submitButton.textContent = 'Sending...';
                 submitButton.disabled = true;
                 
-                try {
-                    // Try fetch first
-                    const response = await fetch('https://app.theforwardhorizon.com/api/submit-form', {
-                        method: 'POST',
-                        body: formData,
-                        mode: 'cors'
-                    });
-                    
-                    if (!response.ok) {
-                        throw new Error(`HTTP ${response.status}`);
-                    }
-                    
-                    const result = await response.json();
-                    
-                    if (result.success) {
-                        // Redirect to beautiful thank you page
-                        const firstName = formData.get('firstName');
-                        const inquiryType = formData.get('inquiry_type');
-                        window.location.href = `https://app.theforwardhorizon.com/thank-you?type=${inquiryType}&name=${firstName}`;
-                    } else {
-                        throw new Error(result.error || 'Submission failed');
-                    }
-                } catch (error) {
-                    console.error('Fetch failed, trying form submission:', error);
-                    
-                    // Fallback: Direct form submission to API
-                    const form = document.createElement('form');
-                    form.method = 'POST';
-                    form.action = 'https://app.theforwardhorizon.com/api/submit-form';
-                    form.style.display = 'none';
-                    
-                    // Copy form data
-                    for (let [key, value] of formData.entries()) {
-                        const input = document.createElement('input');
-                        input.type = 'hidden';
-                        input.name = key;
-                        input.value = value;
-                        form.appendChild(input);
-                    }
-                    
-                    // Add redirect parameters
-                    const redirectInput = document.createElement('input');
-                    redirectInput.type = 'hidden';
-                    redirectInput.name = 'redirect';
-                    redirectInput.value = 'true';
-                    form.appendChild(redirectInput);
-                    
-                    document.body.appendChild(form);
-                    form.submit();
-                } finally {
-                    // Reset button (in case of error)
-                    submitButton.textContent = originalText;
-                    submitButton.disabled = false;
-                }
+                // Let the form submit naturally to the API, which will redirect
+                // No need to prevent default - let it POST and redirect
             });
 
         </script>
