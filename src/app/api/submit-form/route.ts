@@ -162,17 +162,7 @@ export async function POST(request: NextRequest) {
     console.log('EMAIL_USER configured:', !!process.env.EMAIL_USER);
     console.log('EMAIL_PASS configured:', !!process.env.EMAIL_PASS);
 
-    // For now, let's just capture the lead and return success
-    console.log('Lead captured successfully - email will be sent manually');
-    
-    return NextResponse.json({
-      success: true,
-      message: 'Thank you! Your information has been received. We will send your guide and follow up within 24 hours.',
-      leadCaptured: true,
-      emailPending: true
-    });
-
-    // Check if email is configured (temporarily disabled)
+    // Check if email is configured
     if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
       console.log('Email not configured - storing lead for manual follow-up');
       
@@ -186,7 +176,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create transporter (using Gmail SMTP for demo - in production use service like SendGrid)
-    const transporter = nodemailer.createTransporter({
+    const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
         user: process.env.EMAIL_USER,
