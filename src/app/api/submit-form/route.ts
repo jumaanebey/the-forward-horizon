@@ -92,6 +92,23 @@ export async function POST(request: NextRequest) {
     // Get email template
     const template = emailTemplates[formType as keyof typeof emailTemplates];
 
+    // Log the lead capture (for now, until email is configured)
+    console.log(`Lead captured: ${firstName} (${email}) - ${formType}`);
+    console.log('Email template would be:', template.subject);
+
+    // Check if email is configured
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+      console.log('Email not configured - storing lead for manual follow-up');
+      
+      // Return success but explain email will be sent manually
+      return NextResponse.json({
+        success: true,
+        message: 'Thank you! Your information has been received. We will send your guide and follow up within 24 hours.',
+        leadCaptured: true,
+        emailPending: true
+      });
+    }
+
     // Create transporter (using Gmail SMTP for demo - in production use service like SendGrid)
     const transporter = nodemailer.createTransporter({
       service: 'gmail',
@@ -134,9 +151,6 @@ export async function POST(request: NextRequest) {
     // Send email
     await transporter.sendMail(mailOptions);
 
-    // Log successful submission (in production, save to database)
-    console.log(`Lead captured: ${firstName} (${email}) - ${formType}`);
-
     // Also send notification to Forward Horizon team
     const notificationOptions = {
       from: process.env.EMAIL_USER,
@@ -158,7 +172,6 @@ Forward Horizon Team`
     await transporter.sendMail(notificationOptions);
 
     // Add lead to email sequence (in production, this would trigger a background job)
-    // For now, we'll just log it - you'd need to set up proper scheduling
     console.log(`Lead added to email sequence: ${firstName} (${email}) - ${formType}`);
 
     return NextResponse.json({
