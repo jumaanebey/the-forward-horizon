@@ -68,7 +68,7 @@ export default function Home() {
         </nav>
 
         <!-- Hero Section -->
-        <header id="home" class="relative bg-cover bg-center text-white" style="background-image: url('images/American Flag.jpg');">
+        <header id="home" class="relative bg-cover bg-center text-white" style="background-image: url('/images/American Flag.jpg');">
             <!-- Background overlay for better text readability -->
             <div class="absolute inset-0 bg-black bg-opacity-70"></div>
 
@@ -108,7 +108,7 @@ export default function Home() {
                 <div class="grid md:grid-cols-3 gap-8 mb-12">
                     <!-- Veteran Transitional Housing -->
                     <div class="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow duration-300">
-                        <div class="h-48 bg-cover bg-center relative" style="background-image: url('images/veteran.jpg');">
+                        <div class="h-48 bg-cover bg-center relative" style="background-image: url('/images/veteran.jpg');">
                             <div class="absolute inset-0 bg-blue-600 bg-opacity-75"></div>
                             <div class="relative h-full flex flex-col items-center justify-center text-white px-4">
                                 <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mb-4">
@@ -217,7 +217,7 @@ export default function Home() {
 
                 <!-- Facility Image -->
                 <div class="mb-16">
-                    <div class="h-64 bg-cover bg-center rounded-lg shadow-lg" style="background-image: url('images/Calm Home.jpg');">
+                    <div class="h-64 bg-cover bg-center rounded-lg shadow-lg" style="background-image: url('/images/Calm Home.jpg');">
                         <div class="h-full bg-black bg-opacity-30 rounded-lg flex items-center justify-center">
                             <h3 class="text-3xl font-bold text-white text-center">Safe, Welcoming Community</h3>
                         </div>
