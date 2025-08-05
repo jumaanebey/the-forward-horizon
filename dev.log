@@ -1,0 +1,22 @@
+
+> tenant-portal@0.1.0 dev
+> next dev
+
+   ▲ Next.js 15.4.4
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.86.114:3000
+   - Environments: .env.local
+   - Experiments (use with caution):
+     · optimizePackageImports
+
+ ✓ Starting...
+ ✓ Ready in 1893ms
+ ○ Compiling /dashboard ...
+ ✓ Compiled /dashboard in 5.4s (915 modules)
+ HEAD /dashboard 200 in 6047ms
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /dashboard. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /dashboard. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ✓ Compiled in 513ms (390 modules)
+[?25h
