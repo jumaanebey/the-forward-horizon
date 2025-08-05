@@ -19,7 +19,7 @@ export async function OPTIONS(request: NextRequest) {
 const emailTemplates = {
   general: {
     subject: "Thank you for contacting Forward Horizon",
-    pdfFile: "Forward_Horizon_Marketing_Funnel_Strategy.pdf",
+    pdfFile: null, // NO ATTACHMENT for general inquiries
     body: `Thank you for contacting Forward Horizon!
 
 We received your message and will respond within 24 hours during business days.
