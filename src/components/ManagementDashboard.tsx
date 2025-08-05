@@ -24,7 +24,7 @@ import {
   Zap
 } from 'lucide-react';
 import { CRMManager } from '@/lib/crm';
-import { AuthManager, User } from '@/lib/auth';
+import { User } from '@/lib/simple-auth';
 import AISuccessPredictor from './AISuccessPredictor';
 import AdvancedAnalyticsDashboard from './AdvancedAnalyticsDashboard';
 import AutomatedWorkflows from './AutomatedWorkflows';
