@@ -18,10 +18,16 @@ import {
   CheckCircle,
   AlertCircle,
   UserPlus,
-  FileText
+  FileText,
+  Brain,
+  BarChart3,
+  Zap
 } from 'lucide-react';
 import { CRMManager } from '@/lib/crm';
 import { AuthManager, User } from '@/lib/auth';
+import AISuccessPredictor from './AISuccessPredictor';
+import AdvancedAnalyticsDashboard from './AdvancedAnalyticsDashboard';
+import AutomatedWorkflows from './AutomatedWorkflows';
 
 interface ManagementDashboardProps {
   user: User;
@@ -260,12 +266,24 @@ export default function ManagementDashboard({ user }: ManagementDashboardProps) 
 
         {/* Main Content Tabs */}
         <Tabs defaultValue="overview" className="space-y-4">
-          <TabsList>
+          <TabsList className="grid w-full grid-cols-8">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="tasks">Tasks</TabsTrigger>
             <TabsTrigger value="leads">Leads</TabsTrigger>
             {canAccess('residents') && <TabsTrigger value="residents">Residents</TabsTrigger>}
             {canAccess('financial') && <TabsTrigger value="financial">Financial</TabsTrigger>}
+            <TabsTrigger value="ai-insights" className="flex items-center space-x-1">
+              <Brain className="w-4 h-4" />
+              <span>AI Insights</span>
+            </TabsTrigger>
+            <TabsTrigger value="analytics" className="flex items-center space-x-1">
+              <BarChart3 className="w-4 h-4" />
+              <span>Analytics</span>
+            </TabsTrigger>
+            <TabsTrigger value="workflows" className="flex items-center space-x-1">
+              <Zap className="w-4 h-4" />
+              <span>Workflows</span>
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-4">
@@ -401,6 +419,21 @@ export default function ManagementDashboard({ user }: ManagementDashboardProps) 
               </Card>
             </TabsContent>
           )}
+
+          {/* AI Insights Tab */}
+          <TabsContent value="ai-insights">
+            <AISuccessPredictor />
+          </TabsContent>
+
+          {/* Advanced Analytics Tab */}
+          <TabsContent value="analytics">
+            <AdvancedAnalyticsDashboard />
+          </TabsContent>
+
+          {/* Automated Workflows Tab */}
+          <TabsContent value="workflows">
+            <AutomatedWorkflows />
+          </TabsContent>
         </Tabs>
       </div>
     </div>
