@@ -28,6 +28,10 @@ import { User } from '@/lib/simple-auth';
 import AISuccessPredictor from './AISuccessPredictor';
 import AdvancedAnalyticsDashboard from './AdvancedAnalyticsDashboard';
 import AutomatedWorkflows from './AutomatedWorkflows';
+import TaskManagement from './TaskManagement';
+import LeadManagement from './LeadManagement';
+import ResidentManagement from './ResidentManagement';
+import FinancialOverview from './FinancialOverview';
 
 interface ManagementDashboardProps {
   user: User;
@@ -373,50 +377,22 @@ export default function ManagementDashboard({ user }: ManagementDashboardProps) 
           </TabsContent>
 
           <TabsContent value="tasks">
-            <Card>
-              <CardHeader>
-                <CardTitle>Task Management</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-500">Task management interface will be implemented here.</p>
-              </CardContent>
-            </Card>
+            <TaskManagement />
           </TabsContent>
 
           <TabsContent value="leads">
-            <Card>
-              <CardHeader>
-                <CardTitle>Lead Management</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-500">CRM lead management interface will be implemented here.</p>
-              </CardContent>
-            </Card>
+            <LeadManagement />
           </TabsContent>
 
           {canAccess('residents') && (
             <TabsContent value="residents">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Resident Management</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-500">Resident management interface will be implemented here.</p>
-                </CardContent>
-              </Card>
+              <ResidentManagement />
             </TabsContent>
           )}
 
           {canAccess('financial') && (
             <TabsContent value="financial">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Financial Overview</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-500">Financial dashboard will be implemented here.</p>
-                </CardContent>
-              </Card>
+              <FinancialOverview />
             </TabsContent>
           )}
 
