@@ -93,3 +93,11 @@ Import trace for requested module:
 ./src/app/dashboard/page.tsx
  ✓ Compiled in 676ms (948 modules)
  ✓ Compiled in 603ms (948 modules)
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /dashboard. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /dashboard. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET /dashboard 200 in 456ms
+ ✓ Compiled in 597ms (411 modules)
+ ✓ Compiled in 771ms (948 modules)
+ ✓ Compiled in 339ms (411 modules)

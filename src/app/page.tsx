@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Forward Horizon - Transitional Housing for Veterans, Recovering Individuals, and Returning Citizens',
-  description: 'Forward Horizon provides structured transitional housing for veterans, individuals in recovery, and returning citizens. Rebuilding lives through accountability, community, and fresh starts.',
+  description: 'Forward Horizon provides transitional housing support for veterans, individuals in recovery, and returning citizens. Safe, structured community support.',
 }
 
 export default function Home() {
