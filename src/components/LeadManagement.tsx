@@ -656,7 +656,6 @@ export default function LeadManagement() {
           </Card>
         </div>
       )}
-      
         </TabsContent>
 
         <TabsContent value="ai-attraction">
