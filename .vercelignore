@@ -1,0 +1,21 @@
+# Ignore subdirectory vercel configs to prevent conflicts
+marketing-website/vercel.json
+management-platform/vercel.json
+tenant-portal/vercel.json
+
+# Ignore development files
+dev.log
+node_modules
+.env.local
+.env
+
+# Ignore archive and backup files
+_archive/
+_docs/
+*.md
+!README.md
+
+# Ignore other project folders during main deployment
+marketing-website/
+management-platform/
+tenant-portal/

@@ -1,7 +1,13 @@
 {
-  "public": true,
+  "name": "forward-horizon-marketing",
+  "framework": "nextjs",
   "buildCommand": "npm run build",
   "outputDirectory": ".next",
-  "framework": "nextjs",
-  "installCommand": "npm install"
+  "installCommand": "npm install",
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
 } 
