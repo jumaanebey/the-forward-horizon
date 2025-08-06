@@ -1,7 +1,13 @@
 {
-  "public": true,
+  "name": "forward-horizon-tenant-portal",
+  "framework": "nextjs",
   "buildCommand": "npm run build",
   "outputDirectory": ".next",
-  "framework": "nextjs",
-  "installCommand": "npm install"
+  "installCommand": "npm install",
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/tenant-portal.html"
+    }
+  ]
 } 
