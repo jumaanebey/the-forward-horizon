@@ -57,3 +57,39 @@ Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
  ⚠ Unsupported metadata viewport is configured in metadata export in /_not-found. Please move it to viewport export instead.
 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
  GET /icon-512.png 404 in 65ms
+ ✓ Compiled in 627ms (406 modules)
+ ✓ Compiled in 133ms (406 modules)
+ ✓ Compiled in 629ms (938 modules)
+ ✓ Compiled in 446ms (940 modules)
+ ✓ Compiled in 958ms (940 modules)
+ ⨯ ./src/components/LeadManagement.tsx
+Error:   [31mx[0m Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+     ,-[[36;1;4m/Users/jumaanebey/Documents/forward-horizon-app/src/components/LeadManagement.tsx[0m:660:1]
+ [2m657[0m |       )}
+ [2m658[0m |     </div>
+ [2m659[0m |   );
+ [2m660[0m | }
+     : [35;1m^[0m
+     `----
+  [31mx[0m Expected '</', got 'jsx text (
+  [31m|[0m   );
+  [31m|[0m })'
+     ,-[[36;1;4m/Users/jumaanebey/Documents/forward-horizon-app/src/components/LeadManagement.tsx[0m:658:1]
+ [2m655[0m |               </Card>
+ [2m656[0m |             </div>
+ [2m657[0m |           )}
+ [2m658[0m | [35;1m,[0m[35;1m-[0m[35;1m>[0m     </div>
+ [2m659[0m | [35;1m|[0m     );
+ [2m660[0m | [35;1m`[0m[35;1m-[0m[35;1m>[0m }
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/components/LeadManagement.tsx
+./src/components/ManagementDashboard.tsx
+./src/components/RoleBasedDashboard.tsx
+./src/app/dashboard/page.tsx
+ ✓ Compiled in 676ms (948 modules)
+ ✓ Compiled in 603ms (948 modules)
