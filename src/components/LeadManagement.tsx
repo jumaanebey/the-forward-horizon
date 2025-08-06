@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import SmartLeadAttraction from './SmartLeadAttraction';
+import { AILeadEngine, LeadData as AILeadData, LeadScore, AIInsights } from '@/lib/ai-lead-engine';
 import { 
   Plus, 
   Phone, 
@@ -23,7 +25,8 @@ import {
   MoreHorizontal,
   Edit,
   Trash2,
-  MessageSquare
+  MessageSquare,
+  Brain
 } from 'lucide-react';
 
 interface Lead {
@@ -64,6 +67,9 @@ export default function LeadManagement() {
     notes: '',
     assignedTo: 'Sarah Johnson'
   });
+  
+  const [leadEngine] = useState(() => AILeadEngine.getInstance());
+  const [aiAnalysisResults, setAiAnalysisResults] = useState<Map<string, { score: LeadScore; insights: AIInsights }>>(new Map());
 
   useEffect(() => {
     // Load demo leads
@@ -231,19 +237,62 @@ export default function LeadManagement() {
     ));
   };
 
+  const handleAILeadQualified = async (leadData: AILeadData, analysis: { score: LeadScore; insights: AIInsights }) => {
+    // Convert AI lead to regular lead format and add to leads list
+    const newLead: Lead = {
+      id: Date.now().toString(),
+      firstName: leadData.firstName,
+      lastName: leadData.lastName,
+      email: leadData.email,
+      phone: leadData.phone,
+      status: analysis.score.qualificationLevel === 'priority' ? 'qualified' : 
+              analysis.score.qualificationLevel === 'hot' ? 'contacted' : 'new',
+      source: leadData.source,
+      priority: analysis.score.urgencyLevel === 'urgent' ? 'urgent' :
+                analysis.score.urgencyLevel === 'high' ? 'high' : 'medium',
+      expectedMoveIn: leadData.timeline || new Date(Date.now() + analysis.score.estimatedTimeToConversion * 24 * 60 * 60 * 1000).toISOString(),
+      housingType: leadData.inquiryType === 'veterans-housing' ? 'transitional' :
+                   leadData.inquiryType === 'recovery-housing' ? 'transitional' : 'transitional',
+      monthlyIncome: leadData.monthlyIncome,
+      notes: `AI Analysis: ${analysis.score.overallScore}/100 score. ${analysis.insights.personalizedApproach}`,
+      createdAt: new Date().toISOString(),
+      assignedTo: 'AI Auto-Assignment'
+    };
+
+    // Store AI analysis results
+    const newResults = new Map(aiAnalysisResults);
+    newResults.set(newLead.id, analysis);
+    setAiAnalysisResults(newResults);
+
+    // Add to leads list
+    setLeads(prev => [newLead, ...prev]);
+  };
+
   return (
     <div className="space-y-6">
       {/* Header with Stats */}
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-semibold">Lead Management</h2>
-          <p className="text-gray-600">Track and manage potential residents</p>
+          <p className="text-gray-600">Track and manage potential residents with AI-powered insights</p>
         </div>
         <Button onClick={() => setShowAddLead(true)} className="flex items-center space-x-2">
           <Plus className="w-4 h-4" />
           <span>Add Lead</span>
         </Button>
       </div>
+
+      {/* AI Lead Management Tabs */}
+      <Tabs defaultValue="leads" className="space-y-4">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="leads">Lead Pipeline</TabsTrigger>
+          <TabsTrigger value="ai-attraction" className="flex items-center space-x-1">
+            <Brain className="w-4 h-4" />
+            <span>AI Qualification & Attraction</span>
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="leads" className="space-y-6">
 
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
@@ -607,6 +656,13 @@ export default function LeadManagement() {
           </Card>
         </div>
       )}
+      
+        </TabsContent>
+
+        <TabsContent value="ai-attraction">
+          <SmartLeadAttraction onLeadQualified={handleAILeadQualified} />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
