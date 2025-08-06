@@ -3,7 +3,7 @@
 > next dev
 
  ⚠ Port 3000 is in use by process 82289, using available port 3001 instead.
-   ▲ Next.js 15.4.4
+   ▲ Next.js 15.4.5
    - Local:        http://localhost:3001
    - Network:      http://192.168.86.114:3001
    - Environments: .env.local
@@ -11,5 +11,49 @@
      · optimizePackageImports
 
  ✓ Starting...
- ✓ Ready in 1538ms
-[?25h
+ ✓ Ready in 1501ms
+ ○ Compiling /dashboard ...
+ ✓ Compiled /dashboard in 2.8s (947 modules)
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /dashboard. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /dashboard. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET /dashboard 200 in 3130ms
+ ✓ Compiled in 86ms (406 modules)
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /dashboard. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /dashboard. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET /dashboard 200 in 73ms
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /dashboard. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /dashboard. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET /dashboard 200 in 147ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 1524ms (929 modules)
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /_not-found. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /_not-found. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET /icon-192.png 404 in 1827ms
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /_not-found. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /_not-found. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET /icon-512.png 404 in 61ms
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /_not-found. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /_not-found. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /_not-found. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /_not-found. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET /icon-144x144.png 404 in 333ms
+ GET /icon-192.png 404 in 108ms
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /_not-found. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /_not-found. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET /icon-512.png 404 in 65ms
