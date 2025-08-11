@@ -46,6 +46,7 @@ export default function ResidentManagement() {
   const [residents, setResidents] = useState<Resident[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('all');
+  const [showAddResident, setShowAddResident] = useState(false);
 
   useEffect(() => {
     setResidents([
@@ -116,6 +117,20 @@ export default function ResidentManagement() {
     rentOverdue: residents.filter(r => r.status === 'active' && !r.rentPaid).length
   };
 
+  const handleAddResident = () => {
+    setShowAddResident(true);
+  };
+
+  const handleViewResident = (residentId: string) => {
+    console.log('View resident:', residentId);
+    // Could open a modal or navigate to resident details
+  };
+
+  const handleEditResident = (residentId: string) => {
+    console.log('Edit resident:', residentId);
+    // Could open edit modal
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -123,7 +138,7 @@ export default function ResidentManagement() {
           <h2 className="text-2xl font-semibold">Resident Management</h2>
           <p className="text-gray-600">Manage current and former residents</p>
         </div>
-        <Button className="flex items-center space-x-2">
+        <Button className="flex items-center space-x-2" onClick={handleAddResident}>
           <Plus className="w-4 h-4" />
           <span>Add Resident</span>
         </Button>
@@ -268,15 +283,15 @@ export default function ResidentManagement() {
                   </div>
                   
                   <div className="flex items-center space-x-2">
-                    <Button size="sm" variant="outline">
+                    <Button size="sm" variant="outline" onClick={() => handleViewResident(resident.id)}>
                       <Eye className="w-3 h-3 mr-1" />
                       View
                     </Button>
-                    <Button size="sm" variant="outline">
+                    <Button size="sm" variant="outline" onClick={() => handleEditResident(resident.id)}>
                       <Edit className="w-3 h-3 mr-1" />
                       Edit
                     </Button>
-                    <Button size="sm" variant="ghost">
+                    <Button size="sm" variant="ghost" onClick={() => console.log('More options for', resident.id)}>
                       <MoreHorizontal className="w-4 h-4" />
                     </Button>
                   </div>

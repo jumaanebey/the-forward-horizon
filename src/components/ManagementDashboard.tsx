@@ -21,7 +21,8 @@ import {
   FileText,
   Brain,
   BarChart3,
-  Zap
+  Zap,
+  Building
 } from 'lucide-react';
 import { CRMManager } from '@/lib/crm';
 import { User } from '@/lib/simple-auth';
@@ -32,6 +33,7 @@ import TaskManagement from './TaskManagement';
 import LeadManagement from './LeadManagement';
 import ResidentManagement from './ResidentManagement';
 import FinancialOverview from './FinancialOverview';
+import HousingInventory from './HousingInventory';
 
 interface ManagementDashboardProps {
   user: User;
@@ -79,6 +81,7 @@ export default function ManagementDashboard({ user }: ManagementDashboardProps) 
 
   const [todaysTasks, setTodaysTasks] = useState<Task[]>([]);
   const [recentActivity, setRecentActivity] = useState<any[]>([]);
+  const [activeTab, setActiveTab] = useState('overview');
 
   useEffect(() => {
     loadDashboardData();
@@ -147,6 +150,29 @@ export default function ManagementDashboard({ user }: ManagementDashboardProps) 
     if (user.role === 'manager') return resource !== 'system';
     if (user.role === 'staff') return !['financial', 'staff'].includes(resource);
     return false;
+  };
+
+  const handleQuickAction = (action: string) => {
+    switch (action) {
+      case 'add-resident':
+        setActiveTab('residents');
+        // Could also trigger a modal or specific action
+        break;
+      case 'log-call':
+        setActiveTab('leads');
+        // Could trigger a call logging modal
+        break;
+      case 'schedule-event':
+        setActiveTab('tasks');
+        // Could trigger calendar/event modal
+        break;
+      case 'generate-report':
+        setActiveTab('analytics');
+        // Could trigger report generation
+        break;
+      default:
+        console.log(`Quick action: ${action}`);
+    }
   };
 
   return (
@@ -269,12 +295,16 @@ export default function ManagementDashboard({ user }: ManagementDashboardProps) 
         </div>
 
         {/* Main Content Tabs */}
-        <Tabs defaultValue="overview" className="space-y-4">
-          <TabsList className="grid w-full grid-cols-8">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+          <TabsList className="grid w-full grid-cols-9">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="tasks">Tasks</TabsTrigger>
             <TabsTrigger value="leads">Leads</TabsTrigger>
             {canAccess('residents') && <TabsTrigger value="residents">Residents</TabsTrigger>}
+            <TabsTrigger value="housing" className="flex items-center space-x-1">
+              <Building className="w-4 h-4" />
+              <span>Housing</span>
+            </TabsTrigger>
             {canAccess('financial') && <TabsTrigger value="financial">Financial</TabsTrigger>}
             <TabsTrigger value="ai-insights" className="flex items-center space-x-1">
               <Brain className="w-4 h-4" />
@@ -355,19 +385,35 @@ export default function ManagementDashboard({ user }: ManagementDashboardProps) 
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <Button variant="outline" className="h-20 flex-col">
+                  <Button 
+                    variant="outline" 
+                    className="h-20 flex-col hover:bg-blue-50 transition-colors" 
+                    onClick={() => handleQuickAction('add-resident')}
+                  >
                     <UserPlus className="w-6 h-6 mb-2" />
                     Add Resident
                   </Button>
-                  <Button variant="outline" className="h-20 flex-col">
+                  <Button 
+                    variant="outline" 
+                    className="h-20 flex-col hover:bg-green-50 transition-colors" 
+                    onClick={() => handleQuickAction('log-call')}
+                  >
                     <Phone className="w-6 h-6 mb-2" />
                     Log Call
                   </Button>
-                  <Button variant="outline" className="h-20 flex-col">
+                  <Button 
+                    variant="outline" 
+                    className="h-20 flex-col hover:bg-purple-50 transition-colors" 
+                    onClick={() => handleQuickAction('schedule-event')}
+                  >
                     <Calendar className="w-6 h-6 mb-2" />
                     Schedule Event
                   </Button>
-                  <Button variant="outline" className="h-20 flex-col">
+                  <Button 
+                    variant="outline" 
+                    className="h-20 flex-col hover:bg-orange-50 transition-colors" 
+                    onClick={() => handleQuickAction('generate-report')}
+                  >
                     <FileText className="w-6 h-6 mb-2" />
                     Generate Report
                   </Button>
@@ -389,6 +435,10 @@ export default function ManagementDashboard({ user }: ManagementDashboardProps) 
               <ResidentManagement />
             </TabsContent>
           )}
+
+          <TabsContent value="housing">
+            <HousingInventory />
+          </TabsContent>
 
           {canAccess('financial') && (
             <TabsContent value="financial">
