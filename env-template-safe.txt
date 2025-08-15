@@ -1,0 +1,35 @@
+# Forward Horizon - Safe Environment Template (NO REAL KEYS)
+
+# Database Configuration (Supabase) - Replace with your keys
+NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key-here
+SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key-here
+
+# Authentication - Replace with generated keys
+JWT_SECRET=your-jwt-secret-key-here
+SESSION_SECRET=your-session-secret-key-here
+
+# Stripe Payment Processing - Replace with your keys
+STRIPE_SECRET_KEY=sk_live_your-stripe-secret-key-here
+STRIPE_PUBLISHABLE_KEY=pk_live_your-stripe-publishable-key-here
+STRIPE_WEBHOOK_SECRET=whsec_your-stripe-webhook-secret-here
+
+# Email Configuration (Gmail) - Replace with your credentials
+EMAIL_USER=your-email@gmail.com
+EMAIL_PASSWORD=your-app-password-here
+EMAIL_FROM=Forward Horizon <your-email@gmail.com>
+
+# Application Configuration
+NEXT_PUBLIC_APP_URL=https://your-domain.vercel.app
+NEXT_PUBLIC_APP_NAME=Forward Horizon
+NEXT_PUBLIC_APP_DESCRIPTION=Transitional Housing for Veterans, Recovering Individuals, and Returning Citizens
+
+# Feature Flags
+NEXT_PUBLIC_ENABLE_AI_FEATURES=true
+NEXT_PUBLIC_ENABLE_PAYMENTS=true
+NEXT_PUBLIC_ENABLE_EMAIL_SEQUENCES=true
+NEXT_PUBLIC_ENABLE_ANALYTICS=true
+
+# Production Configuration
+NODE_ENV=production
+NEXT_PUBLIC_DEBUG_MODE=false
