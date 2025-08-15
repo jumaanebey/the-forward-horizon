@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import StripePaymentForm from './StripePaymentForm';
 
 interface Payment {
   id: number;
@@ -42,6 +43,8 @@ export default function PaymentTrackingModal({ resident, onClose }: PaymentTrack
   ]);
 
   const [showAddPayment, setShowAddPayment] = useState(false);
+  const [showStripePayment, setShowStripePayment] = useState(false);
+  const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
   const [newPayment, setNewPayment] = useState({
     date: '',
     amount: '',
@@ -79,6 +82,30 @@ export default function PaymentTrackingModal({ resident, onClose }: PaymentTrack
         ? { ...p, status: 'Paid', date: today }
         : p
     ));
+  };
+
+  const handleStripePayment = (payment: Payment) => {
+    setSelectedPayment(payment);
+    setShowStripePayment(true);
+  };
+
+  const handlePaymentSuccess = (paymentResult: any) => {
+    if (selectedPayment) {
+      const today = new Date().toISOString().split('T')[0];
+      setPayments(payments.map(p => 
+        p.id === selectedPayment.id 
+          ? { ...p, status: 'Paid', date: today, method: 'Card' }
+          : p
+      ));
+    }
+    setShowStripePayment(false);
+    setSelectedPayment(null);
+  };
+
+  const handlePaymentError = (error: string) => {
+    console.error('Payment error:', error);
+    setShowStripePayment(false);
+    setSelectedPayment(null);
   };
 
   const getTotalOwed = () => {
@@ -343,12 +370,20 @@ export default function PaymentTrackingModal({ resident, onClose }: PaymentTrack
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                           {payment.status === 'Pending' && (
-                            <button
-                              onClick={() => markAsPaid(payment.id)}
-                              className="text-green-600 hover:text-green-900"
-                            >
-                              Mark Paid
-                            </button>
+                            <div className="flex space-x-2">
+                              <button
+                                onClick={() => handleStripePayment(payment)}
+                                className="text-blue-600 hover:text-blue-900"
+                              >
+                                Pay with Card
+                              </button>
+                              <button
+                                onClick={() => markAsPaid(payment.id)}
+                                className="text-green-600 hover:text-green-900"
+                              >
+                                Mark Paid
+                              </button>
+                            </div>
                           )}
                         </td>
                       </tr>
@@ -370,6 +405,35 @@ export default function PaymentTrackingModal({ resident, onClose }: PaymentTrack
           </button>
         </div>
       </div>
+
+      {/* Stripe Payment Modal */}
+      {showStripePayment && selectedPayment && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-lg font-semibold text-gray-900">Pay with Card</h3>
+              <button
+                onClick={() => setShowStripePayment(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            
+            <StripePaymentForm
+              amount={selectedPayment.amount}
+              residentId={resident.id || '1'}
+              residentName={resident.name || 'Resident'}
+              paymentType={selectedPayment.type}
+              onSuccess={handlePaymentSuccess}
+              onError={handlePaymentError}
+              onCancel={() => setShowStripePayment(false)}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
