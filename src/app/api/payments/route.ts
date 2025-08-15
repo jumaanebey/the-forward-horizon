@@ -1,8 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/utils/supabaseClient';
+import { supabase } from '@/lib/supabase';
 import { performanceOptimizer } from '@/utils/performanceOptimizer';
+import Stripe from 'stripe';
 
-// GET /api/payments - Get all payments with filtering and pagination
+// Initialize Stripe
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: '2024-12-18.acacia',
+});
+
+// GET /api/payments - Get payments with filtering and pagination
 export async function GET(request: NextRequest) {
   const timer = performanceOptimizer.startTimer('api-payments-get');
   
@@ -10,11 +16,9 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '10');
-    const status = searchParams.get('status') || '';
-    const type = searchParams.get('type') || '';
-    const residentId = searchParams.get('residentId') || '';
-    const startDate = searchParams.get('startDate') || '';
-    const endDate = searchParams.get('endDate') || '';
+    const residentId = searchParams.get('residentId');
+    const status = searchParams.get('status');
+    const paymentType = searchParams.get('paymentType');
     const sortBy = searchParams.get('sortBy') || 'created_at';
     const sortOrder = searchParams.get('sortOrder') || 'desc';
 
@@ -29,27 +33,27 @@ export async function GET(request: NextRequest) {
     // Build query
     let query = supabase
       .from('payments')
-      .select('*, residents(name, room_number)', { count: 'exact' });
+      .select(`
+        *,
+        residents (
+          id,
+          first_name,
+          last_name,
+          email
+        )
+      `, { count: 'exact' });
 
     // Apply filters
-    if (status) {
-      query = query.eq('status', status);
-    }
-
-    if (type) {
-      query = query.eq('type', type);
-    }
-
     if (residentId) {
       query = query.eq('resident_id', residentId);
     }
 
-    if (startDate) {
-      query = query.gte('due_date', startDate);
+    if (status) {
+      query = query.eq('status', status);
     }
 
-    if (endDate) {
-      query = query.lte('due_date', endDate);
+    if (paymentType) {
+      query = query.eq('payment_type', paymentType);
     }
 
     // Apply sorting
@@ -70,15 +74,9 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Calculate financial summary
-    const totalAmount = payments?.reduce((sum, payment) => sum + (payment.amount || 0), 0) || 0;
-    const paidAmount = payments?.filter(p => p.status === 'completed').reduce((sum, payment) => sum + (payment.amount || 0), 0) || 0;
-    const pendingAmount = payments?.filter(p => p.status === 'pending').reduce((sum, payment) => sum + (payment.amount || 0), 0) || 0;
-    const overdueAmount = payments?.filter(p => p.status === 'pending' && new Date(p.due_date) < new Date()).reduce((sum, payment) => sum + (payment.amount || 0), 0) || 0;
-
     // Cache the results
-    const cacheKey = `payments-${page}-${limit}-${status}-${type}-${residentId}-${startDate}-${endDate}-${sortBy}-${sortOrder}`;
-    performanceOptimizer.setCache(cacheKey, { payments, count, summary: { totalAmount, paidAmount, pendingAmount, overdueAmount } }, 5 * 60 * 1000);
+    const cacheKey = `payments-${page}-${limit}-${residentId}-${status}-${paymentType}-${sortBy}-${sortOrder}`;
+    performanceOptimizer.setCache(cacheKey, { payments, count }, 5 * 60 * 1000); // 5 minutes
 
     const totalPages = Math.ceil((count || 0) / limit);
 
@@ -94,18 +92,10 @@ export async function GET(request: NextRequest) {
         hasNext: page < totalPages,
         hasPrev: page > 1
       },
-      summary: {
-        totalAmount,
-        paidAmount,
-        pendingAmount,
-        overdueAmount
-      },
       filters: {
-        status,
-        type,
         residentId,
-        startDate,
-        endDate,
+        status,
+        paymentType,
         sortBy,
         sortOrder
       }
@@ -128,10 +118,10 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     
     // Validate required fields
-    const { amount, resident_id, type, due_date } = body;
-    if (!amount || !resident_id || !type || !due_date) {
+    const { residentId, amount, paymentType, paymentMethod, dueDate } = body;
+    if (!residentId || !amount || !paymentType || !paymentMethod || !dueDate) {
       return NextResponse.json(
-        { error: 'Amount, resident ID, type, and due date are required' },
+        { error: 'Missing required fields' },
         { status: 400 }
       );
     }
@@ -147,8 +137,8 @@ export async function POST(request: NextRequest) {
     // Check if resident exists
     const { data: resident } = await supabase
       .from('residents')
-      .select('id')
-      .eq('id', resident_id)
+      .select('id, first_name, last_name, email')
+      .eq('id', residentId)
       .single();
 
     if (!resident) {
@@ -158,16 +148,60 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create payment
+    let paymentIntent = null;
+    let stripePaymentId = null;
+
+    // If payment method is card, create Stripe payment intent
+    if (paymentMethod === 'card') {
+      try {
+        paymentIntent = await stripe.paymentIntents.create({
+          amount: Math.round(amount * 100), // Convert to cents
+          currency: 'usd',
+          metadata: {
+            residentId,
+            paymentType,
+            residentName: `${resident.first_name} ${resident.last_name}`
+          },
+          automatic_payment_methods: {
+            enabled: true,
+          },
+        });
+        
+        stripePaymentId = paymentIntent.id;
+      } catch (stripeError) {
+        console.error('Stripe error:', stripeError);
+        return NextResponse.json(
+          { error: 'Payment processing failed' },
+          { status: 500 }
+        );
+      }
+    }
+
+    // Create payment record
     const { data: payment, error } = await supabase
       .from('payments')
       .insert([{
-        ...body,
-        status: body.status || 'pending',
+        resident_id: residentId,
+        amount,
+        payment_type: paymentType,
+        payment_method: paymentMethod,
+        status: paymentMethod === 'card' ? 'pending' : 'completed',
+        due_date: dueDate,
+        paid_date: paymentMethod !== 'card' ? new Date().toISOString() : null,
+        notes: body.notes,
+        stripe_payment_id: stripePaymentId,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       }])
-      .select('*, residents(name, room_number)')
+      .select(`
+        *,
+        residents (
+          id,
+          first_name,
+          last_name,
+          email
+        )
+      `)
       .single();
 
     if (error) {
@@ -185,7 +219,8 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       message: 'Payment created successfully',
-      payment
+      payment,
+      clientSecret: paymentIntent?.client_secret
     }, { status: 201 });
 
   } catch (error) {
@@ -197,96 +232,56 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// PUT /api/payments - Bulk operations
+// PUT /api/payments - Update payment status
 export async function PUT(request: NextRequest) {
   const timer = performanceOptimizer.startTimer('api-payments-put');
   
   try {
     const body = await request.json();
-    const { operation, ids, data } = body;
+    const { paymentId, status, notes } = body;
 
-    if (!operation || !ids || !Array.isArray(ids)) {
+    if (!paymentId || !status) {
       return NextResponse.json(
-        { error: 'Invalid bulk operation parameters' },
+        { error: 'Payment ID and status are required' },
         { status: 400 }
       );
     }
 
-    let result;
+    // Update payment
+    const updateData: any = {
+      status,
+      updated_at: new Date().toISOString()
+    };
 
-    switch (operation) {
-      case 'markAsPaid':
-        const { data: updatedPayments, error: updateError } = await supabase
-          .from('payments')
-          .update({
-            status: 'completed',
-            paid_date: new Date().toISOString(),
-            updated_at: new Date().toISOString()
-          })
-          .in('id', ids)
-          .select('*, residents(name, room_number)');
+    if (status === 'completed') {
+      updateData.paid_date = new Date().toISOString();
+    }
 
-        if (updateError) {
-          console.error('Database error:', updateError);
-          return NextResponse.json(
-            { error: 'Failed to update payments' },
-            { status: 500 }
-          );
-        }
+    if (notes) {
+      updateData.notes = notes;
+    }
 
-        result = updatedPayments;
-        break;
+    const { data: payment, error } = await supabase
+      .from('payments')
+      .update(updateData)
+      .eq('id', paymentId)
+      .select(`
+        *,
+        residents (
+          id,
+          first_name,
+          last_name,
+          email
+        )
+      `)
+      .single();
 
-      case 'updateStatus':
-        if (!data?.status) {
-          return NextResponse.json(
-            { error: 'Status is required for update operation' },
-            { status: 400 }
-          );
-        }
-        
-        const { data: statusUpdatedPayments, error: statusError } = await supabase
-          .from('payments')
-          .update({
-            status: data.status,
-            updated_at: new Date().toISOString()
-          })
-          .in('id', ids)
-          .select('*, residents(name, room_number)');
-
-        if (statusError) {
-          console.error('Database error:', statusError);
-          return NextResponse.json(
-            { error: 'Failed to update payment status' },
-            { status: 500 }
-          );
-        }
-
-        result = statusUpdatedPayments;
-        break;
-
-      case 'delete':
-        const { error: deleteError } = await supabase
-          .from('payments')
-          .delete()
-          .in('id', ids);
-
-        if (deleteError) {
-          console.error('Database error:', deleteError);
-          return NextResponse.json(
-            { error: 'Failed to delete payments' },
-            { status: 500 }
-          );
-        }
-
-        result = { deletedCount: ids.length };
-        break;
-
-      default:
-        return NextResponse.json(
-          { error: 'Invalid operation' },
-          { status: 400 }
-        );
+    if (error) {
+      console.error('Database error:', error);
+      return NextResponse.json(
+        { error: 'Failed to update payment' },
+        { status: 500 }
+      );
     }
 
     // Clear related caches
@@ -295,8 +290,8 @@ export async function PUT(request: NextRequest) {
     timer();
 
     return NextResponse.json({
-      message: `Bulk ${operation} completed successfully`,
-      result
+      message: 'Payment updated successfully',
+      payment
     });
 
   } catch (error) {
