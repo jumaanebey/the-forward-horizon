@@ -1,0 +1,310 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222.2 84% 4.9%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222.2 84% 4.9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 84% 4.9%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 94.1%;
+  }
+}
+
+/* Custom mobile improvements */
+@layer utilities {
+  /* Mobile-first responsive improvements */
+  .mobile-container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  @media (min-width: 640px) {
+    .mobile-container {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .mobile-container {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+  }
+  .mobile-table {
+    font-size: 0.75rem;
+    line-height: 1rem;
+  }
+  @media (min-width: 640px) {
+    .mobile-table {
+      font-size: 0.875rem;
+      line-height: 1.25rem;
+    }
+  }
+  .mobile-button {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    line-height: 1rem;
+  }
+  @media (min-width: 640px) {
+    .mobile-button {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.875rem;
+      line-height: 1.25rem;
+    }
+  }
+  .mobile-card {
+    padding: 0.75rem;
+  }
+  @media (min-width: 640px) {
+    .mobile-card {
+      padding: 1rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .mobile-card {
+      padding: 1.5rem;
+    }
+  }
+  .mobile-grid {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+  @media (min-width: 640px) {
+    .mobile-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 1024px) {
+    .mobile-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 1280px) {
+    .mobile-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  
+  /* Improved touch targets for mobile */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  /* Better mobile navigation */
+  .mobile-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: white;
+    border-top: 1px solid #e5e7eb;
+    z-index: 50;
+  }
+  /* Mobile-friendly modals */
+  .mobile-modal {
+    margin: 1rem;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  @media (min-width: 640px) {
+    .mobile-modal {
+      margin: 2rem;
+    }
+  }
+  
+  /* Responsive text sizes */
+  .mobile-text-lg {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+  @media (min-width: 640px) {
+    .mobile-text-lg {
+      font-size: 1.125rem;
+      line-height: 1.75rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .mobile-text-lg {
+      font-size: 1.25rem;
+      line-height: 1.75rem;
+    }
+  }
+  .mobile-text-xl {
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+  }
+  @media (min-width: 640px) {
+    .mobile-text-xl {
+      font-size: 1.25rem;
+      line-height: 1.75rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .mobile-text-xl {
+      font-size: 1.5rem;
+      line-height: 2rem;
+    }
+  }
+  .mobile-text-2xl {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+  }
+  @media (min-width: 640px) {
+    .mobile-text-2xl {
+      font-size: 1.5rem;
+      line-height: 2rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .mobile-text-2xl {
+      font-size: 1.875rem;
+      line-height: 2.25rem;
+    }
+  }
+}
+
+/* Print styles for reports */
+@media print {
+  body {
+    margin: 0;
+    padding: 0;
+    background: white;
+    font-size: 12px;
+  }
+  
+  .print-hidden {
+    display: none !important;
+  }
+  
+  .print-break-before {
+    page-break-before: always;
+  }
+  
+  .print-break-after {
+    page-break-after: always;
+  }
+  
+  .print-avoid-break {
+    page-break-inside: avoid;
+  }
+}
+
+/* Improved focus states for accessibility */
+@layer base {
+  button:focus,
+  input:focus,
+  select:focus,
+  textarea:focus {
+    @apply outline-none ring-2 ring-blue-500 ring-offset-2;
+  }
+  
+  /* Better contrast for accessibility */
+  .text-gray-600 {
+    color: #4b5563;
+  }
+  
+  .text-gray-700 {
+    color: #374151;
+  }
+  
+  /* Improved loading states */
+  .loading-skeleton {
+    @apply animate-pulse bg-gray-200 rounded;
+  }
+  
+  /* Better hover states for mobile */
+  @media (hover: hover) {
+    .hover-lift {
+      @apply transition-transform duration-200 hover:-translate-y-1;
+    }
+  }
+  
+  /* Mobile-specific improvements */
+  @media (max-width: 640px) {
+    /* Smaller padding for mobile */
+    .mobile-padding {
+      @apply px-3 py-2;
+    }
+    
+    /* Stack buttons vertically on mobile */
+    .mobile-stack {
+      @apply flex-col space-y-2;
+    }
+    
+    /* Full width buttons on mobile */
+    .mobile-full-width {
+      @apply w-full;
+    }
+    
+    /* Better table layout for mobile */
+    .mobile-table-responsive {
+      @apply block overflow-x-auto;
+    }
+    
+    /* Improved form layout for mobile */
+    .mobile-form-grid {
+      @apply grid-cols-1 gap-4;
+    }
+  }
+}
+
+/* Dark mode support (optional) */
+@media (prefers-color-scheme: dark) {
+  .dark-mode-auto {
+    @apply bg-gray-900 text-white;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .high-contrast {
+    @apply border-2 border-black;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
