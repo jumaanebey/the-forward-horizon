@@ -363,6 +363,42 @@ export async function POST(request: NextRequest) {
       console.error('Error adding lead to sequence:', error);
       // Don't fail the form submission if sequence enrollment fails
     }
+
+    // Send lead to management platform
+    try {
+      const managementApiUrl = process.env.MANAGEMENT_API_URL || 'https://forward-horizon-management-j0ekx2val-jumaane-beys-projects.vercel.app';
+      
+      const leadPayload = {
+        firstName,
+        lastName: '', // We don't capture lastName in current form
+        email,
+        phone: '', // We don't capture phone in current form
+        source: 'marketing-website',
+        status: 'new',
+        notes: `Form submission from ${formType} form. Original inquiry type: ${formType}`,
+        tags: [formType, 'marketing-website']
+      };
+
+      console.log('📊 Sending lead to management platform:', leadPayload);
+
+      const managementResponse = await fetch(`${managementApiUrl}/api/leads`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.MANAGEMENT_API_KEY || 'demo-key'}`
+        },
+        body: JSON.stringify(leadPayload)
+      });
+
+      if (managementResponse.ok) {
+        console.log('✅ Lead successfully sent to management platform');
+      } else {
+        console.error('❌ Failed to send lead to management platform:', managementResponse.status, managementResponse.statusText);
+      }
+    } catch (error) {
+      console.error('❌ Error sending lead to management platform:', error);
+      // Don't fail the form submission if management platform is down
+    }
     
     console.log('🚀 About to redirect to success page...');
 
