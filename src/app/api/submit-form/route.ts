@@ -218,11 +218,20 @@ export async function POST(request: NextRequest) {
     const formTypeMapping: { [key: string]: string } = {
       'veteran-housing': 'veterans',
       'sober-living': 'recovery', 
-      'Re-entry-housing': 'reentry',
+      'reentry-housing': 'reentry',
       'volunteer': 'general',
       'donate': 'general',
       'partner': 'general',
       'other': 'general'
+    };
+
+    // Map form types to database inquiry types
+    const inquiryTypeMapping: { [key: string]: string } = {
+      'veterans': 'veteran-housing',
+      'recovery': 'sober-living',
+      'reentry': 'reentry-housing',
+      're-entry': 'reentry-housing',
+      'general': 'veteran-housing' // fallback
     };
 
     let templateKey = formTypeMapping[formType] || formType;
@@ -391,7 +400,7 @@ export async function POST(request: NextRequest) {
         lastName: '', // We don't capture lastName in current form
         email,
         phone: '', // We don't capture phone in current form
-        inquiryType: formType, // Map formType to inquiryType
+        inquiryType: inquiryTypeMapping[formType] || 'veteran-housing', // Map to correct database inquiry type
         message: `Form submission from ${formType} form. Original inquiry type: ${formType}`,
         source: 'marketing-website'
       };
