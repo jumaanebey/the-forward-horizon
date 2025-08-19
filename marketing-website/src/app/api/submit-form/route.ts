@@ -373,10 +373,9 @@ export async function POST(request: NextRequest) {
         lastName: '', // We don't capture lastName in current form
         email,
         phone: '', // We don't capture phone in current form
-        source: 'marketing-website',
-        status: 'new',
-        notes: `Form submission from ${formType} form. Original inquiry type: ${formType}`,
-        tags: [formType, 'marketing-website']
+        inquiryType: formType, // Map formType to inquiryType
+        message: `Form submission from ${formType} form. Original inquiry type: ${formType}`,
+        source: 'marketing-website'
       };
 
       console.log('📊 Sending lead to management platform:', leadPayload);
