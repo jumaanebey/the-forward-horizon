@@ -339,29 +339,82 @@ export async function POST(request: NextRequest) {
     await transporter.sendMail(mailOptions);
     console.log(`Professional email sent to: ${email}`);
 
-    // Log lead for manual follow-up (no additional emails for now)
-    console.log(`✅ LEAD CAPTURED: ${firstName} (${email}) - ${formType} program`);
-
-    // Add lead to email sequence for automated follow-up
+    // Add lead to CRM system
     try {
-      // In production, this would be a database insert or queue job
       const leadData = {
         firstName,
         lastName: '', // We don't capture lastName in current form
         email,
         phone: '', // We don't capture phone in current form  
         inquiryType: formType,
-        message: 'Contact form submission'
+        message: 'Contact form submission',
+        source: 'website'
       };
       
-      // For now, just log the sequence enrollment
-      console.log(`📧 Lead enrolled in ${formType} email sequence: ${firstName} (${email})`);
-      console.log('   -> Will receive automated follow-up emails over next 7 days');
-      
-      // TODO: In production, call addLeadToSequence(leadData) or add to database
+      // Add to database
+      const { data: lead, error: dbError } = await supabase
+        .from('leads')
+        .insert({
+          first_name: firstName,
+          last_name: '',
+          email,
+          phone: '',
+          inquiry_type: formType,
+          message: 'Contact form submission',
+          source: 'website',
+          status: 'new',
+          sequence_step: 0,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        })
+        .select()
+        .single();
+
+      if (dbError) {
+        console.error('Error adding lead to database:', dbError);
+      } else {
+        console.log(`✅ LEAD ADDED TO CRM: ${firstName} (${email}) - ${formType} program`);
+        console.log(`📧 Lead enrolled in ${formType} email sequence: ${firstName} (${email})`);
+        console.log('   -> Will receive automated follow-up emails over next 7 days');
+      }
     } catch (error) {
-      console.error('Error adding lead to sequence:', error);
-      // Don't fail the form submission if sequence enrollment fails
+      console.error('Error adding lead to CRM:', error);
+      // Don't fail the form submission if CRM enrollment fails
+    }
+
+    // Send lead to management platform
+    try {
+      const managementApiUrl = process.env.MANAGEMENT_API_URL || 'https://forward-horizon-management-j0ekx2val-jumaane-beys-projects.vercel.app';
+      
+      const leadPayload = {
+        firstName,
+        lastName: '', // We don't capture lastName in current form
+        email,
+        phone: '', // We don't capture phone in current form
+        inquiryType: formType, // Map formType to inquiryType
+        message: `Form submission from ${formType} form. Original inquiry type: ${formType}`,
+        source: 'marketing-website'
+      };
+
+      console.log('📊 Sending lead to management platform:', leadPayload);
+
+      const managementResponse = await fetch(`${managementApiUrl}/api/leads`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.MANAGEMENT_API_KEY || 'demo-key'}`
+        },
+        body: JSON.stringify(leadPayload)
+      });
+
+      if (managementResponse.ok) {
+        console.log('✅ Lead successfully sent to management platform');
+      } else {
+        console.error('❌ Failed to send lead to management platform:', managementResponse.status, managementResponse.statusText);
+      }
+    } catch (error) {
+      console.error('❌ Error sending lead to management platform:', error);
+      // Don't fail the form submission if management platform is down
     }
     
     console.log('🚀 About to redirect to success page...');
