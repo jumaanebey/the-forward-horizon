@@ -61,7 +61,7 @@ function ThankYouContent() {
           nextSteps: [
             "Check your email for confirmation",
             "We'll respond within 24 hours during business days",
-            "Feel free to call us at (626) 603-0954 if urgent"
+            "Feel free to call us at (310) 488-5280 if urgent"
           ],
           cta: "Return to Homepage",
           ctaLink: "/"
@@ -129,9 +129,9 @@ function ThankYouContent() {
               Need immediate assistance?
             </h3>
             <div className="flex flex-col sm:flex-row items-center justify-center space-y-3 sm:space-y-0 sm:space-x-8">
-              <a href="tel:+16266030954" className="flex items-center text-blue-600 hover:text-blue-800 font-semibold bg-white px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 hover:-translate-y-1">
+              <a href="tel:+13104885280" className="flex items-center text-blue-600 hover:text-blue-800 font-semibold bg-white px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 hover:-translate-y-1">
                 <span className="mr-2 text-lg">📞</span>
-                (626) 603-0954
+                (310) 488-5280
               </a>
               <a href="mailto:admin@theforwardhorizon.com" className="flex items-center text-blue-600 hover:text-blue-800 font-semibold bg-white px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 hover:-translate-y-1">
                 <span className="mr-2 text-lg">✉️</span>

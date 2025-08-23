@@ -92,8 +92,8 @@ export default function VeteransHousingLanding() {
             </div>
             <div className="hidden sm:flex items-center space-x-4">
               <span className="text-sm text-gray-600">Call Now:</span>
-              <a href="tel:+1-626-603-0954" className="text-blue-600 font-semibold text-lg hover:text-blue-700">
-                (626) 603-0954
+              <a href="tel:+1-310-488-5280" className="text-blue-600 font-semibold text-lg hover:text-blue-700">
+                (310) 488-5280
               </a>
             </div>
           </div>
@@ -345,8 +345,8 @@ export default function VeteransHousingLanding() {
           </div>
           <p className="text-gray-400 mb-4">Supporting veterans in their transition to civilian life</p>
           <div className="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-6">
-            <a href="tel:+1-626-603-0954" className="text-blue-400 hover:text-blue-300">
-              📞 (626) 603-0954
+            <a href="tel:+1-310-488-5280" className="text-blue-400 hover:text-blue-300">
+              📞 (310) 488-5280
             </a>
             <a href="https://theforwardhorizon.com" className="text-blue-400 hover:text-blue-300">
               🌐 theforwardhorizon.com

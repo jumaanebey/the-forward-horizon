@@ -92,8 +92,8 @@ export default function ReentrySupportLanding() {
             </div>
             <div className="hidden sm:flex items-center space-x-4">
               <span className="text-sm text-gray-600">Need Help?</span>
-              <a href="tel:+1-626-603-0954" className="text-purple-600 font-semibold text-lg hover:text-purple-700">
-                (626) 603-0954
+              <a href="tel:+1-310-488-5280" className="text-purple-600 font-semibold text-lg hover:text-purple-700">
+                (310) 488-5280
               </a>
             </div>
           </div>
@@ -386,8 +386,8 @@ export default function ReentrySupportLanding() {
           </div>
           <p className="text-gray-400 mb-4">Supporting your re-entry with stable housing and comprehensive services</p>
           <div className="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-6">
-            <a href="tel:+1-626-603-0954" className="text-purple-400 hover:text-purple-300">
-              📞 (626) 603-0954
+            <a href="tel:+1-310-488-5280" className="text-purple-400 hover:text-purple-300">
+              📞 (310) 488-5280
             </a>
             <a href="https://theforwardhorizon.com" className="text-purple-400 hover:text-purple-300">
               🌐 theforwardhorizon.com

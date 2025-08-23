@@ -704,7 +704,7 @@ export default function Home() {
                                 </div>
                                 <div>
                                     <h4 class="text-lg font-semibold text-gray-900">Phone</h4>
-                                    <p class="text-gray-600">(626) 603-0954</p>
+                                    <p class="text-gray-600">(310) 488-5280</p>
                                     <p class="text-sm text-gray-500">24/7 crisis support available</p>
                                 </div>
                             </div>
@@ -853,7 +853,7 @@ export default function Home() {
                     <div>
                         <h4 class="text-lg font-semibold mb-4">Contact Info</h4>
                         <div class="space-y-2 text-gray-300">
-                            <p>📞 (626) 603-0954</p>
+                            <p>📞 (310) 488-5280</p>
                             <p>✉️ admin@theforwardhorizon.com</p>
                             <p>📍 Los Angeles County, CA</p>
                         </div>

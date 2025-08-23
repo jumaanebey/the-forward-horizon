@@ -74,7 +74,7 @@ export const emailSequences = {
                             
                             <p style="color: #6b7280; line-height: 1.6; margin-bottom: 16px;">
                                 <strong>Need to speak with someone today?</strong><br>
-                                Call our Veterans hotline: <a href="tel:+16266030954" style="color: #1e40af;">(626) 603-0954</a>
+                                Call our Veterans hotline: <a href="tel:+13104885280" style="color: #1e40af;">(310) 488-5280</a>
                             </p>
                         </td>
                     </tr>
@@ -124,7 +124,7 @@ export const emailSequences = {
                             </div>
                             
                             <p style="color: #6b7280; line-height: 1.6; margin-bottom: 24px;">
-                                Reply to this email or call me directly at <a href="tel:+16266030954" style="color: #1e40af;">(626) 603-0954</a>. I'm here to help remove any barriers.
+                                Reply to this email or call me directly at <a href="tel:+13104885280" style="color: #1e40af;">(310) 488-5280</a>. I'm here to help remove any barriers.
                             </p>
                             
                             <div style="text-align: center; margin: 32px 0;">
@@ -175,7 +175,7 @@ export const emailSequences = {
                             </div>
                             
                             <p style="color: #6b7280; line-height: 1.6; margin-bottom: 24px;">
-                                <strong>To secure your unit:</strong> Call me at <a href="tel:+16266030954" style="color: #1e40af;">(626) 603-0954</a> or complete the 2-minute pre-screening below.
+                                <strong>To secure your unit:</strong> Call me at <a href="tel:+13104885280" style="color: #1e40af;">(310) 488-5280</a> or complete the 2-minute pre-screening below.
                             </p>
                             
                             <div style="text-align: center; margin: 32px 0;">
@@ -293,7 +293,7 @@ export const emailSequences = {
                             </div>
                             
                             <p style="color: #6b7280; line-height: 1.6; margin-bottom: 24px;">
-                                What's holding you back from taking the next step? Call me: <a href="tel:+16266030954" style="color: #059669;">(626) 603-0954</a>
+                                What's holding you back from taking the next step? Call me: <a href="tel:+13104885280" style="color: #059669;">(310) 488-5280</a>
                             </p>
                             
                             <div style="text-align: center; margin: 32px 0;">
@@ -366,7 +366,7 @@ export const emailSequences = {
                             </div>
                             
                             <p style="color: #6b7280; line-height: 1.6; margin-bottom: 16px;">
-                                Call me anytime: <a href="tel:+16266030954" style="color: #7c3aed;">(626) 603-0954</a>
+                                Call me anytime: <a href="tel:+13104885280" style="color: #7c3aed;">(310) 488-5280</a>
                             </p>
                         </td>
                     </tr>
@@ -419,7 +419,7 @@ export const emailSequences = {
                             </div>
                             
                             <p style="color: #6b7280; line-height: 1.6; margin-bottom: 16px;">
-                                Let's get you working: <a href="tel:+16266030954" style="color: #7c3aed;">(626) 603-0954</a>
+                                Let's get you working: <a href="tel:+13104885280" style="color: #7c3aed;">(310) 488-5280</a>
                             </p>
                         </td>
                     </tr>

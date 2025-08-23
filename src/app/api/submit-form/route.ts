@@ -27,7 +27,7 @@ We received your message and will respond within 24 hours during business days.
 Forward Horizon provides transitional housing for veterans, individuals in recovery, and returning citizens. We're here to help you on your journey.
 
 Visit our website: https://theforwardhorizon.com
-Call us: (626) 603-0954
+Call us: (310) 488-5280
 
 Best regards,
 The Forward Horizon Team`
@@ -84,7 +84,7 @@ The Forward Horizon Team`
                             
                             <div style="background-color: #dbeafe; padding: 20px; border-radius: 8px; text-align: center; margin: 24px 0;">
                                 <h4 style="color: #1e40af; margin: 0 0 12px 0;">Need to speak with someone?</h4>
-                                <p style="color: #1e40af; margin: 0; font-weight: bold;">📞 (626) 603-0954</p>
+                                <p style="color: #1e40af; margin: 0; font-weight: bold;">📞 (310) 488-5280</p>
                                 <p style="color: #3b82f6; margin: 8px 0 0 0; font-size: 14px;">Available 24/7 for veteran crisis support</p>
                             </div>
                         </td>
@@ -125,7 +125,7 @@ Inside your guide you'll find:
 
 You're not alone in this journey. Visit Forward Horizon to learn about our recovery community and supportive housing program: https://theforwardhorizon.com
 
-24/7 Support: (626) 603-0954
+24/7 Support: (310) 488-5280
 
 One day at a time,
 The Forward Horizon Recovery Team`
@@ -146,7 +146,7 @@ Your complete kit includes:
 
 Forward Horizon believes in second chances. Visit us to learn about our re-entry support program and housing options: https://theforwardhorizon.com
 
-Need immediate support? Call (626) 603-0954
+Need immediate support? Call (310) 488-5280
 
 Believing in your success,
 The Forward Horizon Reentry Team`
@@ -407,23 +407,69 @@ export async function POST(request: NextRequest) {
 
       console.log('📊 Sending lead to management platform:', leadPayload);
 
+      // Add timeout to prevent hanging requests
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+
       const managementResponse = await fetch(`${managementApiUrl}/api/leads`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${process.env.MANAGEMENT_API_KEY || 'demo-key'}`
         },
-        body: JSON.stringify(leadPayload)
+        body: JSON.stringify(leadPayload),
+        signal: controller.signal
       });
+
+      clearTimeout(timeoutId);
 
       if (managementResponse.ok) {
         console.log('✅ Lead successfully sent to management platform');
       } else {
         console.error('❌ Failed to send lead to management platform:', managementResponse.status, managementResponse.statusText);
+        // Don't fail the form submission, just log the error
       }
     } catch (error) {
       console.error('❌ Error sending lead to management platform:', error);
       // Don't fail the form submission if management platform is down
+    }
+
+    // FALLBACK: Store lead in local storage/logs as backup
+    try {
+      const backupLead = {
+        firstName,
+        lastName: '',
+        email,
+        phone: '',
+        inquiryType: inquiryTypeMapping[formType] || 'veteran-housing',
+        message: `Form submission from ${formType} form. Original inquiry type: ${formType}`,
+        source: 'marketing-website',
+        timestamp: new Date().toISOString(),
+        backup: true
+      };
+      
+      console.log('💾 BACKUP LEAD STORED:', backupLead);
+      
+      // Try to store in backup API as well
+      try {
+        const backupResponse = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'https://app.theforwardhorizon.com'}/api/backup-leads`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(backupLead)
+        });
+        
+        if (backupResponse.ok) {
+          console.log('✅ Backup lead stored via API');
+        }
+      } catch (backupApiError) {
+        console.error('❌ Backup API failed:', backupApiError);
+        // Don't fail if backup API fails
+      }
+    } catch (backupError) {
+      console.error('❌ Backup storage failed:', backupError);
+      // Even if backup fails, don't break the form submission
     }
     
     console.log('🚀 About to redirect to success page...');

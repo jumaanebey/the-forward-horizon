@@ -80,7 +80,7 @@ export const defaultBranding: BrandingConfig = {
   tagline: "Rebuilding Lives Together — Through Accountability, Community, and a Fresh Start",
   description: "Transitional Housing for Veterans, Recovering Individuals, and Returning Citizens",
   
-  phone: "(626) 603-0954",
+  phone: "(310) 488-5280",
   email: "admin@theforwardhorizon.com",
   address: "Los Angeles County, CA",
   serviceAreas: [
