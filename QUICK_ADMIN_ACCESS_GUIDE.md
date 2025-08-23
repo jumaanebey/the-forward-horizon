@@ -56,19 +56,19 @@ NOTIFICATION_EMAIL=admin@theforwardhorizon.com
 - **URL:** `/veterans-housing`
 - **Lead Magnet:** Veterans Benefits Guide + Housing Checklist
 - **Theme:** Blue
-- **Phone:** (626) 603-0954
+- **Phone:** (310) 488-5280
 
 #### **Recovery Housing Landing Page**
 - **URL:** `/recovery-housing`
 - **Lead Magnet:** Recovery Housing Preparation Guide
 - **Theme:** Green  
-- **Phone:** (626) 603-0954
+- **Phone:** (310) 488-5280
 
 #### **Re-entry Support Landing Page**
 - **URL:** `/reentry-support`
 - **Lead Magnet:** Life After Release Planning Kit
 - **Theme:** Purple
-- **Phone:** (626) 603-0954
+- **Phone:** (310) 488-5280
 
 ### 📊 What Happens When Someone Fills Out a Form:
 

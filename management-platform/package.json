@@ -1,5 +1,5 @@
 {
-  "name": "tenant-portal",
+  "name": "management-platform",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -40,6 +40,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "critters": "^0.0.23",
+    "dotenv": "^17.2.1",
     "google-auth-library": "^10.2.0",
     "googleapis": "^154.0.0",
     "lucide-react": "^0.532.0",

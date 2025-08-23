@@ -1,38 +1,133 @@
-# Forward Horizon Management System
+# 🤖 UI-TARS Workflow Automation Hub
 
-This is a [Next.js](https://nextjs.org) project for Forward Horizon housing facility management.
+An AI-powered workflow automation platform that combines desktop and browser automation using the cutting-edge UI-TARS technology.
 
-## Getting Started
+## ✨ Features
 
-First, run the development server:
+- **🎯 Natural Language Control** - Control your computer and browser with simple commands
+- **🖥️ Desktop Automation** - Automate desktop applications and workflows
+- **🌐 Browser Automation** - Control web browsers and web applications
+- **📊 Visual Workflow Designer** - Create and manage automation workflows
+- **🔧 Custom MCP Servers** - Extend functionality with custom integrations
+- **📱 Beautiful Web Interface** - Modern, responsive dashboard
+- **🔒 Secure & Private** - All processing happens locally
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Node.js 18+ 
+- Python 3.8+ (for UI-TARS models)
+- Git
+
+### Installation
 
 ```bash
+# Clone the repository
+git clone <your-repo-url>
+cd ui-tars-workflow-hub
+
+# Install dependencies
+npm install
+
+# Set up environment
+cp .env.example .env.local
+# Edit .env.local with your API keys
+
+# Start the development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Setup UI-TARS Agent
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+# Install UI-TARS CLI globally
+npm install @agent-tars/cli@latest -g
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Run the agent
+agent-tars --provider anthropic --model claude-3-5-sonnet-20241022 --apiKey your-api-key
+```
 
-## Learn More
+## 🏗️ Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+ui-tars-workflow-hub/
+├── src/
+│   ├── app/                 # Next.js app directory
+│   │   ├── api/            # API routes
+│   │   ├── dashboard/      # Dashboard pages
+│   │   └── workflows/      # Workflow management
+│   ├── components/         # React components
+│   ├── lib/               # Utility functions
+│   └── agent/             # UI-TARS agent integration
+├── public/                # Static assets
+├── scripts/               # Setup and utility scripts
+└── docs/                  # Documentation
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🎯 Use Cases
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Desktop Automation
+- File management and organization
+- Application automation
+- System configuration
+- Data processing workflows
 
-## Deploy on Vercel
+### Browser Automation
+- Web scraping and data collection
+- Form filling and submission
+- Social media management
+- E-commerce automation
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Workflow Integration
+- Custom MCP servers
+- API integrations
+- Database operations
+- Email automation
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🔧 Configuration
+
+### Environment Variables
+
+```env
+# UI-TARS Configuration
+UI_TARS_API_KEY=your-api-key
+UI_TARS_PROVIDER=anthropic
+UI_TARS_MODEL=claude-3-5-sonnet-20241022
+
+# Database
+DATABASE_URL=your-database-url
+
+# Authentication
+NEXTAUTH_SECRET=your-secret
+NEXTAUTH_URL=http://localhost:3000
+```
+
+## 📚 Documentation
+
+- [Quick Start Guide](./docs/quick-start.md)
+- [API Reference](./docs/api.md)
+- [Workflow Examples](./docs/examples.md)
+- [MCP Server Development](./docs/mcp-servers.md)
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests
+5. Submit a pull request
+
+## 📄 License
+
+MIT License - see [LICENSE](LICENSE) for details.
+
+## 🙏 Acknowledgments
+
+- [UI-TARS Desktop](https://github.com/bytedance/UI-TARS-desktop) - The amazing AI agent technology
+- [Agent TARS](https://agent-tars.com) - The multimodal AI agent stack
+- [MCP Protocol](https://modelcontextprotocol.io) - Model Context Protocol
+
+---
+
+**Built with ❤️ using cutting-edge AI technology**

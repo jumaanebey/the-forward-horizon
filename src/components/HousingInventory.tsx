@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { housingAPI, House as DBHouse, Room as DBRoom, WaitlistEntry as DBWaitlistEntry } from '../../lib/supabase';
+import { housingAPI, House as DBHouse, Room as DBRoom, WaitlistEntry as DBWaitlistEntry } from '@/lib/supabase';
 
 interface Room {
   id: string;

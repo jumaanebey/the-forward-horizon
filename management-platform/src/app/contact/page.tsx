@@ -136,7 +136,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h4 className="text-lg font-semibold text-gray-900">Phone</h4>
-                    <p className="text-gray-600">(626) 603-0954</p>
+                    <p className="text-gray-600">(310) 488-5280</p>
                     <p className="text-sm text-gray-500">24/7 crisis support available</p>
                   </div>
                 </div>

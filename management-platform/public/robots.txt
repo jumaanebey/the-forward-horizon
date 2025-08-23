@@ -1,0 +1,24 @@
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://theforwardhorizon.com/sitemap.xml
+
+# Crawl-delay for all bots
+Crawl-delay: 1
+
+# Allow specific files
+Allow: /index.html
+Allow: /application.html
+Allow: /house-rules.html
+Allow: /careers.html
+Allow: /resources.html
+Allow: /about.html
+Allow: /contact.html
+
+# Block nothing - allow full access
+Disallow:
+
+# PWA files
+Allow: /manifest.json
+Allow: /sw.js 
