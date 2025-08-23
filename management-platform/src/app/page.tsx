@@ -95,7 +95,7 @@ export default function Home() {
             </div>
         </header>
 
-        <!-- Featured Programs Section DEPLOYMENT_TEST_2025_08_23 -->
+        <!-- FOUND_SOURCE_MANAGEMENT_PLATFORM_2025_08_23 -->
         <section id="programs" class="py-20 bg-white">
             <div class="max-w-7xl mx-auto px-4">
                 <div class="text-center mb-16">
