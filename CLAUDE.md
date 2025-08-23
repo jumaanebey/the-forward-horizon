@@ -1,5 +1,21 @@
 # Forward Horizon Website Maintenance Guide
 
+## 🚨 CRITICAL: Always Verify Deployment Source First
+
+**⚠️ WARNING: NEVER make changes without confirming which repository serves the live domain.**
+
+### Before ANY changes:
+1. Read `DEPLOYMENT_MAPPING.md`
+2. Run `./scripts/verify-deployments.sh` 
+3. Verify repository with test identifier
+4. Only then make actual changes
+
+### Known Issue: theforwardhorizon.com source is UNKNOWN
+- Domain shows phone: (626) 603-0954 
+- Should show: (310) 488-5280
+- Problem: Can't find which repository serves the domain
+- DO NOT make random changes - find source first
+
 ## 🚨 CRITICAL: Website Routing Rules
 
 ### Main Website vs Dashboard
