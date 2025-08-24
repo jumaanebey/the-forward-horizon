@@ -759,7 +759,7 @@ export default function Home() {
                     <div class="bg-white rounded-lg shadow-md p-8">
                         <h3 class="text-2xl font-bold text-gray-900 mb-6">Send Us a Message</h3>
 
-                        <form id="contact-form" action="/api/submit-form" method="POST" class="space-y-6" novalidate>
+                        <form id="contact-form" class="space-y-6" novalidate>
                             <div class="grid md:grid-cols-2 gap-4">
                                 <div>
                                     <label for="firstName" class="block text-sm font-medium text-gray-700 mb-2">First Name *</label>
@@ -804,6 +804,7 @@ export default function Home() {
                                 Send Message
                             </button>
 
+                            <div id="form-message" class="text-center p-4 rounded-lg" style="display:none;"></div>
                             <p class="text-xs text-gray-500 text-center">We'll respond within 24 hours during business days</p>
                         </form>
                     </div>
@@ -899,15 +900,59 @@ export default function Home() {
                 });
             });
 
-            // Simple form handling - let the form submit naturally
-            document.getElementById('contact-form').addEventListener('submit', function(e) {
+            // API-powered form handling
+            document.getElementById('contact-form').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
                 const submitButton = this.querySelector('button[type="submit"]');
+                const messageDiv = document.getElementById('form-message');
+                
+                // Get form data
+                const firstName = document.getElementById('firstName').value;
+                const lastName = document.getElementById('lastName').value;
+                const email = document.getElementById('email').value;
+                const phone = document.getElementById('phone').value;
+                const inquiryType = document.getElementById('inquiry-type').value;
+                const message = document.getElementById('message').value;
                 
                 // Show loading state
                 submitButton.textContent = 'Sending...';
                 submitButton.disabled = true;
                 
-                // Let the form submit naturally to the API, which will redirect
+                try {
+                    // Send to API
+                    const response = await fetch('https://forward-horizon-api.vercel.app/api/leads?name=' + 
+                        encodeURIComponent(firstName + ' ' + lastName) +
+                        '&email=' + encodeURIComponent(email) +
+                        '&phone=' + encodeURIComponent(phone), {
+                        method: 'POST'
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success || data.message) {
+                        // Show success
+                        messageDiv.style.display = 'block';
+                        messageDiv.style.backgroundColor = '#10b981';
+                        messageDiv.style.color = 'white';
+                        messageDiv.innerHTML = '<strong>Thank you!</strong> We have received your message and will contact you within 24 hours.';
+                        
+                        // Clear form
+                        this.reset();
+                        
+                        // Scroll to message
+                        messageDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                } catch (error) {
+                    // Show error
+                    messageDiv.style.display = 'block';
+                    messageDiv.style.backgroundColor = '#ef4444';
+                    messageDiv.style.color = 'white';
+                    messageDiv.innerHTML = '<strong>Sorry!</strong> There was an error. Please call us at (310) 488-5280.';
+                } finally {
+                    submitButton.textContent = 'Send Message';
+                    submitButton.disabled = false;
+                }
             });
         </script>
 

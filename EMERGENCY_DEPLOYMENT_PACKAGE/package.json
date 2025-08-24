@@ -1,0 +1,13 @@
+{
+  "name": "forward-horizon-emergency-fix",
+  "version": "1.0.0",
+  "description": "Emergency deployment to fix phone number on theforwardhorizon.com",
+  "main": "index.html",
+  "scripts": {
+    "build": "echo 'Static site - no build needed'",
+    "start": "echo 'Static site deployed'"
+  },
+  "keywords": ["forward-horizon", "transitional-housing", "emergency-fix"],
+  "author": "Forward Horizon",
+  "license": "MIT"
+}
