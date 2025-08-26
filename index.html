@@ -3,8 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Forward Horizon - Where Healing Feels Like Coming Home</title>
-    <meta name="description" content="Feel understood. Feel safe. Feel hope again. Forward Horizon offers more than housing — we offer the warmth of belonging for veterans, those in recovery, and returning citizens ready to thrive.">
+    <title>Forward Horizon - Transitional Housing Los Angeles | Veterans, Recovery, Re-entry</title>
+    <meta name="description" content="Transitional housing in Los Angeles for veterans, recovering individuals, and returning citizens. 24/7 support, job placement, mental health services. Call (310) 488-5280.">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="keywords" content="transitional housing Los Angeles, veteran housing LA, sober living Los Angeles, re-entry housing California, homeless veterans support, PTSD housing support, recovery housing LA">
+    <meta name="author" content="Forward Horizon">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://theforwardhorizon.com/">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:title" content="Forward Horizon - Where Healing Begins">
+    <meta property="og:description" content="Transitional housing and support services for veterans, recovering individuals, and returning citizens in Los Angeles.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://theforwardhorizon.com/">
+    <meta property="og:locale" content="en_US">
+    
+    <!-- Schema.org Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Forward Horizon",
+      "url": "https://theforwardhorizon.com",
+      "telephone": "(310) 488-5280",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Los Angeles",
+        "addressRegion": "CA"
+      },
+      "description": "Transitional housing for veterans, recovering individuals, and returning citizens"
+    }
+    </script>
     
     <!-- Enhanced Professional Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Open+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -1910,6 +1940,51 @@
                 behavior: 'smooth'
             });
         });
+
+        // Form submission handling
+        const contactForm = document.getElementById('contact-form');
+        if (contactForm) {
+            contactForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                // Get form data
+                const formData = new FormData(contactForm);
+                const data = Object.fromEntries(formData);
+                
+                // Show loading state
+                const submitButton = contactForm.querySelector('button[type="submit"]');
+                const originalText = submitButton.innerHTML;
+                submitButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Sending...';
+                submitButton.disabled = true;
+                
+                try {
+                    const response = await fetch('/api/submit-form', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(data)
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        // Show success message
+                        alert('Thank you for reaching out! We will contact you within 24 hours.');
+                        contactForm.reset();
+                    } else {
+                        throw new Error(result.error || 'Form submission failed');
+                    }
+                } catch (error) {
+                    console.error('Form submission error:', error);
+                    alert('There was an error sending your message. Please call us directly at (310) 488-5280');
+                } finally {
+                    // Reset button
+                    submitButton.innerHTML = originalText;
+                    submitButton.disabled = false;
+                }
+            });
+        }
     </script>
 </body>
 </html>
